@@ -2,19 +2,19 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const menuItems = [
-  { icon: '/assets/icon-document-book.svg', label: 'Документация', to: '/', active: true },
-  { icon: '/assets/icon-person.svg', label: 'Команда', to: '/team' },
-  { icon: '/assets/icon-integration.svg', label: 'Сессия', to: '/session' },
-  { icon: '/assets/icon-file.svg', label: 'Загрузчик файлов', to: '/files' },
-  { icon: '/assets/icon-check-circle.svg', label: 'Bi-API методы', to: '/api' },
-  { icon: '/assets/icon-layout-grid.svg', label: 'Карта сервисов', to: '/services' },
-  { icon: '/assets/icon-pencil.svg', label: 'Редактор SQL', to: '/sql' },
-  { icon: '/assets/icon-upload-arrow.svg', label: 'Управление загрузками', to: '/uploads' },
+  { icon: 'assets/icon-document-book.svg', label: 'Документация', to: '/', active: true },
+  { icon: 'assets/icon-person.svg', label: 'Команда', to: '/team' },
+  { icon: 'assets/icon-integration.svg', label: 'Сессия', to: '/session' },
+  { icon: 'assets/icon-file.svg', label: 'Загрузчик файлов', to: '/files' },
+  { icon: 'assets/icon-check-circle.svg', label: 'Bi-API методы', to: '/api' },
+  { icon: 'assets/icon-layout-grid.svg', label: 'Карта сервисов', to: '/services' },
+  { icon: 'assets/icon-pencil.svg', label: 'Редактор SQL', to: '/sql' },
+  { icon: 'assets/icon-upload-arrow.svg', label: 'Управление загрузками', to: '/uploads' },
 ];
 
 const bottomItems = [
-  { icon: '/assets/icon-document-book-2.svg', label: 'Есть идея', to: '/idea' },
-  { icon: '/assets/icon-help-circle.svg', label: 'Нужна помощь', to: '/help' },
+  { icon: 'assets/icon-document-book-2.svg', label: 'Есть идея', to: '/idea' },
+  { icon: 'assets/icon-help-circle.svg', label: 'Нужна помощь', to: '/help' },
 ];
 
 export default function Sidebar() {
@@ -43,7 +43,7 @@ export default function Sidebar() {
               }`
             }
           >
-            <img src={item.icon} alt="" className="w-6 h-6" />
+            <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
             <span>{item.label}</span>
           </NavLink>
         ))}
@@ -59,7 +59,7 @@ export default function Sidebar() {
               to={item.to}
               className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#191919] no-underline rounded-lg hover:bg-[rgba(25,25,25,0.05)] transition-colors"
             >
-              <img src={item.icon} alt="" className="w-6 h-6" />
+              <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
               <span>{item.label}</span>
             </NavLink>
           ))}
