@@ -21,7 +21,7 @@ function PlaceholderPage({ title }) {
 export default function App() {
   return (
     <DocumentsProvider>
-    <BrowserRouter>
+    <BrowserRouter basename="/onboarding-prototype">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<DocumentListPage />} />
