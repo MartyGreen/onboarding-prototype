@@ -1,0 +1,22 @@
+{
+  "spacing-0.5x": 2,
+  "spacing-1x": 4,
+  "spacing-1.5x": 6,
+  "spacing-2x": 8,
+  "spacing-2.5x": 10,
+  "spacing-3x": 12,
+  "spacing-3.5x": 14,
+  "spacing-4x": 16,
+  "spacing-4.5x": 18,
+  "spacing-5x": 20,
+  "spacing-6x": 24,
+  "spacing-8x": 32,
+  "spacing-10x": 40,
+  "spacing-12x": 48,
+  "spacing-14x": 56,
+  "spacing-16x": 64,
+  "spacing-20x": 80,
+  "spacing-24x": 96,
+  "spacing-30x": 120,
+  "spacing-40x": 160
+}

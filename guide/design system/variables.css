@@ -1,0 +1,215 @@
+@import './fonts.css';
+
+:root {
+  /* Colors - Primitives */
+  --primitive-primary: #191919;
+  --primitive-primary-fixed: #191919;
+  --primitive-primary-on-inverse: #ffffff;
+  --primitive-primary-on-inverse-fixed: #ffffff;
+  --primitive-secondary: #676767;
+  --primitive-secondary-fixed: #676767;
+  --primitive-secondary-on-inverse: #aeaeae;
+  --primitive-secondary-on-inverse-fixed: #aeaeae;
+  --primitive-neutral-4: #949494;
+  --primitive-neutral-4-fixed: #949494;
+  --primitive-neutral-4-on-inverse: #777777;
+  --primitive-neutral-4-on-inverse-fixed: #777777;
+  --primitive-neutral-3: #c8c8c8;
+  --primitive-neutral-3-fixed: #c8c8c8;
+  --primitive-neutral-3-on-inverse: #5e5e5e;
+  --primitive-neutral-3-on-inverse-fixed: #5e5e5e;
+  --primitive-neutral-2: #d4d4d4;
+  --primitive-neutral-2-fixed: #d4d4d4;
+  --primitive-neutral-2-on-inverse: #525252;
+  --primitive-neutral-2-on-inverse-fixed: #525252;
+  --primitive-neutral-1: #e1e1e1;
+  --primitive-neutral-1-fixed: #e1e1e1;
+  --primitive-neutral-1-on-inverse: #474747;
+  --primitive-neutral-1-on-inverse-fixed: #474747;
+  --primitive-default: #ffffff;
+  --primitive-default-fixed: #ffffff;
+  --primitive-brand: #835de1;
+  --primitive-brand-fixed: #835de1;
+  --primitive-brand-on-inverse: #9b7ef1;
+  --primitive-brand-on-inverse-fixed: #9b7ef1;
+  --primitive-error: #d84d4d;
+  --primitive-error-fixed: #d84d4d;
+  --primitive-error-on-inverse: #fc6667;
+  --primitive-error-on-inverse-fixed: #fc6667;
+  --primitive-success: #5cad9a;
+  --primitive-success-fixed: #5cad9a;
+  --primitive-success-on-inverse: #5cad9a;
+  --primitive-success-on-inverse-fixed: #5cad9a;
+  --primitive-warning: #f0c555;
+  --primitive-warning-fixed: #f0c555;
+  --primitive-warning-on-inverse: #f0c555;
+  --primitive-warning-on-inverse-fixed: #f0c555;
+
+  /* Colors - Backgrounds */
+  --bg-neutral-5: #777777;
+  --bg-neutral-4: #aeaeae;
+  --bg-neutral-3: #e1e1e1;
+  --bg-neutral-2: #eeeeee;
+  --bg-neutral-1: #f4f4f4;
+  --bg-default: #ffffff;
+  --bg-default-fixed: #ffffff;
+  --bg-inverse: #191919;
+  --bg-inverse-fixed: #191919;
+  --bg-brand: #835de1;
+  --bg-brand-fixed: #835de1;
+  --bg-brand-5: #b39df7;
+  --bg-brand-4: #cabef3;
+  --bg-brand-3: #d6cef3;
+  --bg-brand-2: #e2ddf6;
+  --bg-brand-1: #efedf8;
+  --bg-error: #d84d4d;
+  --bg-error-fixed: #d84d4d;
+  --bg-error-5: #f98e88;
+  --bg-error-4: #fbb2ab;
+  --bg-error-3: #ffc3be;
+  --bg-error-2: #fcd7d4;
+  --bg-error-1: #f9ebea;
+  --bg-success: #5cad9a;
+  --bg-success-fixed: #5cad9a;
+  --bg-success-5: #7ac6b2;
+  --bg-success-4: #a5d7ca;
+  --bg-success-3: #b5e3d7;
+  --bg-success-2: #c9eee3;
+  --bg-success-1: #ddf8ef;
+  --bg-warning: #f0c555;
+  --bg-warning-fixed: #f0c555;
+  --bg-warning-5: #f0c555;
+  --bg-warning-4: #fad370;
+  --bg-warning-3: #fde2a2;
+  --bg-warning-2: #fbefd2;
+  --bg-warning-1: #fcf5e3;
+
+  /* Colors - Container & UI */
+  --container-default: #ffffff;
+  --container-transparent-1: rgba(25, 25, 25, 0.05);
+  --container-transparent-1-fixed: rgba(25, 25, 25, 0.05);
+  --container-transparent-1-on-inverse: rgba(255, 255, 255, 0.1);
+  --container-transparent-1-on-inverse-fixed: rgba(255, 255, 255, 0.1);
+  --container-transparent-2: rgba(25, 25, 25, 0.1);
+  --container-transparent-2-fixed: rgba(25, 25, 25, 0.1);
+  --container-transparent-2-on-inverse: rgba(255, 255, 255, 0.15);
+  --container-transparent-2-on-inverse-fixed: rgba(255, 255, 255, 0.15);
+  --page-primary: #ffffff;
+  --page-secondary: #f9f9f9;
+  --popup-primary: #ffffff;
+  --popup-secondary: #f9f9f9;
+  --overlay-popup: rgba(25, 25, 25, 0.4);
+  --overlay-primary-alpha-050: rgba(25, 25, 25, 0.5);
+
+  /* Spacings */
+  --spacing-0-5x: 2px;
+  --spacing-1x: 4px;
+  --spacing-1-5x: 6px;
+  --spacing-2x: 8px;
+  --spacing-2-5x: 10px;
+  --spacing-3x: 12px;
+  --spacing-3-5x: 14px;
+  --spacing-4x: 16px;
+  --spacing-4-5x: 18px;
+  --spacing-5x: 20px;
+  --spacing-6x: 24px;
+  --spacing-8x: 32px;
+  --spacing-10x: 40px;
+  --spacing-12x: 48px;
+  --spacing-14x: 56px;
+  --spacing-16x: 64px;
+  --spacing-20x: 80px;
+  --spacing-24x: 96px;
+  --spacing-30x: 120px;
+  --spacing-40x: 160px;
+
+  /* Roundings */
+  --rounding-0-5x: 2px;
+  --rounding-1x: 4px;
+  --rounding-1-5x: 6px;
+  --rounding-2x: 8px;
+  --rounding-2-5x: 10px;
+  --rounding-3x: 12px;
+  --rounding-3-5x: 14px;
+  --rounding-4x: 16px;
+  --rounding-4-5x: 18px;
+  --rounding-5x: 20px;
+  --rounding-6x: 24px;
+  --rounding-8x: 32px;
+  --rounding-10x: 40px;
+  --rounding-12x: 48px;
+  --rounding-14x: 56px;
+  --rounding-16x: 64px;
+  --rounding-20x: 80px;
+  --rounding-24x: 96px;
+}
+
+/* Typography Helpers - Can be used as utility classes or mixins */
+/* 
+  Usage example:
+  .my-text {
+    font-size: var(--ttn-400-xl-01-size);
+    line-height: var(--ttn-400-xl-01-lh);
+    font-weight: 400;
+  }
+*/
+
+:root {
+  /* TTN 400 (Regular) */
+  --ttn-400-xl-01-size: 20px; --ttn-400-xl-01-lh: 26px;
+  --ttn-400-xl-02-size: 20px; --ttn-400-xl-02-lh: 28px;
+  --ttn-400-l-01-size: 18px; --ttn-400-l-01-lh: 22px;
+  --ttn-400-l-02-size: 18px; --ttn-400-l-02-lh: 24px;
+  --ttn-400-m-01-size: 16px; --ttn-400-m-01-lh: 20px;
+  --ttn-400-m-02-size: 16px; --ttn-400-m-02-lh: 22px;
+  --ttn-400-s-01-size: 14px; --ttn-400-s-01-lh: 18px;
+  --ttn-400-s-02-size: 14px; --ttn-400-s-02-lh: 20px;
+  --ttn-400-xs-01-size: 12px; --ttn-400-xs-01-lh: 15px;
+  --ttn-400-xs-02-size: 12px; --ttn-400-xs-02-lh: 16px;
+  --ttn-400-2xs-01-size: 10px; --ttn-400-2xs-01-lh: 13px;
+  --ttn-400-2xs-02-size: 10px; --ttn-400-2xs-02-lh: 14px;
+
+  /* TTN 500 (Medium) */
+  --ttn-500-6xl-size: 48px; --ttn-500-6xl-lh: 56px;
+  --ttn-500-5xl-size: 42px; --ttn-500-5xl-lh: 48px;
+  --ttn-500-4xl-size: 36px; --ttn-500-4xl-lh: 42px;
+  --ttn-500-3xl-size: 30px; --ttn-500-3xl-lh: 36px;
+  --ttn-500-2xl-01-size: 24px; --ttn-500-2xl-01-lh: 30px;
+  --ttn-500-2xl-02-size: 24px; --ttn-500-2xl-02-lh: 32px;
+  --ttn-500-xl-01-size: 20px; --ttn-500-xl-01-lh: 26px;
+  --ttn-500-xl-02-size: 20px; --ttn-500-xl-02-lh: 28px;
+  --ttn-500-l-01-size: 18px; --ttn-500-l-01-lh: 22px;
+  --ttn-500-l-02-size: 18px; --ttn-500-l-02-lh: 24px;
+  --ttn-500-m-01-size: 16px; --ttn-500-m-01-lh: 20px;
+  --ttn-500-m-02-size: 16px; --ttn-500-m-02-lh: 22px;
+  --ttn-500-s-01-size: 14px; --ttn-500-s-01-lh: 18px;
+  --ttn-500-s-02-size: 14px; --ttn-500-s-02-lh: 20px;
+  --ttn-500-xs-01-size: 12px; --ttn-500-xs-01-lh: 15px;
+  --ttn-500-xs-02-size: 12px; --ttn-500-xs-02-lh: 16px;
+  --ttn-500-2xs-01-size: 10px; --ttn-500-2xs-01-lh: 13px;
+  --ttn-500-2xs-02-size: 10px; --ttn-500-2xs-02-lh: 14px;
+
+  /* TTN 600 (DemiBold) */
+  --ttn-600-10xl-size: 128px; --ttn-600-10xl-lh: 136px;
+  --ttn-600-9xl-size: 96px; --ttn-600-9xl-lh: 104px;
+  --ttn-600-8xl-size: 72px; --ttn-600-8xl-lh: 80px;
+  --ttn-600-7xl-size: 60px; --ttn-600-7xl-lh: 68px;
+  --ttn-600-6xl-size: 48px; --ttn-600-6xl-lh: 56px;
+  --ttn-600-5xl-size: 42px; --ttn-600-5xl-lh: 48px;
+  --ttn-600-4xl-size: 36px; --ttn-600-4xl-lh: 42px;
+  --ttn-600-3xl-size: 30px; --ttn-600-3xl-lh: 36px;
+  --ttn-600-2xl-01-size: 24px; --ttn-600-2xl-01-lh: 30px;
+  --ttn-600-2xl-02-size: 24px; --ttn-600-2xl-02-lh: 32px;
+  --ttn-600-xl-01-size: 20px; --ttn-600-xl-01-lh: 26px;
+  --ttn-600-xl-02-size: 20px; --ttn-600-xl-02-lh: 28px;
+  --ttn-600-l-01-size: 18px; --ttn-600-l-01-lh: 22px;
+  --ttn-600-l-02-size: 18px; --ttn-600-l-02-lh: 24px;
+  --ttn-600-m-01-size: 16px; --ttn-600-m-01-lh: 20px;
+  --ttn-600-m-02-size: 16px; --ttn-600-m-02-lh: 22px;
+  --ttn-600-s-01-size: 14px; --ttn-600-s-01-lh: 18px;
+  --ttn-600-s-02-size: 14px; --ttn-600-s-02-lh: 20px;
+  --ttn-600-xs-01-size: 12px; --ttn-600-xs-01-lh: 15px;
+  --ttn-600-xs-02-size: 12px; --ttn-600-xs-02-lh: 16px;
+  --ttn-600-2xs-01-size: 10px; --ttn-600-2xs-01-lh: 13px;
+  --ttn-600-2xs-02-size: 10px; --ttn-600-2xs-02-lh: 14px;
+}

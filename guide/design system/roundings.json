@@ -1,0 +1,20 @@
+{
+  "rounding-0.5x": 2,
+  "rounding-1x": 4,
+  "rounding-1.5x": 6,
+  "rounding-2x": 8,
+  "rounding-2.5x": 10,
+  "rounding-3x": 12,
+  "rounding-3.5x": 14,
+  "rounding-4x": 16,
+  "rounding-4.5x": 18,
+  "rounding-5x": 20,
+  "rounding-6x": 24,
+  "rounding-8x": 32,
+  "rounding-10x": 40,
+  "rounding-12x": 48,
+  "rounding-14x": 56,
+  "rounding-16x": 64,
+  "rounding-20x": 80,
+  "rounding-24x": 96
+}

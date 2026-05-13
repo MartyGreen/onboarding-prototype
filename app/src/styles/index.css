@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/* Search bar states */
+.search-field {
+  transition: border-color 0.15s ease, border-width 0s;
+  border: 1px solid transparent;
+}
+.search-field:hover {
+  border-color: #835de1;
+}
+.search-field:focus-within {
+  border: 2px solid #835de1;
+  padding-left: 11px;
+  padding-right: 11px;
+}
+
+/* Form field states (inputs, textareas, tags) */
+.form-field {
+  transition: box-shadow 0.15s ease;
+  border: 1.5px solid transparent;
+}
+.form-field:hover {
+  border-color: rgba(131, 93, 225, 0.3);
+}
+.form-field:focus-within {
+  border-color: #835de1;
+  box-shadow: 0 0 0 3px rgba(131, 93, 225, 0.1);
+}
+
+/* Dropdown animation */
+.dropdown-trigger img {
+  transition: transform 0.2s ease;
+}
+
+/* Rotate chevron for .rotate-180 (Tailwind class in JSX) */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu smooth appearance */
+.dropdown-menu-enter {
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar for dropdown */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(25, 25, 25, 0.15);
+  border-radius: 2px;
+}
+
+@font-face {
+  font-family: 'TT Norms Tochka Extended';
+  src: url('/fonts/TT_Norms_Pro_Tochka_Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Norms Tochka Extended';
+  src: url('/fonts/TT_Norms_Pro_Tochka_Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Norms Tochka Extended';
+  src: url('/fonts/TT_Norms_Pro_Tochka_DemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Norms Tochka Extended';
+  src: url('/fonts/TT_Norms_Pro_Tochka_Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  /* Primitive colors */
+  --primitive\/default: #ffffff;
+  --primitive\/primary: #191919;
+  --primitive\/brand: #835de1;
+  --primitive\/neutral-4: #949494;
+  --primitive\/neutral-3: #c4c4c4;
+  --primitive\/secondary: #676767;
+  --primitive\/error: #d84d4d;
+  --primitive\/success: #5cad9a;
+
+  /* Page */
+  --page\/primary: #ffffff;
+  --page\/horizontal-padding: 20px;
+
+  /* Container */
+  --container\/default: #ffffff;
+  --container\/transparent-1: rgba(25, 25, 25, 0.05);
+
+  /* Spacing */
+  --spacing-0\,5x: 2px;
+  --spacing-1x: 4px;
+  --spacing-2x: 8px;
+  --spacing-3x: 12px;
+  --spacing-4x: 16px;
+  --spacing-5x: 20px;
+  --spacing-6x: 24px;
+  --spacing-8x: 32px;
+  --spacing-10x: 40px;
+
+  /* Roundings */
+  --rounding-2\,5x: 10px;
+  --rounding-3x: 12px;
+  --rounding-5x: 20px;
+  --form-rounding-weak: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'TT Norms Tochka Extended', system-ui, sans-serif;
+  background: #f5f5f5;
+  color: var(--primitive\/primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Modal slide-up animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}

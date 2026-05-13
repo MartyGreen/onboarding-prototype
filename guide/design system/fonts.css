@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Regular.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Italic.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Medium.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Medium_Italic.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Medium_Italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_DemiBold.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_DemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_DemiBold_Italic.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_DemiBold_Italic.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Bold.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro Tochka';
+  src: url('./TT Norms Pro Tochka/WOFF2/TT Norms Pro Tochka WOFF2 2-140/TT_Norms_Pro_Tochka_Bold_Italic.woff2') format('woff2'),
+       url('./TT Norms Pro Tochka/WOFF/TT Norms Pro Tochka WOFF 2-140/TT_Norms_Pro_Tochka_Bold_Italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
