@@ -58,19 +58,19 @@ export default function DocumentListPage() {
         <div className="flex items-center gap-2">
           {/* Icon buttons */}
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-connection-arrows.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-connection-arrows.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-arrows-rotation.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-arrows-rotation.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-pencil-2.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-2.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-layer-copy.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-layer-copy.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-trash.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-5 h-5" />
           </button>
           {/* New Document Button */}
           <button
@@ -92,15 +92,15 @@ export default function DocumentListPage() {
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 h-10 px-3 rounded-xl bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">Все владельцы</span>
-            <img src="/assets/icon-chevron-down.svg" alt="" className="w-3 h-3" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
           </button>
           <button className="flex items-center gap-2 h-10 px-3 rounded-xl bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">База данных</span>
-            <img src="/assets/icon-chevron-down.svg" alt="" className="w-3 h-3" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
           </button>
         </div>
         <div className="search-field flex items-center w-[280px] h-10 px-3 rounded-lg bg-[rgba(25,25,25,0.05)] cursor-pointer">
-          <img src="/assets/icon-search-20.svg" alt="" className="w-5 h-5 mr-2" />
+          <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-5 h-5 mr-2" />
           <span className="text-sm text-[#949494] leading-[18px] tracking-[0.14px]">Название, автор или раздел</span>
         </div>
       </div>

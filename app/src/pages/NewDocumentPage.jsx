@@ -70,7 +70,7 @@ function Dropdown({ label, placeholder, options, value, onChange, disabled }) {
           </span>
         </div>
         <img
-          src="/assets/icon-chevron-down.svg"
+          src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`}
           alt=""
           className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
@@ -151,7 +151,7 @@ export default function NewDocumentPage() {
               onClick={() => navigate(-1)}
               className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-[rgba(25,25,25,0.05)] transition-colors border-none bg-transparent cursor-pointer"
             >
-              <img src="/assets/icon-arrow-left.svg" alt="Back" className="w-6 h-6" />
+              <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-6 h-6" />
             </button>
             <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0 flex-1">
               Новый документ
@@ -349,7 +349,7 @@ export default function NewDocumentPage() {
               <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 pb-4 mt-1">
                 <div className="border-t border-[rgba(25,25,25,0.05)] pt-3.5">
                   <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={addField}>
-                    <img src="/assets/icon-plus-circle.svg" alt="" className="w-6 h-6" />
+                    <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                     <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить поле</span>
                   </div>
                 </div>

@@ -100,7 +100,7 @@ export default function DocumentPage() {
           onClick={() => navigate(-1)}
           className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
         >
-          <img src="/assets/icon-arrow-left.svg" alt="Back" className="w-5 h-5" />
+          <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: statusConfig[doc.status]?.bgColor || '#80bc00' }}>
@@ -112,16 +112,16 @@ export default function DocumentPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-arrows-rotation.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-arrows-rotation.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-pencil-2.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-2.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-layer-copy.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-layer-copy.svg`} alt="" className="w-5 h-5" />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src="/assets/icon-trash.svg" alt="" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -147,7 +147,7 @@ export default function DocumentPage() {
                 Описание документа
               </h3>
               <button className="flex items-center justify-center w-6 h-6 border-none bg-transparent cursor-pointer">
-                <img src="/assets/icon-pencil-3.svg" alt="Edit" className="w-6 h-6" />
+                <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-3.svg`} alt="Edit" className="w-6 h-6" />
               </button>
             </div>
             <h4 className="text-2xl font-medium text-[#191919] leading-[30px] m-0 mb-4">
@@ -170,14 +170,14 @@ export default function DocumentPage() {
                 onClick={() => navigate(`/document/${id}/edit-fields`)}
                 className="flex items-center justify-center w-6 h-6 border-none bg-transparent cursor-pointer"
               >
-                <img src="/assets/icon-pencil-3.svg" alt="Edit" className="w-6 h-6" />
+                <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-3.svg`} alt="Edit" className="w-6 h-6" />
               </button>
             </div>
 
             {/* Search */}
             <div className="mb-4">
               <div className="search-field flex items-center bg-[rgba(25,25,25,0.05)] rounded-lg h-10 px-3">
-                <img src="/assets/icon-search-20.svg" alt="" className="w-5 h-5 mr-2 shrink-0" />
+                <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-5 h-5 mr-2 shrink-0" />
                 <input
                   type="text"
                   value={fieldSearch}
@@ -225,7 +225,7 @@ export default function DocumentPage() {
                         {row.description}
                       </span>
                       {row.hasInfo && (
-                        <img src="/assets/icon-help-circle.svg" alt="" className="w-[18px] h-[18px] ml-2" />
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px] ml-2" />
                       )}
                     </div>
                     <div className="bg-[rgba(25,25,25,0.05)] px-3 py-3.5 flex items-center relative">
@@ -237,7 +237,7 @@ export default function DocumentPage() {
                           setOpenMenuIndex(openMenuIndex === realIndex ? null : realIndex);
                         }}
                       >
-                        <img src="/assets/icon-dots-three.svg" alt="" className="w-5 h-5" />
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-dots-three.svg`} alt="" className="w-5 h-5" />
                       </button>
                       {openMenuIndex === realIndex && (
                         <div
@@ -251,14 +251,14 @@ export default function DocumentPage() {
                               setOpenMenuIndex(null);
                             }}
                           >
-                            <img src="/assets/icon-pencil-3.svg" alt="" className="w-6 h-6" />
+                            <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-3.svg`} alt="" className="w-6 h-6" />
                             Редактировать
                           </button>
                           <button
                             className="flex items-center gap-3 w-full px-5 py-2.5 text-base font-semibold text-[#d74b4b] leading-5 tracking-[0.16px] bg-transparent border-none cursor-pointer hover:bg-[rgba(215,75,75,0.05)] transition-colors text-left"
                             onClick={() => handleDeleteField(realIndex)}
                           >
-                            <img src="/assets/icon-trash.svg" alt="" className="w-6 h-6" />
+                            <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-6 h-6" />
                             Удалить
                           </button>
                         </div>
@@ -297,7 +297,7 @@ export default function DocumentPage() {
                             setOpenMissingMenuIndex(openMissingMenuIndex === i ? null : i);
                           }}
                         >
-                          <img src="/assets/icon-dots-three.svg" alt="" className="w-6 h-6" />
+                          <img src={`${import.meta.env.BASE_URL}assets/icon-dots-three.svg`} alt="" className="w-6 h-6" />
                         </button>
                         {openMissingMenuIndex === i && (
                           <div
@@ -308,7 +308,7 @@ export default function DocumentPage() {
                               className="flex items-center gap-3 w-full px-5 py-2.5 text-base font-semibold text-[#d74b4b] leading-5 tracking-[0.16px] bg-transparent border-none cursor-pointer hover:bg-[rgba(215,75,75,0.05)] transition-colors text-left"
                               onClick={() => handleDeleteMissingField(i)}
                             >
-                              <img src="/assets/icon-trash.svg" alt="" className="w-6 h-6" />
+                              <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-6 h-6" />
                               Удалить
                             </button>
                           </div>
@@ -324,7 +324,7 @@ export default function DocumentPage() {
             <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4 mt-4">
               <div>
                 <div className="flex items-center gap-3 cursor-pointer" onClick={() => setIsAddFieldOpen(true)}>
-                  <img src="/assets/icon-plus-circle.svg" alt="" className="w-6 h-6" />
+                  <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                   <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить поле</span>
                 </div>
               </div>
@@ -341,7 +341,7 @@ export default function DocumentPage() {
               {doc.experts.map((expert, i) => (
                 <div key={i} className="flex items-center gap-3 py-2">
                   <div className="w-10 h-10 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
-                    <img src={expert.avatar} alt="" className="w-full h-full object-cover" />
+                    <img src={`${import.meta.env.BASE_URL}${expert.avatar}`} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">{expert.role}</span>
@@ -355,7 +355,7 @@ export default function DocumentPage() {
             <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4 mt-3">
               <div>
                 <div className="flex items-center gap-3 cursor-pointer">
-                  <img src="/assets/icon-plus-circle.svg" alt="" className="w-6 h-6" />
+                  <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                   <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить себя как эксперта</span>
                 </div>
               </div>
@@ -368,7 +368,7 @@ export default function DocumentPage() {
           {/* Author */}
           <div className="flex items-center gap-3 py-2">
             <div className="w-10 h-10 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
-              <img src={doc.authorAvatar} alt="" className="w-full h-full object-cover" />
+              <img src={`${import.meta.env.BASE_URL}${doc.authorAvatar}`} alt="" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Автор</span>

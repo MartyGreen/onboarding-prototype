@@ -69,7 +69,7 @@ export default function Sidebar() {
         <div className="mt-6">
           <div className="flex items-center gap-3 px-3 py-2">
             <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-              <img src="/assets/logo.png" alt="Avatar" className="w-full h-full object-cover" />
+              <img src={`${import.meta.env.BASE_URL}assets/logo.png`} alt="Avatar" className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
               Никита Сокол

@@ -49,7 +49,7 @@ export default function EditFieldsPage() {
             onClick={() => navigate(-1)}
             className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
           >
-            <img src="/assets/icon-arrow-left.svg" alt="Back" className="w-5 h-5" />
+            <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-5 h-5" />
           </button>
           <h1 className="text-[30px] font-medium text-[#191919] leading-9 tracking-[-0.3px] m-0">
             Описание полей
@@ -63,7 +63,7 @@ export default function EditFieldsPage() {
           {/* Search */}
           <div className="mb-5">
             <div className="search-field flex items-center bg-[rgba(25,25,25,0.05)] rounded-xl h-12 px-3 w-[300px]">
-              <img src="/assets/icon-search-20.svg" alt="" className="w-6 h-6 mr-3 shrink-0" />
+              <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-6 h-6 mr-3 shrink-0" />
               <input
                 type="text"
                 value={fieldSearch}
@@ -124,12 +124,12 @@ export default function EditFieldsPage() {
                         placeholder="Описание поля"
                       />
                       {row.hasInfo && (
-                        <img src="/assets/icon-help-circle.svg" alt="" className="w-[18px] h-[18px] ml-2 shrink-0" />
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px] ml-2 shrink-0" />
                       )}
                     </div>
                     <div className="w-16 bg-[rgba(25,25,25,0.05)] px-5 py-2.5 flex items-center justify-end">
                       <button className="border-none bg-transparent cursor-pointer p-0">
-                        <img src="/assets/icon-dots-three.svg" alt="" className="w-6 h-6" />
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-dots-three.svg`} alt="" className="w-6 h-6" />
                       </button>
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export default function EditFieldsPage() {
                       </div>
                       <div className="w-16 bg-[rgba(25,25,25,0.05)] px-5 py-2.5 flex items-center justify-end">
                         <button className="border-none bg-transparent cursor-pointer p-0">
-                          <img src="/assets/icon-dots-three.svg" alt="" className="w-6 h-6" />
+                          <img src={`${import.meta.env.BASE_URL}assets/icon-dots-three.svg`} alt="" className="w-6 h-6" />
                         </button>
                       </div>
                     </div>
@@ -188,7 +188,7 @@ export default function EditFieldsPage() {
             {/* Add Field */}
             <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4 w-[300px]">
               <div className="flex items-center gap-3 cursor-pointer" onClick={addField}>
-                <img src="/assets/icon-plus-circle.svg" alt="" className="w-6 h-6" />
+                <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                 <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить поле</span>
               </div>
             </div>
