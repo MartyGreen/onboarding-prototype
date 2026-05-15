@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
 import AddFieldModal from '../components/AddFieldModal';
+import WarningTooltip from '../components/WarningTooltip';
 
 export default function DocumentPage() {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ export default function DocumentPage() {
       {/* Header */}
       <header className="flex items-center gap-4 px-8 py-6">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
           className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
         >
           <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-5 h-5" />
@@ -208,6 +209,7 @@ export default function DocumentPage() {
               {filteredFields.map((row, i) => {
                 const realIndex = doc.fields.indexOf(row);
                 const isLast = i === filteredFields.length - 1;
+                const isEmpty = !row.description || row.description === '—' || row.description.trim() === '';
                 return (
                   <div key={i} className={`flex gap-[2px] mt-[2px] ${isLast ? 'rounded-b-xl overflow-hidden' : ''}`}>
                     <div className="w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3.5">
@@ -220,12 +222,40 @@ export default function DocumentPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-3.5 flex items-center">
-                      <span className="text-base text-[#191919] leading-5 tracking-[0.16px] flex-1">
-                        {row.description}
-                      </span>
-                      {row.hasInfo && (
-                        <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px] ml-2" />
+                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-3.5 flex items-center gap-2">
+                      {isEmpty ? (
+                        <>
+                          <input
+                            type="text"
+                            placeholder="Добавить описание..."
+                            className="flex-1 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] placeholder:text-[#949494] p-0 m-0"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && e.target.value.trim()) {
+                                const newFields = [...doc.fields];
+                                newFields[realIndex] = { ...newFields[realIndex], description: e.target.value.trim() };
+                                updateDocument(doc.id, { fields: newFields });
+                                e.target.value = '';
+                              }
+                            }}
+                            onBlur={(e) => {
+                              if (e.target.value.trim()) {
+                                const newFields = [...doc.fields];
+                                newFields[realIndex] = { ...newFields[realIndex], description: e.target.value.trim() };
+                                updateDocument(doc.id, { fields: newFields });
+                              }
+                            }}
+                          />
+                          <WarningTooltip />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-base text-[#191919] leading-5 tracking-[0.16px] flex-1">
+                            {row.description}
+                          </span>
+                          {row.hasInfo && (
+                            <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px]" />
+                          )}
+                        </>
                       )}
                     </div>
                     <div className="bg-[rgba(25,25,25,0.05)] px-3 py-3.5 flex items-center relative">

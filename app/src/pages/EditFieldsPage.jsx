@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
+import WarningTooltip from '../components/WarningTooltip';
 
 export default function EditFieldsPage() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function EditFieldsPage() {
       <div className="flex flex-col gap-5 pt-6 px-8">
         <div className="flex gap-4 items-center">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
             className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
           >
             <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-5 h-5" />
@@ -115,16 +116,19 @@ export default function EditFieldsPage() {
                         />
                       </div>
                     </div>
-                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-2.5 flex items-center">
+                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-2.5 flex items-center gap-2">
                       <input
                         type="text"
-                        value={row.description}
+                        value={row.description === '—' ? '' : row.description}
                         onChange={(e) => handleFieldChange(realIndex, 'description', e.target.value)}
                         className="bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] w-full p-0 m-0 flex-1"
                         placeholder="Описание поля"
                       />
+                      {(!row.description || row.description === '—' || row.description.trim() === '') && (
+                        <WarningTooltip />
+                      )}
                       {row.hasInfo && (
-                        <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px] ml-2 shrink-0" />
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-help-circle.svg`} alt="" className="w-[18px] h-[18px] shrink-0" />
                       )}
                     </div>
                     <div className="w-16 bg-[rgba(25,25,25,0.05)] px-5 py-2.5 flex items-center justify-end">
