@@ -31,10 +31,33 @@ export function AlertProvider({ children }) {
         {alert && (
           <div
             key={alertKey}
-            className="fixed top-0 left-[240px] right-0 z-[100] flex flex-col items-center px-5 py-4 animate-slideDown"
-            style={{ backgroundColor: '#5cad9a' }}
+            className="animate-slideDown"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 245,
+              right: 0,
+              zIndex: 100,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 50,
+              backgroundColor: '#5cad9a',
+              padding: '0 20px',
+            }}
           >
-            <p className="text-sm font-medium text-white leading-[18px] tracking-[0.14px] text-center w-full max-w-[640px] m-0">
+            <p style={{
+              margin: 0,
+              fontFamily: "'TT Norms Tochka Extended', sans-serif",
+              fontSize: 14,
+              fontWeight: 500,
+              lineHeight: '18px',
+              letterSpacing: '0.14px',
+              color: '#ffffff',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: 640,
+            }}>
               {alert}
             </p>
           </div>
