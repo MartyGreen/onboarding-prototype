@@ -42,11 +42,24 @@ export default function DocumentListPage() {
   const navigate = useNavigate();
   const { documents, toggleStarred, statusConfig } = useDocuments();
   const [showStarredOnly, setShowStarredOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredDocuments = useMemo(() => {
-    if (!showStarredOnly) return documents;
-    return documents.filter(d => d.starred);
-  }, [documents, showStarredOnly]);
+    let result = documents;
+    if (showStarredOnly) {
+      result = result.filter(d => d.starred);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(d =>
+        d.name.toLowerCase().includes(q) ||
+        (d.description && d.description.toLowerCase().includes(q)) ||
+        (d.author && d.author.toLowerCase().includes(q)) ||
+        (d.schema && d.schema.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [documents, showStarredOnly, searchQuery]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
@@ -99,9 +112,15 @@ export default function DocumentListPage() {
             <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
           </button>
         </div>
-        <div className="search-field flex items-center w-[280px] h-10 px-3 rounded-lg bg-[rgba(25,25,25,0.05)] cursor-pointer">
-          <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-5 h-5 mr-2" />
-          <span className="text-sm text-[#949494] leading-[18px] tracking-[0.14px]">Название, автор или раздел</span>
+        <div className="search-field flex items-center w-[280px] h-10 px-3 rounded-lg bg-[rgba(25,25,25,0.05)]">
+          <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-5 h-5 mr-2 shrink-0" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Название, автор или описание"
+            className="flex-1 bg-transparent border-none outline-none text-sm text-[#191919] leading-[18px] tracking-[0.14px] placeholder:text-[#949494]"
+          />
         </div>
       </div>
 

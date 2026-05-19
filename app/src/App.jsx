@@ -6,6 +6,7 @@ import DocumentListPage from './pages/DocumentListPage';
 import DocumentPage from './pages/DocumentPage';
 import NewDocumentPage from './pages/NewDocumentPage';
 import EditFieldsPage from './pages/EditFieldsPage';
+import EditDocumentPage from './pages/EditDocumentPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route index element={<DocumentListPage />} />
           <Route path="document/:id" element={<DocumentPage />} />
           <Route path="document/:id/edit-fields" element={<EditFieldsPage />} />
+          <Route path="document/:id/edit" element={<NewDocumentPage />} />
           <Route path="new-document" element={<NewDocumentPage />} />
           <Route path="team" element={<PlaceholderPage title="Команда" />} />
           <Route path="session" element={<PlaceholderPage title="Сессия" />} />

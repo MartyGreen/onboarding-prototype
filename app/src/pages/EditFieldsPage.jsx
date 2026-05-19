@@ -1,12 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
+import { useAlert } from '../components/SuccessAlert';
 import WarningTooltip from '../components/WarningTooltip';
 
 export default function EditFieldsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { documents } = useDocuments();
+  const { documents, updateDocument } = useDocuments();
+  const { showAlert } = useAlert();
   const doc = documents.find(d => d.id === id) || documents[0];
 
   // Editable state for fields
@@ -37,7 +39,13 @@ export default function EditFieldsPage() {
   };
 
   const handleSave = () => {
-    // In a real app, save to backend
+    const cleanFields = fields.filter(f => f.name.trim());
+    const cleanMissing = missingFields.filter(f => f.name.trim());
+    updateDocument(doc.id, {
+      fields: cleanFields,
+      missingFields: cleanMissing,
+    });
+    showAlert('Изменения сохранены');
     navigate(-1);
   };
 

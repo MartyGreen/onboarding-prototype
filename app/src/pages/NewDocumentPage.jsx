@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
+import { useAlert } from '../components/SuccessAlert';
 
 // Данные для дропдаунов
 const ownerOptions = [
@@ -108,18 +109,30 @@ const dbColors = {
 
 export default function NewDocumentPage() {
   const navigate = useNavigate();
-  const { addDocument } = useDocuments();
+  const { id } = useParams();
+  const { documents, addDocument, updateDocument } = useDocuments();
+  const { showAlert } = useAlert();
+
+  // Режим редактирования
+  const isEditMode = Boolean(id);
+  const existingDoc = isEditMode ? documents.find(d => d.id === id) : null;
+
   const [storageEnabled, setStorageEnabled] = useState(true);
   const [storageType, setStorageType] = useState('DWH');
-  const [fields, setFields] = useState([{ name: '', description: '' }]);
-  const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
+  const [fields, setFields] = useState(() => {
+    if (existingDoc && existingDoc.fields.length > 0) {
+      return existingDoc.fields.map(f => ({ name: f.name, description: f.description || '' }));
+    }
+    return [{ name: '', description: '' }];
+  });
+  const [description, setDescription] = useState(existingDoc?.descriptionFull || '');
+  const [tags, setTags] = useState(existingDoc?.tags?.join(', ') || '');
 
   // Dropdown states
-  const [owner, setOwner] = useState('');
-  const [database, setDatabase] = useState('');
-  const [schema, setSchema] = useState('');
-  const [table, setTable] = useState('');
+  const [owner, setOwner] = useState(existingDoc?.circles?.replace(' (Якорный Круг)', '') || '');
+  const [database, setDatabase] = useState(existingDoc?.database || '');
+  const [schema, setSchema] = useState(existingDoc?.schema || '');
+  const [table, setTable] = useState(existingDoc?.name || '');
 
   // Reset dependent dropdowns
   const handleDatabaseChange = (val) => {
@@ -154,7 +167,7 @@ export default function NewDocumentPage() {
               <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Back" className="w-6 h-6" />
             </button>
             <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0 flex-1">
-              Новый документ
+              {isEditMode ? 'Редактирование документа' : 'Новый документ'}
             </h1>
           </div>
         </div>
@@ -324,21 +337,31 @@ export default function NewDocumentPage() {
                 {fields.map((field, i) => (
                   <div key={i} className="flex gap-0.5">
                     <div className="w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-2.5">
-                      <input
-                        type="text"
+                      <textarea
                         value={field.name}
                         onChange={(e) => handleFieldChange(i, 'name', e.target.value)}
+                        onInput={(e) => {
+                          e.target.style.height = 'auto';
+                          e.target.style.height = e.target.scrollHeight + 'px';
+                        }}
                         placeholder="Имя поля"
-                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
+                        rows={1}
+                        style={{ overflow: 'hidden', fontFamily: 'inherit' }}
+                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494] resize-none block"
                       />
                     </div>
                     <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-2.5">
-                      <input
-                        type="text"
+                      <textarea
                         value={field.description}
                         onChange={(e) => handleFieldChange(i, 'description', e.target.value)}
+                        onInput={(e) => {
+                          e.target.style.height = 'auto';
+                          e.target.style.height = e.target.scrollHeight + 'px';
+                        }}
                         placeholder="Описание поля"
-                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
+                        rows={1}
+                        style={{ overflow: 'hidden', fontFamily: 'inherit' }}
+                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494] resize-none block"
                       />
                     </div>
                   </div>
@@ -361,39 +384,61 @@ export default function NewDocumentPage() {
           <div className="flex flex-col items-center px-5 py-3">
             <button
               onClick={() => {
-                const newId = String(Date.now());
                 const tableName = table || 'new_table';
                 const fullPath = database && schema
                   ? `${database.toUpperCase()} > ${schema} > ${tableName}`
                   : tableName;
-                const newDoc = {
-                  id: newId,
-                  name: tableName,
-                  fullPath,
-                  description: description.slice(0, 80) || 'Новый документ',
-                  descriptionFull: description || 'Описание не указано',
-                  author: 'Антон Вараксин',
-                  authorAvatar: '/assets/avatar-boy.svg',
-                  database: database || 'ClickHouse',
-                  dbColor: dbColors[database] || '#facc15',
-                  schema: schema || 'STAGE',
-                  status: 'Черновик',
-                  starred: false,
-                  createdAt: 'только что',
-                  updatedAt: 'только что',
-                  circles: owner ? `${owner} (Якорный Круг)` : 'Не указан',
-                  roles: [],
-                  tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-                  fields: fields.filter(f => f.name).map(f => ({
-                    name: f.name,
-                    type: 'varchar',
-                    description: f.description || '',
-                  })),
-                  missingFields: [],
-                  experts: [],
-                };
-                addDocument(newDoc);
-                navigate(`/document/${newId}`);
+                const parsedFields = fields.filter(f => f.name).map(f => ({
+                  name: f.name,
+                  type: f.type || 'varchar',
+                  description: f.description || '',
+                }));
+                const parsedTags = tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+                if (isEditMode && existingDoc) {
+                  updateDocument(id, {
+                    name: tableName,
+                    fullPath,
+                    description: description.slice(0, 80) || existingDoc.description,
+                    descriptionFull: description || existingDoc.descriptionFull,
+                    database: database || existingDoc.database,
+                    dbColor: dbColors[database] || existingDoc.dbColor,
+                    schema: schema || existingDoc.schema,
+                    circles: owner ? `${owner} (Якорный Круг)` : existingDoc.circles,
+                    tags: parsedTags,
+                    fields: parsedFields,
+                    updatedAt: 'только что',
+                  });
+                  showAlert('Изменения сохранены');
+                  navigate(`/document/${id}`);
+                } else {
+                  const newId = String(Date.now());
+                  const newDoc = {
+                    id: newId,
+                    name: tableName,
+                    fullPath,
+                    description: description.slice(0, 80) || 'Новый документ',
+                    descriptionFull: description || 'Описание не указано',
+                    author: 'Антон Вараксин',
+                    authorAvatar: '/assets/avatar-boy.svg',
+                    database: database || 'ClickHouse',
+                    dbColor: dbColors[database] || '#facc15',
+                    schema: schema || 'STAGE',
+                    status: 'Черновик',
+                    starred: false,
+                    createdAt: 'только что',
+                    updatedAt: 'только что',
+                    circles: owner ? `${owner} (Якорный Круг)` : 'Не указан',
+                    roles: [],
+                    tags: parsedTags,
+                    fields: parsedFields,
+                    missingFields: [],
+                    experts: [],
+                  };
+                  addDocument(newDoc);
+                  showAlert('Документ успешно создан');
+                  navigate(`/document/${newId}`);
+                }
               }}
               className="w-full h-12 bg-[#835de1] rounded-xl border-none cursor-pointer hover:bg-[#7249d1] active:bg-[#6340b8] transition-colors"
             >

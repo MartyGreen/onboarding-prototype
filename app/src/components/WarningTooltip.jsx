@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
-export default function WarningTooltip({ text = 'Поле не заполнено' }) {
+export default function WarningTooltip({ text = 'Поле не заполненно' }) {
   const [visible, setVisible] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const iconRef = useRef(null);
@@ -10,8 +10,8 @@ export default function WarningTooltip({ text = 'Поле не заполнен�
     if (!iconRef.current) return;
     const rect = iconRef.current.getBoundingClientRect();
     setPos({
-      top: rect.top - 8,
-      left: rect.left + rect.width / 2,
+      top: rect.top + rect.height / 2,
+      left: rect.right + 4,
     });
     setVisible(true);
   }, []);
@@ -34,35 +34,41 @@ export default function WarningTooltip({ text = 'Поле не заполнен�
             position: 'fixed',
             top: pos.top,
             left: pos.left,
-            transform: 'translate(-50%, -100%)',
-            background: '#ffffff',
-            color: '#191919',
-            fontSize: 14,
-            fontWeight: 400,
-            lineHeight: '18px',
-            letterSpacing: '0.14px',
-            padding: '20px',
-            borderRadius: 12,
-            whiteSpace: 'nowrap',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            alignItems: 'center',
             zIndex: 99999,
             pointerEvents: 'none',
-            filter: 'drop-shadow(0 5px 7.5px rgba(0,0,0,0.05))',
+            filter: 'drop-shadow(0px 5px 7.5px rgba(0,0,0,0.05))',
           }}
         >
-          {text}
+          {/* Arrow pointing left */}
+          <svg
+            width="9"
+            height="18"
+            viewBox="0 0 9 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ display: 'block', flexShrink: 0, marginRight: -1 }}
+          >
+            <path d="M9 0L9 18L0 9L9 0Z" fill="white" />
+          </svg>
           <div
             style={{
-              position: 'absolute',
-              top: '100%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '5px solid transparent',
-              borderRight: '5px solid transparent',
-              borderTop: '5px solid #ffffff',
+              background: '#ffffff',
+              color: '#191919',
+              fontSize: 14,
+              fontWeight: 400,
+              lineHeight: '18px',
+              letterSpacing: '0.14px',
+              padding: '20px',
+              borderRadius: 12,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
             }}
-          />
+          >
+            {text}
+          </div>
         </div>,
         document.body
       )}
