@@ -3,11 +3,13 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
 import AddFieldModal from '../components/AddFieldModal';
 import WarningTooltip from '../components/WarningTooltip';
+import { useAlert } from '../components/SuccessAlert';
 
 export default function DocumentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { documents, updateDocument, statusConfig, toggleStarred } = useDocuments();
+  const { showAlert } = useAlert();
   const doc = documents.find(d => d.id === id) || documents[0];
   const [fieldSearch, setFieldSearch] = useState('');
   const [isAddFieldOpen, setIsAddFieldOpen] = useState(false);
@@ -119,7 +121,11 @@ export default function DocumentPage() {
           </button>
           {/* 2. Избранное */}
           <button
-            onClick={() => toggleStarred(doc.id)}
+            onClick={() => {
+              const wasStarred = doc.starred;
+              toggleStarred(doc.id);
+              showAlert(wasStarred ? 'Документ убран из избранного' : 'Документ добавлен в избранное');
+            }}
             className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors"
             title={doc.starred ? 'Убрать из избранного' : 'Добавить в избранное'}
           >
