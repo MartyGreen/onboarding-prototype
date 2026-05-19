@@ -62,7 +62,7 @@
 }
 
 .animate-slideDown {
-  animation: slideDown 3s ease-in-out forwards;
+  animation: slideDown 2s ease-in-out forwards;
 }
 
 .overflow-y-auto::-webkit-scrollbar {
