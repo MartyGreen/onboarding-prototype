@@ -170,11 +170,11 @@ export default function EditBiApiMethodPage() {
 
           {/* SQL */}
           <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="px-10 py-5">
+            <div className="px-10 py-5 flex flex-col gap-1.5">
               <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
                 SQL
               </h2>
-              <div className="mt-3 relative">
+              <div className="relative">
                 <div className="rounded-xl overflow-hidden">
                   <div className="px-5 pt-3 pb-3">
                     <textarea
@@ -238,11 +238,11 @@ export default function EditBiApiMethodPage() {
 
           {/* Фильтры */}
           <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="px-10 py-5">
+            <div className="px-10 py-5 flex flex-col gap-1.5">
               <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
                 Фильтры
               </h2>
-              <div className="flex flex-col gap-4 mt-3">
+              <div className="flex flex-col gap-4">
                 {filters.map((filter, i) => (
                   <div key={i} className="flex gap-0.5 items-stretch">
                     {/* Левая колонка: имя + тип */}
