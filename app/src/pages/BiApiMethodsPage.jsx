@@ -14,7 +14,7 @@ const methods = [
     name: 'get_flexible_access_permissions_changelog',
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'sokol',
-    status: 'Активен',
+    status: 'Одобрен',
     avatarColor: '#7AC6B2',
   },
   {
@@ -22,7 +22,7 @@ const methods = [
     name: 'get_authorized_phone',
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'ivanov',
-    status: 'Активен',
+    status: 'Одобрен',
     avatarColor: '#835DE1',
   },
   {
@@ -52,7 +52,7 @@ const methods = [
 ];
 
 const statusStyles = {
-  'Активен': { color: '#5cad9a', borderColor: '#5cad9a' },
+  'Одобрен': { color: '#5cad9a', borderColor: '#5cad9a' },
   'На проверке': { color: '#949494', borderColor: '#949494' },
   'Отклонён': { color: '#d84d4d', borderColor: '#d84d4d' },
 };
