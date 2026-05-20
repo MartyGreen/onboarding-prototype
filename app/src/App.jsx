@@ -7,6 +7,7 @@ import DocumentPage from './pages/DocumentPage';
 import NewDocumentPage from './pages/NewDocumentPage';
 import EditFieldsPage from './pages/EditFieldsPage';
 import EditDocumentPage from './pages/EditDocumentPage';
+import BiApiMethodsPage from './pages/BiApiMethodsPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -33,7 +34,7 @@ export default function App() {
           <Route path="team" element={<PlaceholderPage title="Команда" />} />
           <Route path="session" element={<PlaceholderPage title="Сессия" />} />
           <Route path="files" element={<PlaceholderPage title="Загрузчик файлов" />} />
-          <Route path="api" element={<PlaceholderPage title="Bi-API методы" />} />
+          <Route path="api" element={<BiApiMethodsPage />} />
           <Route path="services" element={<PlaceholderPage title="Карта сервисов" />} />
           <Route path="sql" element={<PlaceholderPage title="Редактор SQL" />} />
           <Route path="uploads" element={<PlaceholderPage title="Управление загрузками" />} />
