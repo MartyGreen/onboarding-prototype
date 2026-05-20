@@ -320,9 +320,9 @@ export default function EditBiApiMethodPage() {
                                 style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                               />
                             </div>
-                            {/* Warning circle icon: pl=16, 24x24 */}
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingLeft: 16, paddingRight: 0 }}>
-                              <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 20, height: 20 }} />
+                            {/* Warning circle icon */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingRight: 16 }}>
+                              <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 18, height: 18 }} />
                             </div>
                           </div>
                         )}
@@ -336,7 +336,7 @@ export default function EditBiApiMethodPage() {
                         {/* Content: h=72, py=12 */}
                         <div style={{ height: 72, padding: '12px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
                           <div style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src={`${base}assets/icon-cross.svg`} alt="Удалить" style={{ width: 16, height: 16 }} />
+                            <img src={`${base}assets/icon-cross.svg`} alt="Удалить" style={{ width: 10, height: 10 }} />
                           </div>
                         </div>
                       </button>
