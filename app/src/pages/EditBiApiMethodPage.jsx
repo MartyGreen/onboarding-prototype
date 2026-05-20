@@ -116,37 +116,47 @@ export default function EditBiApiMethodPage() {
                 </div>
 
                 {/* Input: Краткое описание */}
-                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
                       <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Краткое описание
                       </span>
                     </div>
-                    <input
-                      type="text"
+                    <textarea
                       value={description}
-                      onChange={(e) => setDescription(e.target.value)}
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = e.target.scrollHeight + 'px';
+                      }}
+                      ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                       placeholder="Пример краткого описания"
-                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
+                      rows={1}
+                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
 
                 {/* Input: Подробная информация */}
-                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
                       <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Подробная информация о методу
                       </span>
                     </div>
-                    <input
-                      type="text"
+                    <textarea
                       value={detailedInfo}
-                      onChange={(e) => setDetailedInfo(e.target.value)}
+                      onChange={(e) => {
+                        setDetailedInfo(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = e.target.scrollHeight + 'px';
+                      }}
+                      ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                       placeholder="Какие нюансы есть у метода"
-                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
+                      rows={1}
+                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -298,42 +308,26 @@ export default function EditBiApiMethodPage() {
                       </div>
 
                       {/* Description area: flex=1, full height */}
-                      <div style={{ flex: 1, minWidth: 0, background: 'rgba(25,25,25,0.05)', display: 'flex', overflow: 'hidden' }}>
-                        {filter.description ? (
-                          /* With text: simple input, px=20, py=12 */
-                          <div style={{ flex: 1, padding: '12px 20px', display: 'flex', alignItems: 'flex-start' }}>
-                            <input
-                              type="text"
-                              value={filter.description}
-                              onChange={(e) => {
-                                const updated = [...filters];
-                                updated[i] = { ...updated[i], description: e.target.value };
-                                setFilters(updated);
-                              }}
-                              placeholder="Описание"
-                              style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
-                            />
-                          </div>
-                        ) : (
-                          /* Empty: shows placeholder + warning circle icon */
-                          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start' }}>
-                            <div style={{ flex: 1, padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                              <input
-                                type="text"
-                                value={filter.description}
-                                onChange={(e) => {
-                                  const updated = [...filters];
-                                  updated[i] = { ...updated[i], description: e.target.value };
-                                  setFilters(updated);
-                                }}
-                                placeholder="Описание"
-                                style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
-                              />
-                            </div>
-                            {/* Warning circle icon */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingRight: 16 }}>
-                              <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 18, height: 18 }} />
-                            </div>
+                      <div style={{ flex: 1, minWidth: 0, background: 'rgba(25,25,25,0.05)', display: 'flex' }}>
+                        <div style={{ flex: 1, padding: '12px 20px', display: 'flex', alignItems: 'flex-start' }}>
+                          <textarea
+                            value={filter.description}
+                            onChange={(e) => {
+                              const updated = [...filters];
+                              updated[i] = { ...updated[i], description: e.target.value };
+                              setFilters(updated);
+                              e.target.style.height = 'auto';
+                              e.target.style.height = e.target.scrollHeight + 'px';
+                            }}
+                            ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
+                            placeholder="Описание"
+                            rows={1}
+                            style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: filter.description ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        {!filter.description && (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingRight: 16 }}>
+                            <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 18, height: 18 }} />
                           </div>
                         )}
                       </div>
