@@ -9,6 +9,7 @@ import EditFieldsPage from './pages/EditFieldsPage';
 import EditDocumentPage from './pages/EditDocumentPage';
 import BiApiMethodsPage from './pages/BiApiMethodsPage';
 import BiApiMethodPage from './pages/BiApiMethodPage';
+import EditBiApiMethodPage from './pages/EditBiApiMethodPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="files" element={<PlaceholderPage title="Загрузчик файлов" />} />
           <Route path="api" element={<BiApiMethodsPage />} />
           <Route path="api/:id" element={<BiApiMethodPage />} />
+          <Route path="api/:id/edit" element={<EditBiApiMethodPage />} />
           <Route path="services" element={<PlaceholderPage title="Карта сервисов" />} />
           <Route path="sql" element={<PlaceholderPage title="Редактор SQL" />} />
           <Route path="uploads" element={<PlaceholderPage title="Управление загрузками" />} />
