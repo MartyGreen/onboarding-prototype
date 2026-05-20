@@ -52,47 +52,47 @@ export default function EditBiApiMethodPage() {
   const base = import.meta.env.BASE_URL;
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f9f9f9] overflow-y-auto">
-      {/* Right Panel: pt-24, px-32, gap-32, pb-24 */}
-      <div className="flex flex-col gap-8 items-center pt-6 px-8 pb-6">
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f9f9f9', overflowY: 'auto' }}>
+      {/* Right Panel: w=1190, pt=24, pb=24, px=32, gap=32, centered */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
-        {/* Title: w-640, gap-16, items-center */}
-        <div className="w-[640px] flex items-center gap-4">
-          {/* Icon Button: 40x40, rounded-8, bg transparent-1 */}
+        {/* Title: w=640, gap=16, items-center */}
+        <div style={{ width: 640, display: 'flex', alignItems: 'center', gap: 16 }}>
+          {/* Icon Button: 40x40, rounded=8, bg=transparent-1 */}
           <button
             onClick={() => navigate(`/api/${id}`)}
-            className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 8, background: 'rgba(25,25,25,0.05)', border: 'none', cursor: 'pointer', flexShrink: 0 }}
           >
-            <img src={`${base}assets/icon-arrow-left.svg`} alt="Назад" className="w-5 h-5" />
+            <img src={`${base}assets/icon-arrow-left.svg`} alt="Назад" style={{ width: 20, height: 20 }} />
           </button>
-          {/* 3XL title: 30px DemiBold, lh-36, ls=-0.3 */}
-          <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0">
+          {/* 3XL: 30px DemiBold, lh=36, ls=-0.3 */}
+          <h1 style={{ fontSize: 30, fontWeight: 600, color: '#191919', lineHeight: '36px', letterSpacing: '-0.3px', margin: 0 }}>
             Редактирование
           </h1>
         </div>
 
-        {/* Content: w-640, pb-32 */}
-        <div className="w-[640px] pb-8">
-          {/* Frame 1: flex-col, gap-14 */}
-          <div className="flex flex-col gap-3.5">
+        {/* Content: w=640, pb=32 */}
+        <div style={{ width: 640, paddingBottom: 32 }}>
+          {/* Cards stack: gap=14 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-            {/* === Описание документа === */}
-            {/* Card: bg-white, rounded-20, shadow, px-40, py-20 */}
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px' }}>
-              {/* Content: flex-col, gap-6 */}
-              <div className="flex flex-col" style={{ gap: '6px' }}>
-                {/* L title: 18px Medium, lh-22, py-12 → total h=46 */}
-                <div className="flex items-center" style={{ padding: '12px 0' }}>
-                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+            {/* === Card 1: Описание документа === */}
+            {/* px=40, py=20, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px' }}>
+              {/* Content: gap=6 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {/* L: h=86, py=12 */}
+                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0' }}>
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Описание документа
-                  </h2>
+                  </span>
                 </div>
 
                 {/* Input: Название метода — with description */}
-                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
-                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
-                    <div className="flex items-center h-5">
-                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Название метода
                       </span>
                     </div>
@@ -100,27 +100,26 @@ export default function EditBiApiMethodPage() {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                      style={{ fontFamily: 'inherit' }}
                       placeholder="new_method"
+                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                     />
                   </div>
-                  {/* Description section with divider */}
-                  <div className="flex flex-col" style={{ gap: '8px', paddingBottom: '12px' }}>
-                    <div className="flex items-end justify-end h-[2px]">
-                      <div className="flex-1 h-[0.5px] bg-[rgba(25,25,25,0.2)]" />
+                  {/* Description with divider */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingBottom: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', height: 2 }}>
+                      <div style={{ flex: 1, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
                     </div>
-                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">
+                    <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>
                       Латинские буквы и знак подчеркивания, больше 6 символов
                     </span>
                   </div>
                 </div>
 
                 {/* Input: Краткое описание */}
-                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
-                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
-                    <div className="flex items-center h-5">
-                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Краткое описание
                       </span>
                     </div>
@@ -128,18 +127,17 @@ export default function EditBiApiMethodPage() {
                       type="text"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                      style={{ fontFamily: 'inherit' }}
                       placeholder="Пример краткого описания"
+                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                     />
                   </div>
                 </div>
 
-                {/* Input: Подробная информация о методу */}
-                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
-                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
-                    <div className="flex items-center h-5">
-                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                {/* Input: Подробная информация */}
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Подробная информация о методу
                       </span>
                     </div>
@@ -147,131 +145,129 @@ export default function EditBiApiMethodPage() {
                       type="text"
                       value={detailedInfo}
                       onChange={(e) => setDetailedInfo(e.target.value)}
-                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                      style={{ fontFamily: 'inherit' }}
                       placeholder="Какие нюансы есть у метода"
+                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                     />
                   </div>
                 </div>
 
                 {/* Dropdown: Командная тех. учетка */}
-                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
-                  <div className="flex items-start">
-                    <div className="flex-1 min-w-0 flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
-                      <div className="flex items-center h-5">
-                        <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                           Командная тех. учетка
                         </span>
                       </div>
-                      <span className="text-[16px] text-[#191919] leading-5 tracking-[0.16px] truncate">
+                      <span style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {techAccount}
                       </span>
                     </div>
-                    <div className="flex flex-col items-end justify-center self-stretch shrink-0" style={{ paddingLeft: '16px' }}>
-                      <div className="flex items-center justify-end">
-                        <img src={`${base}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
-                      </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingLeft: 16 }}>
+                      <img src={`${base}assets/icon-chevron-down.svg`} alt="" style={{ width: 12, height: 12 }} />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* === SQL === */}
-            {/* Card: bg-white, rounded-20, shadow, pt-20, pb-40, px-40, h-404 */}
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px 40px 40px' }}>
-              {/* Text Container: flex-col, gap-6 */}
-              <div className="flex flex-col" style={{ gap: '6px' }}>
-                {/* L title */}
-                <div className="flex items-center" style={{ padding: '12px 0' }}>
-                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+            {/* === Card 2: SQL === */}
+            {/* h=404, pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', height: 404, padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, height: '100%' }}>
+                {/* L: h=86, py=12 */}
+                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     SQL
-                  </h2>
+                  </span>
                 </div>
 
-                {/* text_block: bg, rounded-12, pt-12, pb-12, px-20 */}
-                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '12px 20px' }}>
+                {/* text_block: bg, rounded=12, pt=12, pb=12, px=20 */}
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px 12px 20px', flex: 1, overflow: 'hidden' }}>
                   <textarea
                     value={sql}
                     onChange={(e) => setSql(e.target.value)}
-                    onInput={(e) => {
-                      e.target.style.height = 'auto';
-                      e.target.style.height = e.target.scrollHeight + 'px';
-                    }}
-                    ref={(el) => {
-                      if (el) {
-                        el.style.height = 'auto';
-                        el.style.height = el.scrollHeight + 'px';
-                      }
-                    }}
-                    style={{ minHeight: '260px', overflow: 'hidden', fontFamily: 'inherit', boxSizing: 'border-box', paddingBottom: '8px' }}
-                    className="w-full bg-transparent border-none outline-none resize-none text-[16px] text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 block"
                     placeholder="Добавьте SQL запрос"
+                    style={{
+                      width: '100%', height: '100%', background: 'transparent', border: 'none', outline: 'none',
+                      resize: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
+                      padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box'
+                    }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* === Поля (таблица) === */}
-            {/* Card: bg-white, rounded-20, shadow, pt-10, pb-20 */}
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '10px 0 20px 0' }}>
-              {/* Table Header: px-40, pb-8 */}
+            {/* === Card 3: Поля (таблица) === */}
+            {/* h=275, pt=10, pb=20, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', height: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
+              {/* Table Header: px=40, row gap=20, pb=8 */}
               <div style={{ padding: '0 40px' }}>
-                <div className="flex items-center" style={{ gap: '20px', paddingBottom: '8px' }}>
-                  <div style={{ width: '250px' }}>
-                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Поля</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingBottom: 8 }}>
+                  <div style={{ width: 250 }}>
+                    {/* S: h=54, py=8 */}
+                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Поля</span>
+                    </div>
                   </div>
-                  <div style={{ width: '70px' }}>
-                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Длинна</span>
+                  <div style={{ width: 70 }}>
+                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Длинна</span>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Описание</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Описание</span>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Divider */}
-              <div className="h-px relative">
-                <div className="absolute left-0 right-0 top-[0.5px] h-[0.5px] bg-[rgba(25,25,25,0.2)]" />
+              <div style={{ height: 1, position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
               </div>
-              {/* Rows: px-40, pt-6 */}
+              {/* Rows: px=40, pt=6 */}
               <div style={{ padding: '6px 40px 0 40px' }}>
                 {fields.map((field, i) => (
-                  <div key={i} className="flex items-start" style={{ gap: '20px', padding: '12px 0' }}>
-                    <div style={{ width: '250px' }}>
-                      <p className="text-[16px] font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.name}</p>
-                      <p className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px] m-0" style={{ marginTop: '2px' }}>{field.type}</p>
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, padding: '12px 0' }}>
+                    {/* M cell: w=250, h=84, py=12 */}
+                    <div style={{ width: 250 }}>
+                      <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.name}</p>
+                      <p style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px', margin: 0, marginTop: 2 }}>{field.type}</p>
                     </div>
-                    <div style={{ width: '70px' }}>
-                      <p className="text-[16px] font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.length}</p>
+                    {/* M cell: w=70 */}
+                    <div style={{ width: 70 }}>
+                      <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.length}</p>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-[16px] text-[#191919] leading-[22px] tracking-[0.16px] m-0">{field.description}</p>
+                    {/* M cell: flex=1 */}
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: 16, color: '#191919', lineHeight: '22px', letterSpacing: '0.16px', margin: 0 }}>{field.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* === Фильтры === */}
-            {/* Card: bg-white, rounded-20, shadow, pt-20, pb-40, px-40 */}
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px 40px 40px' }}>
-              {/* Content: flex-col, gap-6 */}
-              <div className="flex flex-col" style={{ gap: '6px' }}>
-                {/* L title */}
-                <div className="flex items-center" style={{ padding: '12px 0' }}>
-                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+            {/* === Card 4: Фильтры === */}
+            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {/* L: h=86, py=12 */}
+                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0' }}>
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Фильтры
-                  </h2>
+                  </span>
                 </div>
 
-                {/* Filters list: gap-16 */}
-                <div className="flex flex-col" style={{ gap: '16px' }}>
+                {/* Filters: gap=16 */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {filters.map((filter, i) => (
-                    <div key={i} className="flex overflow-hidden rounded-xl" style={{ gap: '2px' }}>
-                      {/* Left column: name + type dropdown, w-240 */}
-                      <div className="flex flex-col shrink-0" style={{ width: '240px', gap: '2px' }}>
-                        {/* Name input: h-52 */}
-                        <div className="bg-[rgba(25,25,25,0.05)] rounded-tl-xl" style={{ padding: '0 20px', height: '52px', display: 'flex', alignItems: 'center' }}>
+                    <div key={i} style={{ display: 'flex', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
+                      {/* Left column: w=240, gap=2 */}
+                      <div style={{ width: 240, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {/* Name input: h=52, px=20, rounded-tl=12 */}
+                        <div style={{ background: 'rgba(25,25,25,0.05)', borderTopLeftRadius: 12, height: 52, padding: '0 20px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
                           <input
                             type="text"
                             value={filter.name}
@@ -280,41 +276,67 @@ export default function EditBiApiMethodPage() {
                               updated[i] = { ...updated[i], name: e.target.value };
                               setFilters(updated);
                             }}
-                            className="bg-transparent border-none outline-none text-[16px] text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                            style={{ fontFamily: 'inherit' }}
                             placeholder="Название"
+                            style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                           />
                         </div>
-                        {/* Type dropdown */}
-                        <div className="bg-[rgba(25,25,25,0.05)] rounded-bl-xl flex items-center justify-between" style={{ padding: '12px 20px' }}>
-                          <span className="text-[16px] text-[#191919] leading-5 tracking-[0.16px]">{filter.type}</span>
-                          <img src={`${base}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3 opacity-60" />
+                        {/* Type dropdown: px=20, py=12, rounded-bl=12 */}
+                        <div style={{ background: 'rgba(25,25,25,0.05)', borderBottomLeftRadius: 12, padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', overflow: 'hidden' }}>
+                          <span style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px' }}>{filter.type}</span>
+                          <img src={`${base}assets/icon-chevron-down.svg`} alt="" style={{ width: 12, height: 12, flexShrink: 0 }} />
                         </div>
                       </div>
 
-                      {/* Description area: flex-1, full height */}
-                      <div className="flex-1 min-w-0 bg-[rgba(25,25,25,0.05)] flex items-start" style={{ padding: '12px 20px' }}>
-                        <input
-                          type="text"
-                          value={filter.description}
-                          onChange={(e) => {
-                            const updated = [...filters];
-                            updated[i] = { ...updated[i], description: e.target.value };
-                            setFilters(updated);
-                          }}
-                          className="bg-transparent border-none outline-none text-[16px] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                          style={{ fontFamily: 'inherit', color: filter.description ? '#191919' : '#949494' }}
-                          placeholder="Описание"
-                        />
+                      {/* Description area: flex=1, full height */}
+                      <div style={{ flex: 1, minWidth: 0, background: 'rgba(25,25,25,0.05)', display: 'flex', overflow: 'hidden' }}>
+                        {filter.description ? (
+                          /* With text: simple input, px=20, py=12 */
+                          <div style={{ flex: 1, padding: '12px 20px', display: 'flex', alignItems: 'flex-start' }}>
+                            <input
+                              type="text"
+                              value={filter.description}
+                              onChange={(e) => {
+                                const updated = [...filters];
+                                updated[i] = { ...updated[i], description: e.target.value };
+                                setFilters(updated);
+                              }}
+                              placeholder="Описание"
+                              style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
+                            />
+                          </div>
+                        ) : (
+                          /* Empty: shows placeholder + warning circle icon */
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start' }}>
+                            <div style={{ flex: 1, padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                              <input
+                                type="text"
+                                value={filter.description}
+                                onChange={(e) => {
+                                  const updated = [...filters];
+                                  updated[i] = { ...updated[i], description: e.target.value };
+                                  setFilters(updated);
+                                }}
+                                placeholder="Описание"
+                                style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
+                              />
+                            </div>
+                            {/* Warning circle icon: pl=16, 24x24 */}
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingLeft: 16, paddingRight: 0 }}>
+                              <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 24, height: 24 }} />
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Delete button: px-10, rounded-tr-12, rounded-br-12 */}
+                      {/* Delete button: px=10, rounded-tr=12, rounded-br=12, cross icon 24x24 */}
                       <button
                         onClick={() => handleRemoveFilter(i)}
-                        className="bg-[rgba(25,25,25,0.05)] rounded-tr-xl rounded-br-xl flex items-center justify-center border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
-                        style={{ padding: '12px 10px' }}
+                        style={{ background: 'rgba(25,25,25,0.05)', borderTopRightRadius: 12, borderBottomRightRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', border: 'none', cursor: 'pointer', flexShrink: 0, padding: '0 10px', overflow: 'hidden' }}
                       >
-                        <img src={`${base}assets/icon-cross.svg`} alt="Удалить" className="w-6 h-6" />
+                        {/* Content: h=72, py=12 */}
+                        <div style={{ height: 72, padding: '12px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
+                          <img src={`${base}assets/icon-cross.svg`} alt="Удалить" style={{ width: 24, height: 24 }} />
+                        </div>
                       </button>
                     </div>
                   ))}
@@ -326,14 +348,15 @@ export default function EditBiApiMethodPage() {
         </div>
       </div>
 
-      {/* Footer: h-90, py-20, centered */}
-      <div className="flex items-center justify-center shrink-0 bg-[#f9f9f9]" style={{ height: '90px', padding: '20px 0' }}>
+      {/* Footer: h=90, py=20, gap=10, items-center, justify-end */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box' }}>
         <button
           onClick={handleSave}
-          className="bg-[#835de1] text-white text-[18px] font-medium leading-[22px] border-none cursor-pointer hover:bg-[#7248d4] transition-colors"
-          style={{ width: '335px', height: '50px', borderRadius: '10px' }}
+          style={{ width: 335, height: 50, borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', position: 'relative' }}
         >
-          Сохранить
+          <span style={{ fontSize: 18, fontWeight: 500, color: 'white', lineHeight: '22px', textAlign: 'center' }}>
+            Сохранить
+          </span>
         </button>
       </div>
     </div>
