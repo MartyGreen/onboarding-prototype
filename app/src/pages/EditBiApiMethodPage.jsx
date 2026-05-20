@@ -173,9 +173,9 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 2: SQL === */}
-            {/* h=404, pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', height: 404, padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, height: '100%' }}>
+            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8, min-h=404 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', minHeight: 404, padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* L: h=86, py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
@@ -184,15 +184,25 @@ export default function EditBiApiMethodPage() {
                 </div>
 
                 {/* text_block: bg, rounded=12, pt=12, pb=12, px=20 */}
-                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px 12px 20px', flex: 1, overflow: 'hidden' }}>
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px 12px 20px' }}>
                   <textarea
                     value={sql}
-                    onChange={(e) => setSql(e.target.value)}
+                    onChange={(e) => {
+                      setSql(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                    ref={(el) => {
+                      if (el) {
+                        el.style.height = 'auto';
+                        el.style.height = el.scrollHeight + 'px';
+                      }
+                    }}
                     placeholder="Добавьте SQL запрос"
                     style={{
-                      width: '100%', height: '100%', background: 'transparent', border: 'none', outline: 'none',
+                      width: '100%', minHeight: 200, background: 'transparent', border: 'none', outline: 'none',
                       resize: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
-                      padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box'
+                      padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box', overflow: 'hidden'
                     }}
                   />
                 </div>
@@ -200,8 +210,8 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 3: Поля (таблица) === */}
-            {/* h=275, pt=10, pb=20, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', height: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
+            {/* min-h=275, pt=10, pb=20, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', minHeight: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
               {/* Table Header: px=40, row gap=20, pb=8 */}
               <div style={{ padding: '0 40px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingBottom: 8 }}>
