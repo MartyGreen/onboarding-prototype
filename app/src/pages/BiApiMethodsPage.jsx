@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const methods = [
   {
@@ -76,6 +77,7 @@ function MoreIcon() {
 }
 
 export default function BiApiMethodsPage() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredMethods = useMemo(() => {
@@ -157,6 +159,7 @@ export default function BiApiMethodsPage() {
             return (
               <div
                 key={method.id}
+                onClick={() => navigate(`/api/${method.id}`)}
                 className="flex items-center gap-5 h-16 px-5 hover:bg-[rgba(25,25,25,0.02)] cursor-pointer transition-colors"
               >
                 {/* Name + Avatar */}
