@@ -22,7 +22,7 @@ export function AlertProvider({ children }) {
     timerRef.current = setTimeout(() => {
       setAlert(null);
       timerRef.current = null;
-    }, 1000);
+    }, 1500);
   }, []);
 
   return (
