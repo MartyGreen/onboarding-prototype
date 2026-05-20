@@ -91,16 +91,13 @@ export default function BiApiMethodPage() {
         <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0 flex-1 truncate">
           {data.name}
         </h1>
-        <div className="flex items-center gap-2 shrink-0">
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-pencil.svg`} alt="" className="w-5 h-5" />
-          </button>
+        <div className="flex items-center gap-3 shrink-0">
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="" className="w-5 h-5" />
           </button>
-          <button className="flex items-center gap-2 h-10 px-3 rounded-lg bg-[#835de1] border-none cursor-pointer hover:bg-[#7249d1] transition-colors">
+          <button className="flex items-center gap-2 h-10 px-3 rounded-lg bg-[#191919] border-none cursor-pointer hover:bg-[#333] transition-colors">
             <span className="text-sm font-medium text-white leading-[18px] tracking-[0.14px] whitespace-nowrap">
-              На модерацию
+              Редактировать
             </span>
           </button>
         </div>
