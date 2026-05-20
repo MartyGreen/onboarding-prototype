@@ -7,7 +7,7 @@ const methods = [
     description: 'Получение платежей физ. лицам в рамках зарплатных проектов',
     author: 'zhenikhov',
     status: 'На проверке',
-    avatar: 'avatar-boy.jpg',
+    avatarColor: '#F2C94C',
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const methods = [
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'sokol',
     status: 'Активен',
-    avatar: 'avatar-girl.jpg',
+    avatarColor: '#7AC6B2',
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ const methods = [
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'ivanov',
     status: 'Активен',
-    avatar: 'avatar-boy-2.jpg',
+    avatarColor: '#835DE1',
   },
   {
     id: 4,
@@ -31,7 +31,7 @@ const methods = [
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'petrov',
     status: 'На проверке',
-    avatar: 'avatar-boy-3.jpg',
+    avatarColor: '#EB5757',
   },
   {
     id: 5,
@@ -39,7 +39,7 @@ const methods = [
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'sidorova',
     status: 'На проверке',
-    avatar: 'avatar-girl-2.jpg',
+    avatarColor: '#56CCF2',
   },
   {
     id: 6,
@@ -47,7 +47,7 @@ const methods = [
     description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
     author: 'kuznetsov',
     status: 'Отклонён',
-    avatar: 'avatar-boy-4.jpg',
+    avatarColor: '#F2994A',
   },
 ];
 
@@ -161,12 +161,10 @@ export default function BiApiMethodsPage() {
               >
                 {/* Name + Avatar */}
                 <div className="w-[608px] flex items-center gap-3">
-                  <div className="w-10 h-10 shrink-0 relative rounded-full overflow-hidden">
-                    <img
-                      src={`${import.meta.env.BASE_URL}assets/${method.avatar}`}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="w-10 h-10 shrink-0 relative">
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0">
+                      <path d="M20 0C33.6364 0 40 6.36364 40 20C40 33.6364 33.6364 40 20 40C6.36364 40 0 33.6364 0 20C0 6.36364 6.36364 0 20 0Z" fill={method.avatarColor} />
+                    </svg>
                     <CheckCircleIcon />
                   </div>
                   <div className="flex flex-col gap-0.5 min-w-0">
