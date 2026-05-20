@@ -49,258 +49,289 @@ export default function EditBiApiMethodPage() {
     setFilters(filters.filter((_, i) => i !== index));
   };
 
+  const base = import.meta.env.BASE_URL;
+
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] overflow-y-auto">
-      {/* Header */}
-      <header className="flex items-center gap-4 px-8 py-6">
-        <button
-          onClick={() => navigate(`/api/${id}`)}
-          className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
-        >
-          <img src={`${import.meta.env.BASE_URL}assets/icon-arrow-left.svg`} alt="Назад" className="w-5 h-5" />
-        </button>
-        <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0">
-          Редактирование
-        </h1>
-      </header>
+      {/* Right Panel: pt-24, px-32, gap-32, pb-24 */}
+      <div className="flex flex-col gap-8 items-center pt-6 px-8 pb-6">
 
-      {/* Content — centered 640px column */}
-      <div className="flex-1 flex flex-col items-center pb-0">
-        <div className="w-[640px] flex flex-col gap-3.5">
+        {/* Title: w-640, gap-16, items-center */}
+        <div className="w-[640px] flex items-center gap-4">
+          {/* Icon Button: 40x40, rounded-8, bg transparent-1 */}
+          <button
+            onClick={() => navigate(`/api/${id}`)}
+            className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
+          >
+            <img src={`${base}assets/icon-arrow-left.svg`} alt="Назад" className="w-5 h-5" />
+          </button>
+          {/* 3XL title: 30px DemiBold, lh-36, ls=-0.3 */}
+          <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0">
+            Редактирование
+          </h1>
+        </div>
 
-          {/* Описание документа */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="px-10 py-5 flex flex-col gap-1.5">
-              <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
-                Описание документа
-              </h2>
+        {/* Content: w-640, pb-32 */}
+        <div className="w-[640px] pb-8">
+          {/* Frame 1: flex-col, gap-14 */}
+          <div className="flex flex-col gap-3.5">
 
-              {/* Название метода */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 flex flex-col">
-                <div className="flex flex-col gap-2 py-3">
-                  <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-                    Название метода
-                  </span>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-transparent border-none outline-none text-base text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                    style={{ fontFamily: 'inherit' }}
-                    placeholder="new_method"
-                  />
+            {/* === Описание документа === */}
+            {/* Card: bg-white, rounded-20, shadow, px-40, py-20 */}
+            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px' }}>
+              {/* Content: flex-col, gap-6 */}
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                {/* L title: 18px Medium, lh-22, py-12 → total h=46 */}
+                <div className="flex items-center" style={{ padding: '12px 0' }}>
+                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+                    Описание документа
+                  </h2>
                 </div>
-                <div className="flex flex-col gap-2 pb-3">
-                  <div className="h-[0.5px] bg-[rgba(25,25,25,0.2)]" />
-                  <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">
-                    Латинские буквы и знак подчеркивания, больше 6 символов
-                  </span>
-                </div>
-              </div>
 
-              {/* Краткое описание */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5">
-                <div className="flex flex-col gap-2 py-3">
-                  <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-                    Краткое описание
-                  </span>
-                  <input
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="bg-transparent border-none outline-none text-base text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                    style={{ fontFamily: 'inherit' }}
-                    placeholder="Пример краткого описания"
-                  />
-                </div>
-              </div>
-
-              {/* Подробная информация */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5">
-                <div className="flex flex-col gap-2 py-3">
-                  <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-                    Подробная информация о методу
-                  </span>
-                  <input
-                    type="text"
-                    value={detailedInfo}
-                    onChange={(e) => setDetailedInfo(e.target.value)}
-                    className="bg-transparent border-none outline-none text-base text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                    style={{ fontFamily: 'inherit' }}
-                    placeholder="Какие нюансы есть у метода"
-                  />
-                </div>
-              </div>
-
-              {/* SQL запрос */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5">
-                <div className="flex items-center justify-between py-3">
-                  <div className="flex flex-col gap-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-                      SQL запрос
-                    </span>
-                    <span className="text-base text-[#949494] leading-5 tracking-[0.16px]">
-                      {sql ? 'Добавьте SQL запрос' : 'Добавьте SQL запрос'}
+                {/* Input: Название метода — with description */}
+                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
+                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
+                    <div className="flex items-center h-5">
+                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                        Название метода
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
+                      style={{ fontFamily: 'inherit' }}
+                      placeholder="new_method"
+                    />
+                  </div>
+                  {/* Description section with divider */}
+                  <div className="flex flex-col" style={{ gap: '8px', paddingBottom: '12px' }}>
+                    <div className="flex items-end justify-end h-[2px]">
+                      <div className="flex-1 h-[0.5px] bg-[rgba(25,25,25,0.2)]" />
+                    </div>
+                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">
+                      Латинские буквы и знак подчеркивания, больше 6 символов
                     </span>
                   </div>
-                  <div className="pl-4 flex items-center">
-                    <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-edit.svg`} alt="" className="w-6 h-6" />
-                  </div>
                 </div>
-              </div>
 
-              {/* Командная тех. учетка */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5">
-                <div className="flex items-center justify-between py-3">
-                  <div className="flex flex-col gap-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-                      Командная тех. учетка
-                    </span>
-                    <span className="text-base text-[#191919] leading-5 tracking-[0.16px]">
-                      {techAccount}
-                    </span>
-                  </div>
-                  <div className="pl-4 flex items-center">
-                    <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* SQL */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="px-10 py-5 flex flex-col gap-1.5">
-              <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
-                SQL
-              </h2>
-              <div className="relative">
-                <div className="rounded-xl overflow-hidden">
-                  <div className="px-5 pt-3 pb-3">
-                    <textarea
-                      value={sql}
-                      onChange={(e) => setSql(e.target.value)}
-                      onInput={(e) => {
-                        e.target.style.height = 'auto';
-                        e.target.style.height = e.target.scrollHeight + 'px';
-                      }}
-                      ref={(el) => {
-                        if (el) {
-                          el.style.height = 'auto';
-                          el.style.height = el.scrollHeight + 'px';
-                        }
-                      }}
-                      style={{ minHeight: '260px', overflow: 'hidden', fontFamily: 'inherit', boxSizing: 'border-box' }}
-                      className="w-full bg-transparent border-none outline-none resize-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 block"
-                      placeholder="Введите SQL запрос..."
+                {/* Input: Краткое описание */}
+                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
+                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
+                    <div className="flex items-center h-5">
+                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                        Краткое описание
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
+                      style={{ fontFamily: 'inherit' }}
+                      placeholder="Пример краткого описания"
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Поля (таблица) */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]">
-            <div className="pt-2.5 pb-5">
-              <div className="px-10">
-                <div className="flex items-center gap-5 pb-2">
-                  <div className="w-[250px]">
-                    <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Поля</span>
+                {/* Input: Подробная информация о методу */}
+                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
+                  <div className="flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
+                    <div className="flex items-center h-5">
+                      <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                        Подробная информация о методу
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={detailedInfo}
+                      onChange={(e) => setDetailedInfo(e.target.value)}
+                      className="bg-transparent border-none outline-none text-[16px] text-[#949494] leading-5 tracking-[0.16px] p-0 m-0 w-full"
+                      style={{ fontFamily: 'inherit' }}
+                      placeholder="Какие нюансы есть у метода"
+                    />
                   </div>
-                  <div className="w-[70px]">
-                    <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Длинна</span>
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Описание</span>
+                </div>
+
+                {/* Dropdown: Командная тех. учетка */}
+                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '0 20px' }}>
+                  <div className="flex items-start">
+                    <div className="flex-1 min-w-0 flex flex-col" style={{ gap: '8px', padding: '12px 0' }}>
+                      <div className="flex items-center h-5">
+                        <span className="text-[14px] font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
+                          Командная тех. учетка
+                        </span>
+                      </div>
+                      <span className="text-[16px] text-[#191919] leading-5 tracking-[0.16px] truncate">
+                        {techAccount}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end justify-center self-stretch shrink-0" style={{ paddingLeft: '16px' }}>
+                      <div className="flex items-center justify-end">
+                        <img src={`${base}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="h-px bg-[rgba(25,25,25,0.2)]" />
-              <div className="px-10 pt-1.5">
+            </div>
+
+            {/* === SQL === */}
+            {/* Card: bg-white, rounded-20, shadow, pt-20, pb-40, px-40, h-404 */}
+            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px 40px 40px' }}>
+              {/* Text Container: flex-col, gap-6 */}
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                {/* L title */}
+                <div className="flex items-center" style={{ padding: '12px 0' }}>
+                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+                    SQL
+                  </h2>
+                </div>
+
+                {/* text_block: bg, rounded-12, pt-12, pb-12, px-20 */}
+                <div className="bg-[rgba(25,25,25,0.05)] rounded-xl" style={{ padding: '12px 20px' }}>
+                  <textarea
+                    value={sql}
+                    onChange={(e) => setSql(e.target.value)}
+                    onInput={(e) => {
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                    ref={(el) => {
+                      if (el) {
+                        el.style.height = 'auto';
+                        el.style.height = el.scrollHeight + 'px';
+                      }
+                    }}
+                    style={{ minHeight: '260px', overflow: 'hidden', fontFamily: 'inherit', boxSizing: 'border-box', paddingBottom: '8px' }}
+                    className="w-full bg-transparent border-none outline-none resize-none text-[16px] text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 block"
+                    placeholder="Добавьте SQL запрос"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* === Поля (таблица) === */}
+            {/* Card: bg-white, rounded-20, shadow, pt-10, pb-20 */}
+            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '10px 0 20px 0' }}>
+              {/* Table Header: px-40, pb-8 */}
+              <div style={{ padding: '0 40px' }}>
+                <div className="flex items-center" style={{ gap: '20px', paddingBottom: '8px' }}>
+                  <div style={{ width: '250px' }}>
+                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Поля</span>
+                  </div>
+                  <div style={{ width: '70px' }}>
+                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Длинна</span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px]">Описание</span>
+                  </div>
+                </div>
+              </div>
+              {/* Divider */}
+              <div className="h-px relative">
+                <div className="absolute left-0 right-0 top-[0.5px] h-[0.5px] bg-[rgba(25,25,25,0.2)]" />
+              </div>
+              {/* Rows: px-40, pt-6 */}
+              <div style={{ padding: '6px 40px 0 40px' }}>
                 {fields.map((field, i) => (
-                  <div key={i} className="flex items-start gap-5 py-3">
-                    <div className="w-[250px]">
-                      <p className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.name}</p>
-                      <p className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] mt-0.5 m-0">{field.type}</p>
+                  <div key={i} className="flex items-start" style={{ gap: '20px', padding: '12px 0' }}>
+                    <div style={{ width: '250px' }}>
+                      <p className="text-[16px] font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.name}</p>
+                      <p className="text-[14px] text-[#676767] leading-[18px] tracking-[0.14px] m-0" style={{ marginTop: '2px' }}>{field.type}</p>
                     </div>
-                    <div className="w-[70px]">
-                      <p className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.length}</p>
+                    <div style={{ width: '70px' }}>
+                      <p className="text-[16px] font-medium text-[#191919] leading-5 tracking-[0.16px] m-0">{field.length}</p>
                     </div>
                     <div className="flex-1">
-                      <p className="text-base text-[#191919] leading-[22px] tracking-[0.16px] m-0">{field.description}</p>
+                      <p className="text-[16px] text-[#191919] leading-[22px] tracking-[0.16px] m-0">{field.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Фильтры */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="px-10 py-5 flex flex-col gap-1.5">
-              <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
-                Фильтры
-              </h2>
-              <div className="flex flex-col gap-4">
-                {filters.map((filter, i) => (
-                  <div key={i} className="flex gap-0.5 items-stretch">
-                    {/* Левая колонка: имя + тип */}
-                    <div className="w-[300px] flex flex-col gap-0.5">
-                      <div className="bg-[rgba(25,25,25,0.05)] rounded-tl-xl px-5 py-3">
+            {/* === Фильтры === */}
+            {/* Card: bg-white, rounded-20, shadow, pt-20, pb-40, px-40 */}
+            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)]" style={{ padding: '20px 40px 40px 40px' }}>
+              {/* Content: flex-col, gap-6 */}
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                {/* L title */}
+                <div className="flex items-center" style={{ padding: '12px 0' }}>
+                  <h2 className="text-[18px] font-medium text-[#191919] leading-[22px] m-0">
+                    Фильтры
+                  </h2>
+                </div>
+
+                {/* Filters list: gap-16 */}
+                <div className="flex flex-col" style={{ gap: '16px' }}>
+                  {filters.map((filter, i) => (
+                    <div key={i} className="flex overflow-hidden rounded-xl" style={{ gap: '2px' }}>
+                      {/* Left column: name + type dropdown, w-240 */}
+                      <div className="flex flex-col shrink-0" style={{ width: '240px', gap: '2px' }}>
+                        {/* Name input: h-52 */}
+                        <div className="bg-[rgba(25,25,25,0.05)] rounded-tl-xl" style={{ padding: '0 20px', height: '52px', display: 'flex', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            value={filter.name}
+                            onChange={(e) => {
+                              const updated = [...filters];
+                              updated[i] = { ...updated[i], name: e.target.value };
+                              setFilters(updated);
+                            }}
+                            className="bg-transparent border-none outline-none text-[16px] text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 w-full"
+                            style={{ fontFamily: 'inherit' }}
+                            placeholder="Название"
+                          />
+                        </div>
+                        {/* Type dropdown */}
+                        <div className="bg-[rgba(25,25,25,0.05)] rounded-bl-xl flex items-center justify-between" style={{ padding: '12px 20px' }}>
+                          <span className="text-[16px] text-[#191919] leading-5 tracking-[0.16px]">{filter.type}</span>
+                          <img src={`${base}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3 opacity-60" />
+                        </div>
+                      </div>
+
+                      {/* Description area: flex-1, full height */}
+                      <div className="flex-1 min-w-0 bg-[rgba(25,25,25,0.05)] flex items-start" style={{ padding: '12px 20px' }}>
                         <input
                           type="text"
-                          value={filter.name}
+                          value={filter.description}
                           onChange={(e) => {
                             const updated = [...filters];
-                            updated[i] = { ...updated[i], name: e.target.value };
+                            updated[i] = { ...updated[i], description: e.target.value };
                             setFilters(updated);
                           }}
-                          className="bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                          style={{ fontFamily: 'inherit' }}
-                          placeholder="Название"
+                          className="bg-transparent border-none outline-none text-[16px] leading-5 tracking-[0.16px] p-0 m-0 w-full"
+                          style={{ fontFamily: 'inherit', color: filter.description ? '#191919' : '#949494' }}
+                          placeholder="Описание"
                         />
                       </div>
-                      <div className="bg-[rgba(25,25,25,0.05)] rounded-bl-xl px-5 py-3 flex items-center justify-between">
-                        <span className="text-base text-[#191919] leading-5 tracking-[0.16px]">{filter.type}</span>
-                        <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3 opacity-60" />
-                      </div>
+
+                      {/* Delete button: px-10, rounded-tr-12, rounded-br-12 */}
+                      <button
+                        onClick={() => handleRemoveFilter(i)}
+                        className="bg-[rgba(25,25,25,0.05)] rounded-tr-xl rounded-br-xl flex items-center justify-center border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"
+                        style={{ padding: '12px 10px' }}
+                      >
+                        <img src={`${base}assets/icon-cross.svg`} alt="Удалить" className="w-6 h-6" />
+                      </button>
                     </div>
-                    {/* Правая колонка: описание */}
-                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-3 flex items-start">
-                      <input
-                        type="text"
-                        value={filter.description}
-                        onChange={(e) => {
-                          const updated = [...filters];
-                          updated[i] = { ...updated[i], description: e.target.value };
-                          setFilters(updated);
-                        }}
-                        className="bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 w-full"
-                        style={{ fontFamily: 'inherit' }}
-                        placeholder="Описание"
-                      />
-                    </div>
-                    {/* Кнопка удалить (крестик) */}
-                    <button
-                      onClick={() => handleRemoveFilter(i)}
-                      className="bg-[rgba(25,25,25,0.05)] rounded-tr-xl rounded-br-xl px-2.5 flex items-center justify-center border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors"
-                    >
-                      <img src={`${import.meta.env.BASE_URL}assets/icon-cross.svg`} alt="Удалить" className="w-6 h-6" />
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-center py-5 bg-[#f9f9f9] shrink-0">
+      {/* Footer: h-90, py-20, centered */}
+      <div className="flex items-center justify-center shrink-0 bg-[#f9f9f9]" style={{ height: '90px', padding: '20px 0' }}>
         <button
           onClick={handleSave}
-          className="w-[335px] h-[50px] bg-[#835de1] text-white text-lg font-medium leading-[22px] rounded-[10px] border-none cursor-pointer hover:bg-[#7248d4] transition-colors"
+          className="bg-[#835de1] text-white text-[18px] font-medium leading-[22px] border-none cursor-pointer hover:bg-[#7248d4] transition-colors"
+          style={{ width: '335px', height: '50px', borderRadius: '10px' }}
         >
           Сохранить
         </button>
