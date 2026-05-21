@@ -1,56 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const methods = [
-  {
-    id: 1,
-    name: 'get_salary_payments',
-    description: 'Получение платежей физ. лицам в рамках зарплатных проектов',
-    author: 'zhenikhov',
-    status: 'На проверке',
-    avatarColor: '#F2C94C',
-  },
-  {
-    id: 2,
-    name: 'get_flexible_access_permissions_changelog',
-    description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
-    author: 'sokol',
-    status: 'Одобрен',
-    avatarColor: '#7AC6B2',
-  },
-  {
-    id: 3,
-    name: 'get_authorized_phone',
-    description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
-    author: 'ivanov',
-    status: 'Одобрен',
-    avatarColor: '#835DE1',
-  },
-  {
-    id: 4,
-    name: 'get_authorized_phone',
-    description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
-    author: 'petrov',
-    status: 'На проверке',
-    avatarColor: '#EB5757',
-  },
-  {
-    id: 5,
-    name: 'get_authorized_phone',
-    description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
-    author: 'sidorova',
-    status: 'На проверке',
-    avatarColor: '#56CCF2',
-  },
-  {
-    id: 6,
-    name: 'get_authorized_phone',
-    description: 'Запрос логов о выдаче/изъятии доступов уполномоченных лиц к счетам',
-    author: 'kuznetsov',
-    status: 'Отклонён',
-    avatarColor: '#F2994A',
-  },
-];
+import { useBiApiMethods } from '../data/BiApiMethodsContext';
 
 const statusStyles = {
   'Одобрен': { color: '#5cad9a', borderColor: '#5cad9a' },
@@ -78,6 +28,7 @@ function MoreIcon() {
 
 export default function BiApiMethodsPage() {
   const navigate = useNavigate();
+  const { methods } = useBiApiMethods();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredMethods = useMemo(() => {
@@ -88,7 +39,7 @@ export default function BiApiMethodsPage() {
       m.description.toLowerCase().includes(q) ||
       m.author.toLowerCase().includes(q)
     );
-  }, [searchQuery]);
+  }, [searchQuery, methods]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f5f5f5] pt-8 px-8 pb-5 overflow-hidden">

@@ -1,50 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const methodData = {
-  name: 'fds_fresh_payee_limited',
-  description: 'Получение массива id активных терминалов торгового эквайринга по ИНН клиента',
-  detailedInfo: 'Метод для получения массива id активных терминалов торгового эквайринга по ИНН клиента для реализации акции с Т-банком по продвижению наших клиентов в разделе кэшбэк внутри Т-банка',
-  needsPagination: 'Да',
-  recordsPerRequest: '10 000',
-  author: 'Кисарова Галина',
-  status: 'Активен',
-  created: '3 дня назад',
-  updated: 'минуту назад',
-  sql: [
-    { type: 'keyword', text: 'select' },
-    { type: 'normal', text: '    ' },
-    { type: 'comment', text: 'cl.client_inn,' },
-    { type: 'comment', text: '                 customer_code,' },
-    { type: 'comment', text: '                 atr.tid' },
-    { type: 'keyword', text: 'from ' },
-    { type: 'normal', text: '      ' },
-    { type: 'comment', text: 'stage.acquiring_terminals atr' },
-    { type: 'keyword', text: 'join' },
-    { type: 'normal', text: '         ' },
-    { type: 'comment', text: 'stage.acquiring_contracts ac on atr.contract_id = ac.id' },
-    { type: 'keyword', text: 'and' },
-    { type: 'normal', text: '         ' },
-    { type: 'comment', text: "ac.status = 'EKV_REG_1'" },
-    { type: 'keyword', text: 'join' },
-    { type: 'normal', text: '         ' },
-    { type: 'comment', text: 'datamart.client_life cl on cl.client_code = ac.customer_code' },
-    { type: 'keyword', text: 'and' },
-    { type: 'normal', text: '         ' },
-    { type: 'comment', text: 'cl.last_life_flag = 1' },
-    { type: 'keyword', text: 'where' },
-    { type: 'normal', text: '   ' },
-    { type: 'comment', text: ' cl.client_inn = :inn' },
-  ],
-  fields: [
-    { name: 'CLIENT_INN', type: 'VARCHAR2', length: '12', description: 'ИНН клиента' },
-    { name: 'CUSTOMER_CODE', type: 'VARCHAR2', length: '20', description: 'Код клиента в системе' },
-    { name: 'TID', type: 'NUMBER', length: '22', description: 'Идентификатор активного терминала торгового эквайринга' },
-  ],
-  filters: [
-    { name: 'inn', type: 'VARCHAR2', description: 'ИНН клиента для поиска терминалов' },
-  ],
-};
+import { useBiApiMethods } from '../data/BiApiMethodsContext';
 
 const statusStyles = {
   'Активен': { color: '#5cad9a', borderColor: '#5cad9a' },
@@ -54,29 +10,64 @@ const statusStyles = {
 
 const tabs = ['Описание', 'Запросы', 'Статистика'];
 
+// Парсинг SQL строки в токены для подсветки
+const SQL_KEYWORDS = ['select', 'from', 'join', 'and', 'or', 'where', 'on', 'left', 'right', 'inner', 'outer', 'group', 'order', 'by', 'having', 'insert', 'update', 'delete', 'create', 'alter', 'drop', 'into', 'values', 'set', 'as', 'in', 'not', 'null', 'is', 'like', 'between', 'exists', 'case', 'when', 'then', 'else', 'end', 'union', 'all', 'distinct', 'limit', 'offset'];
+
+function parseSqlToTokens(sqlString) {
+  if (!sqlString) return [];
+  const lines = sqlString.split('\n');
+  return lines.map(line => {
+    const tokens = [];
+    const words = line.split(/(\s+)/);
+    words.forEach(word => {
+      if (/^\s+$/.test(word)) {
+        tokens.push({ type: 'normal', text: word });
+      } else if (SQL_KEYWORDS.includes(word.toLowerCase())) {
+        tokens.push({ type: 'keyword', text: word });
+      } else {
+        tokens.push({ type: 'comment', text: word });
+      }
+    });
+    return tokens;
+  });
+}
+
 export default function BiApiMethodPage() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { getMethod } = useBiApiMethods();
   const [activeTab, setActiveTab] = useState('Описание');
 
-  const data = methodData;
+  const data = getMethod(id);
+
+  if (!data) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-[#f9f9f9]">
+        <p className="text-lg text-[#949494]">Метод не найден</p>
+      </div>
+    );
+  }
+
   const status = statusStyles[data.status] || statusStyles['На проверке'];
 
   // Форматируем SQL с подсветкой
-  const sqlLines = [];
-  let currentLine = [];
-  data.sql.forEach((token) => {
-    if (token.type === 'keyword' && currentLine.length > 0) {
-      sqlLines.push([...currentLine]);
-      currentLine = [];
-    }
-    currentLine.push(token);
-    if (token.type === 'comment') {
-      sqlLines.push([...currentLine]);
-      currentLine = [];
-    }
-  });
-  if (currentLine.length > 0) sqlLines.push(currentLine);
+  const sqlLines = typeof data.sql === 'string' ? parseSqlToTokens(data.sql) : (() => {
+    const lines = [];
+    let currentLine = [];
+    data.sql.forEach((token) => {
+      if (token.type === 'keyword' && currentLine.length > 0) {
+        lines.push([...currentLine]);
+        currentLine = [];
+      }
+      currentLine.push(token);
+      if (token.type === 'comment') {
+        lines.push([...currentLine]);
+        currentLine = [];
+      }
+    });
+    if (currentLine.length > 0) lines.push(currentLine);
+    return lines;
+  })();
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-6 px-8 pb-6 gap-8 overflow-y-auto">

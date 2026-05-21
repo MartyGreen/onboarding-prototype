@@ -1,46 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlert } from '../components/SuccessAlert';
-
-const methodData = {
-  name: 'new_method',
-  description: '',
-  detailedInfo: '',
-  sql: `select    cl.client_inn,
-                 customer_code,
-                 atr.tid
-from       stage.acquiring_terminals atr
-join         stage.acquiring_contracts ac on atr.contract_id = ac.id
-and         ac.status = 'EKV_REG_1'
-join         datamart.client_life cl on cl.client_code = ac.customer_code
-and         cl.last_life_flag = 1
-where    cl.client_inn = :inn`,
-  techAccount: 'TEST_TEAM',
-  fields: [
-    { name: 'CLIENT_INN', type: 'VARCHAR2', length: '12', description: 'ИНН клиента' },
-    { name: 'CUSTOMER_CODE', type: 'VARCHAR2', length: '20', description: 'Код клиента в системе' },
-    { name: 'TID', type: 'NUMBER', length: '22', description: 'Идентификатор активного терминала торгового эквайринга' },
-  ],
-  filters: [
-    { name: 'inn', type: 'VARCHAR2', description: 'ИНН клиента для поиска терминалов' },
-  ],
-};
+import { useBiApiMethods } from '../data/BiApiMethodsContext';
 
 export default function EditBiApiMethodPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { showAlert } = useAlert();
+  const { getMethod, updateMethod } = useBiApiMethods();
 
-  const [name, setName] = useState(methodData.name);
-  const [description, setDescription] = useState(methodData.description);
-  const [detailedInfo, setDetailedInfo] = useState(methodData.detailedInfo);
-  const [sql, setSql] = useState(methodData.sql);
-  const [techAccount] = useState(methodData.techAccount);
-  const [fields, setFields] = useState(methodData.fields);
-  const [filters, setFilters] = useState(methodData.filters);
+  const methodData = getMethod(id);
+
+  const [name, setName] = useState(methodData?.name || '');
+  const [description, setDescription] = useState(methodData?.description || '');
+  const [detailedInfo, setDetailedInfo] = useState(methodData?.detailedInfo || '');
+  const [sql, setSql] = useState(methodData?.sql || '');
+  const [techAccount] = useState(methodData?.techAccount || 'TEST_TEAM');
+  const [fields, setFields] = useState(methodData?.fields || []);
+  const [filters, setFilters] = useState(methodData?.filters || []);
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
   const [sqlDraft, setSqlDraft] = useState('');
   const [sqlError, setSqlError] = useState('');
+
+  if (!methodData) {
+    return (
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f9f9f9' }}>
+        <p style={{ fontSize: 18, color: '#949494' }}>Метод не найден</p>
+      </div>
+    );
+  }
 
   // Парсинг SQL: извлечение полей из SELECT и фильтров из WHERE (:param)
   const parseSqlFieldsAndFilters = (sqlText) => {
@@ -81,6 +69,15 @@ export default function EditBiApiMethodPage() {
   };
 
   const handleSave = () => {
+    updateMethod(id, {
+      name,
+      description,
+      detailedInfo,
+      sql,
+      techAccount,
+      fields,
+      filters,
+    });
     showAlert('Изменения сохранены');
     navigate(`/api/${id}`);
   };
