@@ -17,13 +17,12 @@ and         cl.last_life_flag = 1
 where    cl.client_inn = :inn`,
   techAccount: 'TEST_TEAM',
   fields: [
-    { name: 'COLVIR_CODE', type: 'NAMBER', length: '22', description: 'id активного терминала' },
-    { name: 'FRAGMENT_NAME', type: 'VARCHAR_2', length: '100 000', description: 'Сссылка на процесс на ежегодную актуализацию данных клиента в ЭДО Идентификатор пользователя из Слака' },
+    { name: 'CLIENT_INN', type: 'VARCHAR2', length: '12', description: 'ИНН клиента' },
+    { name: 'CUSTOMER_CODE', type: 'VARCHAR2', length: '20', description: 'Код клиента в системе' },
+    { name: 'TID', type: 'NUMBER', length: '22', description: 'Идентификатор активного терминала торгового эквайринга' },
   ],
   filters: [
-    { name: 'sum_flag_int', type: 'sting', description: 'Фильтруем по сумме переводов' },
-    { name: 'sum_flag_int', type: 'sting', description: '' },
-    { name: 'bag_int', type: 'namber', description: '' },
+    { name: 'inn', type: 'VARCHAR2', description: 'ИНН клиента для поиска терминалов' },
   ],
 };
 
