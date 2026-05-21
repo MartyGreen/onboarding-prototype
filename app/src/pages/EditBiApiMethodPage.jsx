@@ -40,6 +40,7 @@ export default function EditBiApiMethodPage() {
   const [filters, setFilters] = useState(methodData.filters);
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
   const [sqlDraft, setSqlDraft] = useState('');
+  const [sqlError, setSqlError] = useState('');
 
   const handleSave = () => {
     showAlert('Изменения сохранены');
@@ -196,7 +197,7 @@ export default function EditBiApiMethodPage() {
 
                 {/* Input-кнопка: при клике открывает модалку */}
                 <button
-                  onClick={() => { setSqlDraft(sql); setSqlModalOpen(true); }}
+                  onClick={() => { setSqlDraft(sql); setSqlError(''); setSqlModalOpen(true); }}
                   style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', overflow: 'hidden' }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
@@ -407,7 +408,7 @@ export default function EditBiApiMethodPage() {
                     <div style={{ flex: 1, minHeight: 0 }}>
                       <textarea
                         value={sqlDraft}
-                        onChange={(e) => setSqlDraft(e.target.value)}
+                        onChange={(e) => { setSqlDraft(e.target.value); setSqlError(''); }}
                         autoFocus
                         placeholder="Введите текст"
                         style={{
@@ -418,13 +419,13 @@ export default function EditBiApiMethodPage() {
                       />
                     </div>
                   </div>
-                  {/* Description with divider */}
+                  {/* Description/Error with divider */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingBottom: 12, flexShrink: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', height: 2 }}>
-                      <div style={{ flex: 1, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
+                      <div style={{ flex: 1, height: sqlError ? 2 : 0.5, background: sqlError ? '#d84d4d' : 'rgba(25,25,25,0.2)' }} />
                     </div>
-                    <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>
-                      Должен начинаться с SELECT или WITH
+                    <span style={{ fontSize: 14, color: sqlError ? '#d84d4d' : '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>
+                      {sqlError || 'Должен начинаться с SELECT или WITH'}
                     </span>
                   </div>
                 </div>
@@ -440,7 +441,23 @@ export default function EditBiApiMethodPage() {
               {/* Button area */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px' }}>
                 <button
-                  onClick={() => { setSql(sqlDraft); setSqlModalOpen(false); }}
+                  onClick={() => {
+                    // Валидация: проверяем, что SQL содержит перечисление полей после SELECT
+                    const trimmed = sqlDraft.trim().toLowerCase();
+                    const selectMatch = trimmed.match(/^(select|with)\s+/i);
+                    if (!selectMatch) {
+                      setSqlError('В методе не указаны поля для обращения');
+                      return;
+                    }
+                    // Проверяем что после SELECT есть что-то кроме пробелов до FROM
+                    const afterSelect = trimmed.replace(/^select\s+/i, '').trim();
+                    if (!afterSelect || afterSelect.startsWith('from')) {
+                      setSqlError('В методе не указаны поля для обращения');
+                      return;
+                    }
+                    setSql(sqlDraft);
+                    setSqlModalOpen(false);
+                  }}
                   style={{ width: '100%', height: 48, borderRadius: 12, background: '#835de1', border: 'none', cursor: 'pointer', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <span style={{ fontSize: 16, fontWeight: 500, color: 'white', lineHeight: '20px', letterSpacing: '0.16px', textAlign: 'center', whiteSpace: 'nowrap' }}>
