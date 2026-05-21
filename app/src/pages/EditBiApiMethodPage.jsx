@@ -363,52 +363,91 @@ export default function EditBiApiMethodPage() {
       {/* SQL Modal */}
       {sqlModalOpen && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+          style={{ position: 'fixed', inset: 0, background: 'linear-gradient(90deg, rgba(25,25,25,0.4) 0%, rgba(25,25,25,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
           onClick={() => setSqlModalOpen(false)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{ background: 'white', borderRadius: 20, width: 640, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.15))' }}
+            style={{ background: 'white', borderRadius: 12, width: 680, height: 620, minWidth: 320, maxWidth: 900, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0px 20px 40px rgba(0,0,0,0.1)' }}
           >
-            {/* Modal Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 32px', flexShrink: 0 }}>
-              <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>Редактирование SQL</span>
-              <button
-                onClick={() => setSqlModalOpen(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <img src={`${base}assets/icon-cross.svg`} alt="Закрыть" style={{ width: 12, height: 12 }} />
-              </button>
-            </div>
-            {/* Modal Body */}
-            <div style={{ flex: 1, padding: '0 32px', overflowY: 'auto' }}>
-              <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '16px 20px' }}>
-                <textarea
-                  value={sqlDraft}
-                  onChange={(e) => setSqlDraft(e.target.value)}
-                  autoFocus
-                  style={{
-                    width: '100%', minHeight: 300, background: 'transparent', border: 'none', outline: 'none',
-                    resize: 'vertical', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
-                    padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box'
-                  }}
-                />
+            {/* Header: h=56, title centered, cross right */}
+            <div style={{ flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', height: 56, padding: '0 20px', position: 'relative' }}>
+                <div style={{ flex: 1, overflow: 'hidden', position: 'relative', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 18, fontWeight: 600, color: '#191919', lineHeight: '22px', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 280 }}>
+                    SQL запрос
+                  </span>
+                  <button
+                    onClick={() => setSqlModalOpen(false)}
+                    style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24 }}
+                  >
+                    <img src={`${base}assets/icon-cross.svg`} alt="Закрыть" style={{ width: 16, height: 16 }} />
+                  </button>
+                </div>
+              </div>
+              {/* Divider */}
+              <div style={{ height: 1, position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
               </div>
             </div>
-            {/* Modal Footer */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, padding: '20px 32px', flexShrink: 0 }}>
-              <button
-                onClick={() => setSqlModalOpen(false)}
-                style={{ height: 40, padding: '0 20px', borderRadius: 10, background: 'rgba(25,25,25,0.05)', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, color: '#191919' }}
-              >
-                Отмена
-              </button>
-              <button
-                onClick={() => { setSql(sqlDraft); setSqlModalOpen(false); }}
-                style={{ height: 40, padding: '0 20px', borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, color: 'white' }}
-              >
-                Сохранить
-              </button>
+
+            {/* Content: TextArea fills available space */}
+            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 20px', height: '100%', boxSizing: 'border-box' }}>
+                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  {/* TextArea content */}
+                  <div style={{ flex: 1, minHeight: 0, padding: '12px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {/* Title */}
+                    <div style={{ display: 'flex', alignItems: 'center', height: 20, flexShrink: 0 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
+                        Текст SQL запроса
+                      </span>
+                    </div>
+                    {/* Input area */}
+                    <div style={{ flex: 1, minHeight: 0 }}>
+                      <textarea
+                        value={sqlDraft}
+                        onChange={(e) => setSqlDraft(e.target.value)}
+                        autoFocus
+                        placeholder="Введите текст"
+                        style={{
+                          width: '100%', height: '100%', background: 'transparent', border: 'none', outline: 'none',
+                          resize: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
+                          padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {/* Description with divider */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingBottom: 12, flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', height: 2 }}>
+                      <div style={{ flex: 1, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
+                    </div>
+                    <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>
+                      Должен начинаться с SELECT или WITH
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer: divider + button */}
+            <div style={{ flexShrink: 0 }}>
+              {/* Divider */}
+              <div style={{ height: 1, position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
+              </div>
+              {/* Button area */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px' }}>
+                <button
+                  onClick={() => { setSql(sqlDraft); setSqlModalOpen(false); }}
+                  style={{ width: '100%', height: 48, borderRadius: 12, background: '#835de1', border: 'none', cursor: 'pointer', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <span style={{ fontSize: 16, fontWeight: 500, color: 'white', lineHeight: '20px', letterSpacing: '0.16px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                    Добавить
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
