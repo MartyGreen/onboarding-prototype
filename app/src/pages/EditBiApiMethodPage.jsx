@@ -195,10 +195,10 @@ export default function EditBiApiMethodPage() {
                   </span>
                 </div>
 
-                {/* Input-кнопка: при клике открывает модалку */}
+                {/* Input-кнопка: показывает SQL или placeholder, при клике открывает модалку */}
                 <button
                   onClick={() => { setSqlDraft(sql); setSqlError(''); setSqlModalOpen(true); }}
-                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', overflow: 'hidden' }}
+                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
@@ -206,8 +206,8 @@ export default function EditBiApiMethodPage() {
                         Текст SQL запроса
                       </span>
                     </div>
-                    <p style={{ fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
-                      Введите текст
+                    <p style={{ fontSize: 16, color: sql ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, fontFamily: 'inherit', whiteSpace: sql ? 'pre-wrap' : 'nowrap', wordBreak: 'break-word', overflow: sql ? 'visible' : 'hidden', textOverflow: sql ? 'unset' : 'ellipsis' }}>
+                      {sql || 'Введите текст'}
                     </p>
                   </div>
                 </button>
