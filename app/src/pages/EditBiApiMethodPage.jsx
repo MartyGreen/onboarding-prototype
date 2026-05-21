@@ -38,6 +38,8 @@ export default function EditBiApiMethodPage() {
   const [techAccount] = useState(methodData.techAccount);
   const [fields] = useState(methodData.fields);
   const [filters, setFilters] = useState(methodData.filters);
+  const [sqlModalOpen, setSqlModalOpen] = useState(false);
+  const [sqlDraft, setSqlDraft] = useState('');
 
   const handleSave = () => {
     showAlert('Изменения сохранены');
@@ -182,8 +184,8 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 2: SQL === */}
-            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8, min-h=404 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', minHeight: 404, padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* L: h=86, py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
@@ -192,28 +194,23 @@ export default function EditBiApiMethodPage() {
                   </span>
                 </div>
 
-                {/* text_block: bg, rounded=12, pt=12, pb=12, px=20 */}
-                <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px 12px 20px' }}>
-                  <textarea
-                    value={sql}
-                    onChange={(e) => {
-                      setSql(e.target.value);
-                      e.target.style.height = 'auto';
-                      e.target.style.height = e.target.scrollHeight + 'px';
-                    }}
-                    ref={(el) => {
-                      if (el) {
-                        el.style.height = 'auto';
-                        el.style.height = el.scrollHeight + 'px';
-                      }
-                    }}
-                    placeholder="Добавьте SQL запрос"
-                    style={{
-                      width: '100%', minHeight: 200, background: 'transparent', border: 'none', outline: 'none',
-                      resize: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
-                      padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box', overflow: 'hidden'
-                    }}
-                  />
+                {/* Кликабельный блок SQL — открывает модалку */}
+                <div
+                  onClick={() => { setSqlDraft(sql); setSqlModalOpen(true); }}
+                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px', cursor: 'pointer', minHeight: 80 }}
+                >
+                  {sql ? (
+                    <pre style={{
+                      fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
+                      margin: 0, fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word'
+                    }}>
+                      {sql}
+                    </pre>
+                  ) : (
+                    <span style={{ fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px' }}>
+                      Нажмите, чтобы добавить SQL запрос
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -364,6 +361,60 @@ export default function EditBiApiMethodPage() {
           </span>
         </button>
       </div>
+
+      {/* SQL Modal */}
+      {sqlModalOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+          onClick={() => setSqlModalOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: 'white', borderRadius: 20, width: 640, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.15))' }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 32px', flexShrink: 0 }}>
+              <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>Редактирование SQL</span>
+              <button
+                onClick={() => setSqlModalOpen(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <img src={`${base}assets/icon-cross.svg`} alt="Закрыть" style={{ width: 12, height: 12 }} />
+              </button>
+            </div>
+            {/* Modal Body */}
+            <div style={{ flex: 1, padding: '0 32px', overflowY: 'auto' }}>
+              <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '16px 20px' }}>
+                <textarea
+                  value={sqlDraft}
+                  onChange={(e) => setSqlDraft(e.target.value)}
+                  autoFocus
+                  style={{
+                    width: '100%', minHeight: 300, background: 'transparent', border: 'none', outline: 'none',
+                    resize: 'vertical', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
+                    padding: 0, margin: 0, fontFamily: 'inherit', boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+            </div>
+            {/* Modal Footer */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, padding: '20px 32px', flexShrink: 0 }}>
+              <button
+                onClick={() => setSqlModalOpen(false)}
+                style={{ height: 40, padding: '0 20px', borderRadius: 10, background: 'rgba(25,25,25,0.05)', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, color: '#191919' }}
+              >
+                Отмена
+              </button>
+              <button
+                onClick={() => { setSql(sqlDraft); setSqlModalOpen(false); }}
+                style={{ height: 40, padding: '0 20px', borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, color: 'white' }}
+              >
+                Сохранить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
