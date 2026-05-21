@@ -205,8 +205,8 @@ export default function EditBiApiMethodPage() {
                         Текст SQL запроса
                       </span>
                     </div>
-                    <p style={{ fontSize: 16, color: sql ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
-                      {sql ? sql.split('\n')[0] + (sql.includes('\n') ? '...' : '') : 'Введите текст'}
+                    <p style={{ fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
+                      Введите текст
                     </p>
                   </div>
                 </button>
