@@ -36,11 +36,49 @@ export default function EditBiApiMethodPage() {
   const [detailedInfo, setDetailedInfo] = useState(methodData.detailedInfo);
   const [sql, setSql] = useState(methodData.sql);
   const [techAccount] = useState(methodData.techAccount);
-  const [fields] = useState(methodData.fields);
+  const [fields, setFields] = useState(methodData.fields);
   const [filters, setFilters] = useState(methodData.filters);
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
   const [sqlDraft, setSqlDraft] = useState('');
   const [sqlError, setSqlError] = useState('');
+
+  // Парсинг SQL: извлечение полей из SELECT и фильтров из WHERE (:param)
+  const parseSqlFieldsAndFilters = (sqlText) => {
+    const text = sqlText.trim();
+    
+    // Извлекаем поля между SELECT и FROM
+    const selectFromMatch = text.match(/select\s+([\s\S]*?)\s+from\s/i);
+    if (selectFromMatch) {
+      const fieldsPart = selectFromMatch[1];
+      const parsedFields = fieldsPart
+        .split(',')
+        .map(f => f.trim())
+        .filter(f => f.length > 0)
+        .map(f => {
+          // Убираем алиас таблицы (cl.client_inn -> CLIENT_INN)
+          const parts = f.split('.');
+          const fieldName = (parts.length > 1 ? parts[parts.length - 1] : parts[0]).trim().toUpperCase();
+          // Проверяем, есть ли уже такое поле — если да, сохраняем его данные
+          const existing = fields.find(ef => ef.name === fieldName);
+          return existing || { name: fieldName, type: 'VARCHAR2', length: '', description: '' };
+        });
+      setFields(parsedFields);
+    }
+    
+    // Извлекаем фильтры — параметры :param из SQL
+    const paramMatches = [...text.matchAll(/:(\w+)/g)];
+    if (paramMatches.length > 0) {
+      const uniqueParams = [...new Set(paramMatches.map(m => m[1]))];
+      const parsedFilters = uniqueParams.map(paramName => {
+        // Сохраняем существующий фильтр, если есть
+        const existing = filters.find(ef => ef.name === paramName);
+        return existing || { name: paramName, type: 'VARCHAR2', description: '' };
+      });
+      setFilters(parsedFilters);
+    } else {
+      setFilters([]);
+    }
+  };
 
   const handleSave = () => {
     showAlert('Изменения сохранены');
@@ -456,6 +494,7 @@ export default function EditBiApiMethodPage() {
                       return;
                     }
                     setSql(sqlDraft);
+                    parseSqlFieldsAndFilters(sqlDraft);
                     setSqlModalOpen(false);
                   }}
                   style={{ width: '100%', height: 48, borderRadius: 12, background: '#835de1', border: 'none', cursor: 'pointer', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
