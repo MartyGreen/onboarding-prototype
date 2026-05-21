@@ -186,7 +186,7 @@ export default function EditBiApiMethodPage() {
             {/* === Card 2: SQL === */}
             {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
             <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, justifyContent: 'space-between', height: '100%' }}>
                 {/* L: h=86, py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
@@ -194,24 +194,22 @@ export default function EditBiApiMethodPage() {
                   </span>
                 </div>
 
-                {/* Кликабельный блок SQL — открывает модалку */}
-                <div
+                {/* Input-кнопка: при клике открывает модалку */}
+                <button
                   onClick={() => { setSqlDraft(sql); setSqlModalOpen(true); }}
-                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '12px 20px', cursor: 'pointer', minHeight: 80 }}
+                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', overflow: 'hidden' }}
                 >
-                  {sql ? (
-                    <pre style={{
-                      fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px',
-                      margin: 0, fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word'
-                    }}>
-                      {sql}
-                    </pre>
-                  ) : (
-                    <span style={{ fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px' }}>
-                      Нажмите, чтобы добавить SQL запрос
-                    </span>
-                  )}
-                </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
+                        Текст SQL запроса
+                      </span>
+                    </div>
+                    <p style={{ fontSize: 16, color: sql ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
+                      {sql ? sql.split('\n')[0] + (sql.includes('\n') ? '...' : '') : 'Введите текст'}
+                    </p>
+                  </div>
+                </button>
               </div>
             </div>
 
