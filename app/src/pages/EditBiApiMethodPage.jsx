@@ -118,7 +118,7 @@ export default function EditBiApiMethodPage() {
 
             {/* === Card 1: Описание документа === */}
             {/* px=40, py=20, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px' }}>
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.05))', padding: '20px 40px' }}>
               {/* Content: gap=6 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* L: h=86, py=12 */}
@@ -224,7 +224,7 @@ export default function EditBiApiMethodPage() {
 
             {/* === Card 2: SQL === */}
             {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0, justifyContent: 'space-between', height: '100%' }}>
                 {/* L: h=86, py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
@@ -254,7 +254,7 @@ export default function EditBiApiMethodPage() {
 
             {/* === Card 3: Поля (таблица) === */}
             {/* min-h=275, pt=10, pb=20, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', minHeight: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.05))', minHeight: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
               {/* Table Header: px=40, row gap=20, pb=8 */}
               <div style={{ padding: '0 40px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingBottom: 8 }}>
@@ -304,7 +304,7 @@ export default function EditBiApiMethodPage() {
 
             {/* === Card 4: Фильтры === */}
             {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px' }}>
+            <div style={{ background: 'white', borderRadius: 20, filter: 'drop-shadow(0px 4px 16px rgba(0,0,0,0.05))', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* L: h=86, py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0' }}>
