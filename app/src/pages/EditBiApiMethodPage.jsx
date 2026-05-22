@@ -60,7 +60,7 @@ export default function EditBiApiMethodPage() {
       const parsedFilters = uniqueParams.map(paramName => {
         // Сохраняем существующий фильтр, если есть
         const existing = filters.find(ef => ef.name === paramName);
-        return existing || { name: paramName, type: 'VARCHAR2', description: '' };
+        return existing || { name: paramName, type: 'VARCHAR2', description: '', enabled: false };
       });
       setFilters(parsedFilters);
     } else {
@@ -82,9 +82,6 @@ export default function EditBiApiMethodPage() {
     navigate(`/api/${id}`);
   };
 
-  const handleRemoveFilter = (index) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
 
   const base = import.meta.env.BASE_URL;
 
@@ -250,132 +247,156 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 3: Поля (таблица) === */}
-            {/* min-h=275, pt=10, pb=20, rounded=20, drop-shadow 0 4 8 */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', minHeight: 275, padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
-              {/* Table Header: px=40, row gap=20, pb=8 */}
+            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
+              {/* Table Header */}
               <div style={{ padding: '0 40px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingBottom: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '8px 0' }}>
                   <div style={{ width: 250 }}>
-                    {/* S: h=54, py=8 */}
-                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Поля</span>
-                    </div>
+                    <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Поля</span>
                   </div>
-                  <div style={{ width: 70 }}>
-                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Длинна</span>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ height: 54, padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                      <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Описание</span>
-                    </div>
-                  </div>
+                  {fields.length > 0 && (
+                    <>
+                      <div style={{ width: 70 }}>
+                        <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Длинна</span>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Описание</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-              {/* Divider */}
-              <div style={{ height: 1, position: 'relative' }}>
-                <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
-              </div>
-              {/* Rows: px=40, pt=6 */}
-              <div style={{ padding: '6px 40px 0 40px' }}>
-                {fields.map((field, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, padding: '12px 0' }}>
-                    {/* M cell: w=250, h=84, py=12 */}
-                    <div style={{ width: 250 }}>
-                      <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.name}</p>
-                      <p style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px', margin: 0, marginTop: 2 }}>{field.type}</p>
-                    </div>
-                    {/* M cell: w=70 */}
-                    <div style={{ width: 70 }}>
-                      <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.length}</p>
-                    </div>
-                    {/* M cell: flex=1 */}
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 16, color: '#191919', lineHeight: '22px', letterSpacing: '0.16px', margin: 0 }}>{field.description}</p>
-                    </div>
+              {fields.length > 0 && (
+                <>
+                  {/* Divider */}
+                  <div style={{ height: 1, position: 'relative' }}>
+                    <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
                   </div>
-                ))}
-              </div>
+                  {/* Rows */}
+                  <div style={{ padding: '6px 40px 0 40px' }}>
+                    {fields.map((field, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, padding: '12px 0' }}>
+                        <div style={{ width: 250 }}>
+                          <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.name}</p>
+                          <p style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px', margin: 0, marginTop: 2 }}>{field.type}</p>
+                        </div>
+                        <div style={{ width: 70 }}>
+                          <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.length}</p>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontSize: 16, color: '#191919', lineHeight: '22px', letterSpacing: '0.16px', margin: 0 }}>{field.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {fields.length === 0 && (
+                <div style={{ padding: '12px 40px 0 40px' }}>
+                  <p style={{ fontSize: 14, color: '#949494', lineHeight: '18px', margin: 0 }}>Поля будут извлечены из SQL запроса</p>
+                </div>
+              )}
             </div>
 
             {/* === Card 4: Фильтры === */}
-            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
             <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* L: h=86, py=12 */}
-                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0' }}>
+                {/* Заголовок: L */}
+                <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Фильтры
                   </span>
                 </div>
 
-                {/* Filters: gap=16 */}
+                {/* Список фильтров: gap=16 */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {filters.map((filter, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
-                      {/* Left column: w=240, gap=2 */}
-                      <div style={{ width: 240, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {/* Name input: h=52, px=20, rounded-tl=12 */}
-                        <div style={{ background: 'rgba(25,25,25,0.05)', borderTopLeftRadius: 12, height: 52, padding: '0 20px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-                          <input
-                            type="text"
-                            value={filter.name}
-                            onChange={(e) => {
-                              const updated = [...filters];
-                              updated[i] = { ...updated[i], name: e.target.value };
-                              setFilters(updated);
-                            }}
-                            placeholder="Название"
-                            style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
-                          />
-                        </div>
-                        {/* Type dropdown: px=20, py=12, rounded-bl=12 */}
-                        <div style={{ background: 'rgba(25,25,25,0.05)', borderBottomLeftRadius: 12, padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', overflow: 'hidden' }}>
-                          <span style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px' }}>{filter.type}</span>
-                          <img src={`${base}assets/icon-chevron-down.svg`} alt="" style={{ width: 12, height: 12, flexShrink: 0 }} />
-                        </div>
-                      </div>
-
-                      {/* Description area: flex=1, full height */}
-                      <div style={{ flex: 1, minWidth: 0, background: 'rgba(25,25,25,0.05)', display: 'flex' }}>
-                        <div style={{ flex: 1, padding: '12px 20px', display: 'flex', alignItems: 'flex-start' }}>
-                          <textarea
-                            value={filter.description}
-                            onChange={(e) => {
-                              const updated = [...filters];
-                              updated[i] = { ...updated[i], description: e.target.value };
-                              setFilters(updated);
-                              e.target.style.height = 'auto';
-                              e.target.style.height = e.target.scrollHeight + 'px';
-                            }}
-                            ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
-                            placeholder="Описание"
-                            rows={1}
-                            style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: filter.description ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
-                          />
-                        </div>
-                        {!filter.description && (
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch', flexShrink: 0, paddingRight: 16 }}>
-                            <img src={`${base}assets/icon-warning-circle.svg`} alt="" style={{ width: 18, height: 18 }} />
+                  {filters.map((filter, i) => {
+                    const isDisabled = filter.enabled === true;
+                    return (
+                      <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
+                        {/* M-ячейка: название + тип (текст), справа кнопка "Учитывать/Не учитывать" */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, height: 76, alignItems: 'flex-start', padding: '8px 0' }}>
+                            <div style={{
+                              flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2,
+                              justifyContent: 'center', alignSelf: 'stretch',
+                              fontSize: 16, lineHeight: '20px', letterSpacing: '0.16px',
+                              color: isDisabled ? '#949494' : undefined,
+                            }}>
+                              <p style={{ fontWeight: 500, color: isDisabled ? '#949494' : '#191919', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {filter.name}
+                              </p>
+                              <p style={{ fontWeight: 400, color: isDisabled ? '#949494' : '#676767', margin: 0 }}>
+                                {filter.type || 'string'}
+                              </p>
+                            </div>
                           </div>
-                        )}
-                      </div>
-
-                      {/* Delete button: px=10, rounded-tr=12, rounded-br=12, cross icon 24x24 */}
-                      <button
-                        onClick={() => handleRemoveFilter(i)}
-                        style={{ background: 'rgba(25,25,25,0.05)', borderTopRightRadius: 12, borderBottomRightRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', border: 'none', cursor: 'pointer', flexShrink: 0, padding: '0 10px', overflow: 'hidden' }}
-                      >
-                        {/* Content: h=72, py=12 */}
-                        <div style={{ height: 72, padding: '12px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-                          <div style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src={`${base}assets/icon-cross.svg`} alt="Удалить" style={{ width: 10, height: 10 }} />
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 20, flexShrink: 0, gap: 12 }}>
+                            <button
+                              onClick={() => {
+                                const updated = [...filters];
+                                updated[i] = { ...updated[i], enabled: !filter.enabled };
+                                setFilters(updated);
+                              }}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 16, fontWeight: 400, color: '#676767', lineHeight: '20px', letterSpacing: '0.16px', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'inherit' }}
+                            >
+                              {isDisabled ? 'Учитывать' : 'Не учитывать'}
+                            </button>
                           </div>
                         </div>
-                      </button>
-                    </div>
-                  ))}
+
+                        {/* Инпут «Описание» — на всю ширину */}
+                        <div style={{
+                          background: 'rgba(25,25,25,0.05)',
+                          borderRadius: 12,
+                          height: 72,
+                          padding: '0 20px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-start',
+                          overflow: 'hidden',
+                          opacity: isDisabled ? 0.25 : 1,
+                          pointerEvents: isDisabled ? 'none' : 'auto',
+                        }}>
+                          <div style={{ display: 'flex', flex: 1, alignItems: 'flex-start' }}>
+                            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', height: 20, gap: 2 }}>
+                                <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px', whiteSpace: 'nowrap' }}>
+                                  Описание
+                                </span>
+                                {!isDisabled && !filter.description && (
+                                  <span style={{ fontSize: 18, fontWeight: 500, color: '#d84d4d', lineHeight: '22px', position: 'relative', top: -4, width: 8 }}>*</span>
+                                )}
+                              </div>
+                              {isDisabled ? (
+                                <p style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {filter.description || 'Заполните описание'}
+                                </p>
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={filter.description}
+                                  onChange={(e) => {
+                                    const updated = [...filters];
+                                    updated[i] = { ...updated[i], description: e.target.value };
+                                    setFilters(updated);
+                                  }}
+                                  placeholder="Заполните описание"
+                                  style={{
+                                    background: 'transparent', border: 'none', outline: 'none',
+                                    fontSize: 16, color: filter.description ? '#191919' : '#949494',
+                                    lineHeight: '20px', letterSpacing: '0.16px',
+                                    padding: 0, margin: 0, width: '100%', fontFamily: 'inherit',
+                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                                  }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
