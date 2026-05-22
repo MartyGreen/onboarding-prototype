@@ -330,13 +330,13 @@ export default function NewDocumentPage() {
               {/* Table — поля из таблицы */}
               <div className="flex flex-col gap-0.5 overflow-hidden" style={{ borderRadius: 12 }}>
                 {fields.map((field, i) => (
-                  <div key={i} className="flex gap-0.5" style={{ height: 60 }}>
+                  <div key={i} className="flex gap-0.5" style={{ minHeight: 60 }}>
                     {/* Название + тип */}
                     <div className="bg-[rgba(25,25,25,0.05)] flex items-start" style={{ width: 240, padding: '10px 20px', gap: 10 }}>
                       <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                        <span className="text-base text-[#191919] leading-5 tracking-[0.16px] truncate">{field.name || 'Имя поля'}</span>
+                        <span className="text-base text-[#191919] leading-5 tracking-[0.16px]" style={{ wordBreak: 'break-word' }}>{field.name || 'Имя поля'}</span>
                         {field.type && (
-                          <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] truncate">{field.type}</span>
+                          <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]" style={{ wordBreak: 'break-word' }}>{field.type}</span>
                         )}
                       </div>
                     </div>
@@ -379,14 +379,34 @@ export default function NewDocumentPage() {
                   {/* Таблица missing-полей */}
                   <div className="flex flex-col gap-0.5 overflow-hidden w-full" style={{ borderRadius: 12 }}>
                     {missingFields.map((field, i) => (
-                      <div key={i} className="flex gap-0.5" style={{ height: 60 }}>
-                        {/* Название + тип */}
+                      <div key={i} className="flex gap-0.5" style={{ minHeight: 60 }}>
+                        {/* Название + тип — редактируемое */}
                         <div className="bg-[rgba(25,25,25,0.05)] flex items-start" style={{ width: 240, padding: '10px 20px', gap: 10 }}>
                           <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                            <span className="text-base text-[#191919] leading-5 tracking-[0.16px] truncate">{field.name}</span>
-                            {field.type && (
-                              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] truncate">{field.type}</span>
-                            )}
+                            <input
+                              type="text"
+                              value={field.name}
+                              onChange={(e) => {
+                                const updated = [...missingFields];
+                                updated[i] = { ...updated[i], name: e.target.value };
+                                setMissingFields(updated);
+                              }}
+                              placeholder="Имя поля"
+                              style={{ fontFamily: 'inherit', wordBreak: 'break-word' }}
+                              className="w-full min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
+                            />
+                            <input
+                              type="text"
+                              value={field.type || ''}
+                              onChange={(e) => {
+                                const updated = [...missingFields];
+                                updated[i] = { ...updated[i], type: e.target.value };
+                                setMissingFields(updated);
+                              }}
+                              placeholder="Тип"
+                              style={{ fontFamily: 'inherit' }}
+                              className="w-full min-w-0 bg-transparent border-none outline-none text-sm text-[#676767] leading-[18px] tracking-[0.14px] p-0 m-0 placeholder:text-[#949494]"
+                            />
                           </div>
                         </div>
                         {/* Описание */}
