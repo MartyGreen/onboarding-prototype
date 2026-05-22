@@ -121,9 +121,15 @@ export default function NewDocumentPage() {
   const [storageType, setStorageType] = useState('DWH');
   const [fields, setFields] = useState(() => {
     if (existingDoc && existingDoc.fields.length > 0) {
-      return existingDoc.fields.map(f => ({ name: f.name, description: f.description || '' }));
+      return existingDoc.fields.map(f => ({ name: f.name, type: f.type || '', description: f.description || '', inTable: true }));
     }
-    return [{ name: '', description: '' }];
+    return [{ name: 'id', type: 'bigint', description: 'PK', inTable: true }, { name: 'created_at', type: 'timestamp without time zone', description: '', inTable: true }];
+  });
+  const [missingFields, setMissingFields] = useState(() => {
+    if (existingDoc && existingDoc.missingFields && existingDoc.missingFields.length > 0) {
+      return existingDoc.missingFields.map(f => ({ name: f.name, type: f.type || '', description: f.description || '' }));
+    }
+    return [];
   });
   const [description, setDescription] = useState(existingDoc?.descriptionFull || '');
   const [tags, setTags] = useState(existingDoc?.tags?.join(', ') || '');
@@ -316,66 +322,116 @@ export default function NewDocumentPage() {
             </div>
 
             {/* Fields Table */}
-            <div className="flex flex-col gap-0">
-              <div className="flex items-center py-3">
+            <div className="flex flex-col" style={{ gap: 6 }}>
+              <div className="flex items-center" style={{ height: 78, padding: '8px 0' }}>
                 <span className="text-lg font-medium text-[#191919] leading-[22px] flex-1">Описание полей</span>
               </div>
 
-              {/* Table */}
-              <div className="flex flex-col gap-0.5 rounded-xl overflow-hidden">
-                {/* Table Header */}
-                <div className="flex gap-0.5">
-                  <div className="w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-2 flex items-center gap-3">
-                    <span className="text-xs font-medium text-[#191919] leading-[15px] tracking-[0.12px]">Название</span>
-                  </div>
-                  <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-2">
-                    <span className="text-xs font-medium text-[#191919] leading-[15px] tracking-[0.12px]">Описание</span>
-                  </div>
-                </div>
-
-                {/* Table Rows */}
+              {/* Table — поля из таблицы */}
+              <div className="flex flex-col gap-0.5 overflow-hidden" style={{ borderRadius: 12 }}>
                 {fields.map((field, i) => (
-                  <div key={i} className="flex gap-0.5">
-                    <div className="w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-2.5">
-                      <textarea
-                        value={field.name}
-                        onChange={(e) => handleFieldChange(i, 'name', e.target.value)}
-                        onInput={(e) => {
-                          e.target.style.height = 'auto';
-                          e.target.style.height = e.target.scrollHeight + 'px';
-                        }}
-                        placeholder="Имя поля"
-                        rows={1}
-                        style={{ overflow: 'hidden', fontFamily: 'inherit' }}
-                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494] resize-none block"
-                      />
+                  <div key={i} className="flex gap-0.5" style={{ height: 60 }}>
+                    {/* Название + тип */}
+                    <div className="bg-[rgba(25,25,25,0.05)] flex items-start" style={{ width: 240, padding: '10px 20px', gap: 10 }}>
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <span className="text-base text-[#191919] leading-5 tracking-[0.16px] truncate">{field.name || 'Имя поля'}</span>
+                        {field.type && (
+                          <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] truncate">{field.type}</span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-2.5">
-                      <textarea
+                    {/* Описание */}
+                    <div className="bg-[rgba(25,25,25,0.05)] flex flex-1 items-center min-w-0" style={{ padding: '10px 20px', gap: 10 }}>
+                      <input
+                        type="text"
                         value={field.description}
                         onChange={(e) => handleFieldChange(i, 'description', e.target.value)}
-                        onInput={(e) => {
-                          e.target.style.height = 'auto';
-                          e.target.style.height = e.target.scrollHeight + 'px';
-                        }}
-                        placeholder="Описание поля"
-                        rows={1}
-                        style={{ overflow: 'hidden', fontFamily: 'inherit' }}
-                        className="form-input w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494] resize-none block"
+                        placeholder=""
+                        style={{ fontFamily: 'inherit' }}
+                        className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0"
                       />
+                      {/* Красная иконка предупреждения если нет описания */}
+                      {!field.description && (
+                        <img src={`${import.meta.env.BASE_URL}assets/icon-warning-circle.svg`} alt="Нет описания" style={{ width: 18, height: 18, flexShrink: 0 }} />
+                      )}
+                    </div>
+                    {/* Корзина — серая, неактивная для полей из таблицы */}
+                    <div className="bg-[rgba(25,25,25,0.05)] flex items-center justify-center" style={{ padding: '10px 20px' }}>
+                      <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" style={{ width: 24, height: 24, opacity: 0.25, cursor: 'default' }} />
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Add Field */}
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 pb-4 mt-1">
-                <div className="border-t border-[rgba(25,25,25,0.05)] pt-3.5">
-                  <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={addField}>
-                    <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
-                    <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить поле</span>
+              {/* Поля которых нет в таблице */}
+              {missingFields.length > 0 && (
+                <div className="flex flex-col items-start" style={{ marginTop: 20 }}>
+                  {/* Заголовок блока */}
+                  <div className="flex flex-col gap-0.5" style={{ padding: '8px 0', height: 54, justifyContent: 'center' }}>
+                    <span className="text-sm font-medium text-[#191919] leading-5 tracking-[0.14px]">
+                      Поля которых нет в таблице
+                    </span>
+                    <span className="text-xs text-[#676767] leading-[15px] tracking-[0.12px]">
+                      Обратитесь к автору таблицы или удалите их
+                    </span>
+                  </div>
+
+                  {/* Таблица missing-полей */}
+                  <div className="flex flex-col gap-0.5 overflow-hidden w-full" style={{ borderRadius: 12 }}>
+                    {missingFields.map((field, i) => (
+                      <div key={i} className="flex gap-0.5" style={{ height: 60 }}>
+                        {/* Название + тип */}
+                        <div className="bg-[rgba(25,25,25,0.05)] flex items-start" style={{ width: 240, padding: '10px 20px', gap: 10 }}>
+                          <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                            <span className="text-base text-[#191919] leading-5 tracking-[0.16px] truncate">{field.name}</span>
+                            {field.type && (
+                              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] truncate">{field.type}</span>
+                            )}
+                          </div>
+                        </div>
+                        {/* Описание */}
+                        <div className="bg-[rgba(25,25,25,0.05)] flex flex-1 items-center min-w-0" style={{ padding: '10px 20px', gap: 10 }}>
+                          <input
+                            type="text"
+                            value={field.description}
+                            onChange={(e) => {
+                              const updated = [...missingFields];
+                              updated[i] = { ...updated[i], description: e.target.value };
+                              setMissingFields(updated);
+                            }}
+                            placeholder=""
+                            style={{ fontFamily: 'inherit' }}
+                            className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0"
+                          />
+                          {/* Красная иконка предупреждения если нет описания */}
+                          {!field.description && (
+                            <img src={`${import.meta.env.BASE_URL}assets/icon-warning-circle.svg`} alt="Нет описания" style={{ width: 18, height: 18, flexShrink: 0 }} />
+                          )}
+                        </div>
+                        {/* Корзина — красная, активная для missing-полей */}
+                        <div
+                          className="bg-[rgba(25,25,25,0.05)] flex items-center justify-center cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors"
+                          style={{ padding: '10px 20px' }}
+                          onClick={() => setMissingFields(prev => prev.filter((_, idx) => idx !== i))}
+                        >
+                          <img src={`${import.meta.env.BASE_URL}assets/icon-trash-red.svg`} alt="Удалить" style={{ width: 24, height: 24 }} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              )}
+
+              {/* Кнопка «Добавить строку» */}
+              <div
+                className="bg-[rgba(25,25,25,0.05)] flex items-center gap-2 cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors"
+                style={{ borderRadius: 8, padding: '0 12px', height: 40, marginTop: 20 }}
+                onClick={() => setMissingFields(prev => [...prev, { name: '', type: '', description: '' }])}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 3V13M3 8H13" stroke="#191919" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">Добавить строку</span>
               </div>
             </div>
           </div>
@@ -407,6 +463,7 @@ export default function NewDocumentPage() {
                     circles: owner ? `${owner} (Якорный Круг)` : existingDoc.circles,
                     tags: parsedTags,
                     fields: parsedFields,
+                    missingFields: missingFields.filter(f => f.name),
                     updatedAt: 'только что',
                   });
                   showAlert('Изменения сохранены');
