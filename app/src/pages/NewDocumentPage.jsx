@@ -346,9 +346,9 @@ export default function NewDocumentPage() {
                         type="text"
                         value={field.description}
                         onChange={(e) => handleFieldChange(i, 'description', e.target.value)}
-                        placeholder=""
+                        placeholder="Заполните описание"
                         style={{ fontFamily: 'inherit' }}
-                        className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0"
+                        className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
                       />
                       {/* Красная иконка предупреждения если нет описания */}
                       {!field.description && (
@@ -419,9 +419,9 @@ export default function NewDocumentPage() {
                               updated[i] = { ...updated[i], description: e.target.value };
                               setMissingFields(updated);
                             }}
-                            placeholder=""
+                            placeholder="Заполните описание"
                             style={{ fontFamily: 'inherit' }}
-                            className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0"
+                            className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
                           />
                           {/* Красная иконка предупреждения если нет описания */}
                           {!field.description && (
