@@ -91,7 +91,7 @@ export default function EditBiApiMethodPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
         {/* Title: w=640, gap=16, items-center */}
-        <div style={{ width: 640, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ width: 720, display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* Icon Button: 40x40, rounded=8, bg=transparent-1 */}
           <button
             onClick={() => navigate(`/api/${id}`)}
@@ -106,7 +106,7 @@ export default function EditBiApiMethodPage() {
         </div>
 
         {/* Content: w=640, pb=32 */}
-        <div style={{ width: 640, paddingBottom: 32 }}>
+        <div style={{ width: 720, paddingBottom: 32 }}>
           {/* Cards stack: gap=14 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 

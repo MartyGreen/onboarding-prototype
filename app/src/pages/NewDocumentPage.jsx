@@ -173,7 +173,7 @@ export default function NewDocumentPage() {
         </div>
 
         {/* Content */}
-        <div className="w-[640px] flex flex-col gap-8 pb-8">
+        <div className="w-[720px] flex flex-col gap-8 pb-8">
           {/* Fields Section */}
           <div className="flex flex-col gap-4 px-5">
             {/* Owner Dropdown */}
