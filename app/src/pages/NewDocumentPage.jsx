@@ -357,7 +357,7 @@ export default function NewDocumentPage() {
                     </div>
                     {/* Корзина — серая, неактивная для полей из таблицы */}
                     <div className="bg-[rgba(25,25,25,0.05)] flex items-center justify-center" style={{ padding: '10px 20px' }}>
-                      <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" style={{ width: 24, height: 24, opacity: 0.25, cursor: 'default' }} />
+                      <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="" style={{ width: 20, height: 20, opacity: 0.25, cursor: 'default' }} />
                     </div>
                   </div>
                 ))}
