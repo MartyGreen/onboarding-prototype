@@ -434,7 +434,7 @@ export default function NewDocumentPage() {
                           style={{ padding: '10px 20px' }}
                           onClick={() => setMissingFields(prev => prev.filter((_, idx) => idx !== i))}
                         >
-                          <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="Удалить" style={{ width: 24, height: 24 }} />
+                          <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="Удалить" style={{ width: 20, height: 20 }} />
                         </div>
                       </div>
                     ))}
