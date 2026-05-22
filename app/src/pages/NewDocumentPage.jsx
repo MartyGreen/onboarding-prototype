@@ -408,13 +408,13 @@ export default function NewDocumentPage() {
                             <img src={`${import.meta.env.BASE_URL}assets/icon-warning-circle.svg`} alt="Нет описания" style={{ width: 18, height: 18, flexShrink: 0 }} />
                           )}
                         </div>
-                        {/* Корзина — красная, активная для missing-полей */}
+                        {/* Корзина — чёрная, активная для missing-полей */}
                         <div
                           className="bg-[rgba(25,25,25,0.05)] flex items-center justify-center cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors"
                           style={{ padding: '10px 20px' }}
                           onClick={() => setMissingFields(prev => prev.filter((_, idx) => idx !== i))}
                         >
-                          <img src={`${import.meta.env.BASE_URL}assets/icon-trash-red.svg`} alt="Удалить" style={{ width: 24, height: 24 }} />
+                          <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="Удалить" style={{ width: 24, height: 24 }} />
                         </div>
                       </div>
                     ))}
