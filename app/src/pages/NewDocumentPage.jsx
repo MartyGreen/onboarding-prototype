@@ -342,12 +342,26 @@ export default function NewDocumentPage() {
                     </div>
                     {/* Описание */}
                     <div className="bg-[rgba(25,25,25,0.05)] flex flex-1 items-center min-w-0" style={{ padding: '10px 20px', gap: 10 }}>
-                      <input
-                        type="text"
+                      <textarea
                         value={field.description}
-                        onChange={(e) => handleFieldChange(i, 'description', e.target.value)}
+                        onChange={(e) => {
+                          handleFieldChange(i, 'description', e.target.value);
+                          e.target.style.height = 'auto';
+                          e.target.style.height = e.target.scrollHeight + 'px';
+                        }}
+                        onInput={(e) => {
+                          e.target.style.height = 'auto';
+                          e.target.style.height = e.target.scrollHeight + 'px';
+                        }}
+                        ref={(el) => {
+                          if (el) {
+                            el.style.height = 'auto';
+                            el.style.height = el.scrollHeight + 'px';
+                          }
+                        }}
                         placeholder="Заполните описание"
-                        style={{ fontFamily: 'inherit' }}
+                        rows={1}
+                        style={{ fontFamily: 'inherit', resize: 'none', overflow: 'hidden' }}
                         className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
                       />
                       {/* Красная иконка предупреждения если нет описания */}
@@ -411,16 +425,28 @@ export default function NewDocumentPage() {
                         </div>
                         {/* Описание */}
                         <div className="bg-[rgba(25,25,25,0.05)] flex flex-1 items-center min-w-0" style={{ padding: '10px 20px', gap: 10 }}>
-                          <input
-                            type="text"
+                          <textarea
                             value={field.description}
                             onChange={(e) => {
                               const updated = [...missingFields];
                               updated[i] = { ...updated[i], description: e.target.value };
                               setMissingFields(updated);
+                              e.target.style.height = 'auto';
+                              e.target.style.height = e.target.scrollHeight + 'px';
+                            }}
+                            onInput={(e) => {
+                              e.target.style.height = 'auto';
+                              e.target.style.height = e.target.scrollHeight + 'px';
+                            }}
+                            ref={(el) => {
+                              if (el) {
+                                el.style.height = 'auto';
+                                el.style.height = el.scrollHeight + 'px';
+                              }
                             }}
                             placeholder="Заполните описание"
-                            style={{ fontFamily: 'inherit' }}
+                            rows={1}
+                            style={{ fontFamily: 'inherit', resize: 'none', overflow: 'hidden' }}
                             className="flex-1 min-w-0 bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
                           />
                           {/* Красная иконка предупреждения если нет описания */}
