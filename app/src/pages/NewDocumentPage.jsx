@@ -489,7 +489,8 @@ export default function NewDocumentPage() {
               </div>
             </div>
 
-            {/* Fields Table */}
+            {/* Fields Table — только если выбрана таблица */}
+            {table && (
             <div className="flex flex-col" style={{ gap: 6 }}>
               <div className="flex items-center" style={{ height: 78, padding: '8px 0' }}>
                 <span className="text-lg font-medium text-[#191919] leading-[22px] flex-1">Описание полей</span>
@@ -648,6 +649,7 @@ export default function NewDocumentPage() {
                 <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">Добавить строку</span>
               </div>
             </div>
+            )}
           </div>
 
           {/* Footer */}
