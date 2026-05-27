@@ -56,6 +56,21 @@ export default function DocumentListPage() {
   const [authorSearchQuery, setAuthorSearchQuery] = useState('');
   const authorDropdownRef = useRef(null);
 
+  // Фильтр по базе данных
+  const [selectedDatabase, setSelectedDatabase] = useState(null);
+  const [databaseDropdownOpen, setDatabaseDropdownOpen] = useState(false);
+  const databaseDropdownRef = useRef(null);
+
+  // Фильтр по схеме
+  const [selectedSchema, setSelectedSchema] = useState(null);
+  const [schemaDropdownOpen, setSchemaDropdownOpen] = useState(false);
+  const schemaDropdownRef = useRef(null);
+
+  // Фильтр по статусу
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const statusDropdownRef = useRef(null);
+
   // Список уникальных владельцев (кругов)
   const allOwners = useMemo(() => {
     const ownerSet = new Set(
@@ -138,6 +153,63 @@ export default function DocumentListPage() {
     setAuthorSearchQuery('');
   };
 
+  // Список уникальных баз данных
+  const allDatabases = useMemo(() => {
+    const dbSet = new Set(documents.map(d => d.database).filter(Boolean));
+    return [...dbSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Список уникальных схем
+  const allSchemas = useMemo(() => {
+    const schemaSet = new Set(documents.map(d => d.schema).filter(Boolean));
+    return [...schemaSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Список уникальных статусов
+  const allStatuses = useMemo(() => {
+    const statusSet = new Set(documents.map(d => d.status).filter(Boolean));
+    return [...statusSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Закрытие дропдауна БД при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (databaseDropdownRef.current && !databaseDropdownRef.current.contains(e.target)) {
+        setDatabaseDropdownOpen(false);
+      }
+    }
+    if (databaseDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [databaseDropdownOpen]);
+
+  // Закрытие дропдауна Схемы при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (schemaDropdownRef.current && !schemaDropdownRef.current.contains(e.target)) {
+        setSchemaDropdownOpen(false);
+      }
+    }
+    if (schemaDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [schemaDropdownOpen]);
+
+  // Закрытие дропдауна Статуса при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (statusDropdownRef.current && !statusDropdownRef.current.contains(e.target)) {
+        setStatusDropdownOpen(false);
+      }
+    }
+    if (statusDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [statusDropdownOpen]);
+
   // Генерация инициалов из имени
   const getInitials = (name) => {
     const parts = name.split(' ').filter(Boolean);
@@ -159,6 +231,15 @@ export default function DocumentListPage() {
     if (selectedAuthor) {
       result = result.filter(d => d.author === selectedAuthor);
     }
+    if (selectedDatabase) {
+      result = result.filter(d => d.database === selectedDatabase);
+    }
+    if (selectedSchema) {
+      result = result.filter(d => d.schema === selectedSchema);
+    }
+    if (selectedStatus) {
+      result = result.filter(d => d.status === selectedStatus);
+    }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(d =>
@@ -169,7 +250,7 @@ export default function DocumentListPage() {
       );
     }
     return result;
-  }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner]);
+  }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner, selectedDatabase, selectedSchema, selectedStatus]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
@@ -415,14 +496,152 @@ export default function DocumentListPage() {
                 </div>
               )}
             </div>
-            <div className="flex-1 px-2.5">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">База данных</span>
+            <div className="flex-1 px-2.5 relative" ref={databaseDropdownRef}>
+              <button
+                onClick={() => setDatabaseDropdownOpen(!databaseDropdownOpen)}
+                className={`flex items-center gap-1.5 border-none cursor-pointer transition-colors rounded-lg px-2 py-1 -ml-2 ${
+                  selectedDatabase
+                    ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                    : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+                }`}
+              >
+                <span className={`text-sm leading-[18px] tracking-[0.14px] ${
+                  selectedDatabase ? 'text-[#835de1] font-medium' : 'text-[#676767]'
+                }`}>
+                  {selectedDatabase || 'База данных'}
+                </span>
+                {selectedDatabase ? (
+                  <svg
+                    width="10" height="10" viewBox="0 0 16 16" fill="none"
+                    className="shrink-0 cursor-pointer"
+                    onClick={(e) => { e.stopPropagation(); setSelectedDatabase(null); setDatabaseDropdownOpen(false); }}
+                  >
+                    <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${databaseDropdownOpen ? 'rotate-180' : ''}`}>
+                    <path d="M4 6l4 4 4-4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              {databaseDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden py-[5px]">
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {allDatabases.map((db) => (
+                      <button
+                        key={db}
+                        onClick={() => { setSelectedDatabase(prev => prev === db ? null : db); setDatabaseDropdownOpen(false); }}
+                        className={`flex items-center w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                          selectedDatabase === db ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                        }`}
+                      >
+                        <span className={`text-[16px] leading-[20px] tracking-[0.16px] ${
+                          selectedDatabase === db ? 'text-[#835de1] font-medium' : 'text-[#191919]'
+                        }`}>{db}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex-1 px-2.5">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Схема</span>
+            <div className="flex-1 px-2.5 relative" ref={schemaDropdownRef}>
+              <button
+                onClick={() => setSchemaDropdownOpen(!schemaDropdownOpen)}
+                className={`flex items-center gap-1.5 border-none cursor-pointer transition-colors rounded-lg px-2 py-1 -ml-2 ${
+                  selectedSchema
+                    ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                    : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+                }`}
+              >
+                <span className={`text-sm leading-[18px] tracking-[0.14px] ${
+                  selectedSchema ? 'text-[#835de1] font-medium' : 'text-[#676767]'
+                }`}>
+                  {selectedSchema || 'Схема'}
+                </span>
+                {selectedSchema ? (
+                  <svg
+                    width="10" height="10" viewBox="0 0 16 16" fill="none"
+                    className="shrink-0 cursor-pointer"
+                    onClick={(e) => { e.stopPropagation(); setSelectedSchema(null); setSchemaDropdownOpen(false); }}
+                  >
+                    <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${schemaDropdownOpen ? 'rotate-180' : ''}`}>
+                    <path d="M4 6l4 4 4-4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              {schemaDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden py-[5px]">
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {allSchemas.map((schema) => (
+                      <button
+                        key={schema}
+                        onClick={() => { setSelectedSchema(prev => prev === schema ? null : schema); setSchemaDropdownOpen(false); }}
+                        className={`flex items-center w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                          selectedSchema === schema ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                        }`}
+                      >
+                        <span className={`text-[16px] leading-[20px] tracking-[0.16px] ${
+                          selectedSchema === schema ? 'text-[#835de1] font-medium' : 'text-[#191919]'
+                        }`}>{schema}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex-1 px-2.5">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Статус</span>
+            <div className="flex-1 px-2.5 relative" ref={statusDropdownRef}>
+              <button
+                onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
+                className={`flex items-center gap-1.5 border-none cursor-pointer transition-colors rounded-lg px-2 py-1 -ml-2 ${
+                  selectedStatus
+                    ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                    : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+                }`}
+              >
+                <span className={`text-sm leading-[18px] tracking-[0.14px] ${
+                  selectedStatus ? 'text-[#835de1] font-medium' : 'text-[#676767]'
+                }`}>
+                  {selectedStatus || 'Статус'}
+                </span>
+                {selectedStatus ? (
+                  <svg
+                    width="10" height="10" viewBox="0 0 16 16" fill="none"
+                    className="shrink-0 cursor-pointer"
+                    onClick={(e) => { e.stopPropagation(); setSelectedStatus(null); setStatusDropdownOpen(false); }}
+                  >
+                    <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${statusDropdownOpen ? 'rotate-180' : ''}`}>
+                    <path d="M4 6l4 4 4-4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              {statusDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden py-[5px]">
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {allStatuses.map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => { setSelectedStatus(prev => prev === status ? null : status); setStatusDropdownOpen(false); }}
+                        className={`flex items-center gap-2 w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                          selectedStatus === status ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                        }`}
+                      >
+                        <span
+                          className="inline-flex items-center justify-center px-2 h-6 rounded-md text-sm font-medium leading-[18px] tracking-[0.14px] border whitespace-nowrap"
+                          style={{ color: statusConfig[status]?.color, borderColor: statusConfig[status]?.color }}
+                        >
+                          {status}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="w-[75px] flex items-center">
               <button
