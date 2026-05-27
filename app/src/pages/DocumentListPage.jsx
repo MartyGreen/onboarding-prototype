@@ -44,11 +44,61 @@ export default function DocumentListPage() {
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Фильтр по автору (владельцу) — одиночный выбор
+  // Фильтр по владельцу (кругу) — одиночный выбор
+  const [selectedOwner, setSelectedOwner] = useState(null);
+  const [ownerDropdownOpen, setOwnerDropdownOpen] = useState(false);
+  const [ownerSearchQuery, setOwnerSearchQuery] = useState('');
+  const ownerDropdownRef = useRef(null);
+
+  // Фильтр по автору — одиночный выбор
   const [selectedAuthor, setSelectedAuthor] = useState(null);
   const [authorDropdownOpen, setAuthorDropdownOpen] = useState(false);
   const [authorSearchQuery, setAuthorSearchQuery] = useState('');
   const authorDropdownRef = useRef(null);
+
+  // Список уникальных владельцев (кругов)
+  const allOwners = useMemo(() => {
+    const ownerSet = new Set(
+      documents
+        .map(d => d.circles)
+        .filter(Boolean)
+        .map(c => c.replace(' (Якорный Круг)', '').trim())
+        .filter(c => c && c !== 'Не указан')
+    );
+    return [...ownerSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Владельцы, отфильтрованные по поиску
+  const filteredOwners = useMemo(() => {
+    if (!ownerSearchQuery.trim()) return allOwners;
+    const q = ownerSearchQuery.toLowerCase();
+    return allOwners.filter(o => o.toLowerCase().includes(q));
+  }, [allOwners, ownerSearchQuery]);
+
+  // Закрытие дропдауна владельцев при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (ownerDropdownRef.current && !ownerDropdownRef.current.contains(e.target)) {
+        setOwnerDropdownOpen(false);
+        setOwnerSearchQuery('');
+      }
+    }
+    if (ownerDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [ownerDropdownOpen]);
+
+  const selectOwner = (owner) => {
+    setSelectedOwner(prev => prev === owner ? null : owner);
+    setOwnerDropdownOpen(false);
+    setOwnerSearchQuery('');
+  };
+
+  const clearOwnerFilter = () => {
+    setSelectedOwner(null);
+    setOwnerSearchQuery('');
+  };
 
   // Список уникальных авторов
   const allAuthors = useMemo(() => {
@@ -100,6 +150,12 @@ export default function DocumentListPage() {
     if (showStarredOnly) {
       result = result.filter(d => d.starred);
     }
+    if (selectedOwner) {
+      result = result.filter(d => {
+        const ownerName = d.circles?.replace(' (Якорный Круг)', '').trim();
+        return ownerName === selectedOwner;
+      });
+    }
     if (selectedAuthor) {
       result = result.filter(d => d.author === selectedAuthor);
     }
@@ -113,7 +169,7 @@ export default function DocumentListPage() {
       );
     }
     return result;
-  }, [documents, showStarredOnly, searchQuery, selectedAuthor]);
+  }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
@@ -157,10 +213,90 @@ export default function DocumentListPage() {
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 h-10 px-3 rounded-xl bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">Все владельцы</span>
-            <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
-          </button>
+          <div className="relative" ref={ownerDropdownRef}>
+            <button
+              onClick={() => {
+                setOwnerDropdownOpen(!ownerDropdownOpen);
+                if (!ownerDropdownOpen) setOwnerSearchQuery('');
+              }}
+              className={`flex items-center gap-2 h-10 px-3 rounded-xl border-none cursor-pointer transition-colors ${
+                selectedOwner
+                  ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                  : 'bg-[rgba(25,25,25,0.05)] hover:bg-[rgba(25,25,25,0.1)]'
+              }`}
+            >
+              <span className={`text-sm font-medium leading-[18px] tracking-[0.14px] ${
+                selectedOwner ? 'text-[#835de1]' : 'text-[#191919]'
+              }`}>
+                {selectedOwner || 'Все владельцы'}
+              </span>
+              {selectedOwner ? (
+                <svg
+                  width="10" height="10" viewBox="0 0 16 16" fill="none"
+                  className="shrink-0 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearOwnerFilter();
+                    setOwnerDropdownOpen(false);
+                  }}
+                >
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${ownerDropdownOpen ? 'rotate-180' : ''}`}>
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+
+            {/* Дропдаун владельцев */}
+            {ownerDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 w-[300px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden">
+                <div className="flex flex-col items-stretch py-[5px]">
+                  {/* Поиск */}
+                  <div className="px-[10px] pb-[6px]">
+                    <div className="bg-[rgba(25,25,25,0.05)] rounded-[12px] px-[20px] overflow-hidden">
+                      <div className="flex items-center">
+                        <div className="flex-1 py-[12px]">
+                          <input
+                            type="text"
+                            value={ownerSearchQuery}
+                            onChange={(e) => setOwnerSearchQuery(e.target.value)}
+                            placeholder="Поиск по названию"
+                            className="w-full bg-transparent border-none outline-none text-[16px] text-[#191919] leading-[20px] tracking-[0.16px] placeholder:text-[#949494] p-0 m-0"
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Список владельцев */}
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {filteredOwners.length === 0 ? (
+                      <div className="px-[10px] py-[12px] text-[14px] text-[#949494] text-center leading-[18px]">Ничего не найдено</div>
+                    ) : (
+                      filteredOwners.map((owner) => (
+                        <button
+                          key={owner}
+                          onClick={() => selectOwner(owner)}
+                          className={`flex items-center w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                            selectedOwner === owner ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                          }`}
+                        >
+                          <span className={`text-[16px] leading-[20px] tracking-[0.16px] ${
+                            selectedOwner === owner ? 'text-[#835de1] font-medium' : 'text-[#191919]'
+                          }`}>
+                            {owner}
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <button className="flex items-center gap-2 h-10 px-3 rounded-xl bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">База данных</span>
             <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
