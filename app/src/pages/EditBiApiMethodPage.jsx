@@ -16,8 +16,12 @@ export default function EditBiApiMethodPage() {
   const [detailedInfo, setDetailedInfo] = useState(methodData?.detailedInfo || '');
   const [sql, setSql] = useState(methodData?.sql || '');
   const [techAccount] = useState(methodData?.techAccount || 'TEST_TEAM');
-  const [fields, setFields] = useState(methodData?.fields || []);
-  const [filters, setFilters] = useState(methodData?.filters || []);
+  const [fields, setFields] = useState(() =>
+    (methodData?.fields || []).map(f => ({ ...f, enabled: f.enabled !== undefined ? f.enabled : true }))
+  );
+  const [filters, setFilters] = useState(() =>
+    (methodData?.filters || []).map(f => ({ ...f, enabled: f.enabled !== undefined ? f.enabled : true }))
+  );
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
   const [sqlDraft, setSqlDraft] = useState('');
   const [sqlError, setSqlError] = useState('');
@@ -48,7 +52,7 @@ export default function EditBiApiMethodPage() {
           const fieldName = (parts.length > 1 ? parts[parts.length - 1] : parts[0]).trim().toUpperCase();
           // Проверяем, есть ли уже такое поле — если да, сохраняем его данные
           const existing = fields.find(ef => ef.name === fieldName);
-          return existing || { name: fieldName, type: 'VARCHAR2', length: '', description: '' };
+          return existing || { name: fieldName, type: 'VARCHAR2', length: '', description: '', enabled: true };
         });
       setFields(parsedFields);
     }
@@ -60,7 +64,7 @@ export default function EditBiApiMethodPage() {
       const parsedFilters = uniqueParams.map(paramName => {
         // Сохраняем существующий фильтр, если есть
         const existing = filters.find(ef => ef.name === paramName);
-        return existing || { name: paramName, type: 'VARCHAR2', description: '', enabled: false };
+        return existing || { name: paramName, type: 'VARCHAR2', description: '', enabled: true };
       });
       setFilters(parsedFilters);
     } else {
@@ -82,15 +86,113 @@ export default function EditBiApiMethodPage() {
     navigate(`/api/${id}`);
   };
 
-
   const base = import.meta.env.BASE_URL;
+
+  // Компонент Filter-блока (используется и для полей, и для фильтров)
+  const FilterBlock = ({ item, index, items, setItems, showLength }) => {
+    const isDisabled = item.enabled === false;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
+        {/* M-ячейка: название + тип, справа "Учитывать/Не учитывать" */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, alignItems: 'center', padding: '8px 0' }}>
+            <div style={{
+              flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2,
+              fontSize: 16, lineHeight: '20px', letterSpacing: '0.16px',
+            }}>
+              <p style={{
+                fontWeight: 500,
+                color: isDisabled ? '#949494' : '#191919',
+                margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+              }}>
+                {item.name}
+              </p>
+              <p style={{
+                fontWeight: 400,
+                color: isDisabled ? '#949494' : '#676767',
+                margin: 0, whiteSpace: 'pre-wrap'
+              }}>
+                {item.type || 'string'}{showLength && item.length ? `   (${item.length})` : ''}
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 20, flexShrink: 0, gap: 12 }}>
+            <button
+              onClick={() => {
+                const updated = [...items];
+                updated[index] = { ...updated[index], enabled: !item.enabled };
+                setItems(updated);
+              }}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                fontSize: 16, fontWeight: 400, color: '#676767', lineHeight: '20px',
+                letterSpacing: '0.16px', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'inherit'
+              }}
+            >
+              {isDisabled ? 'Учитывать' : 'Не учитывать'}
+            </button>
+          </div>
+        </div>
+
+        {/* Инпут «Описание» */}
+        <div style={{
+          background: 'rgba(25,25,25,0.05)',
+          borderRadius: 12,
+          height: 72,
+          padding: '0 20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          overflow: 'hidden',
+          opacity: isDisabled ? 0.25 : 1,
+          pointerEvents: isDisabled ? 'none' : 'auto',
+        }}>
+          <div style={{ display: 'flex', flex: 1, alignItems: 'flex-start' }}>
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', height: 20, gap: 2 }}>
+                <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px', whiteSpace: 'nowrap' }}>
+                  Описание
+                </span>
+                {!isDisabled && !item.description && (
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#d84d4d', lineHeight: '22px', position: 'relative', top: -4, width: 8 }}>*</span>
+                )}
+              </div>
+              {isDisabled ? (
+                <p style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.description || 'Заполните описание'}
+                </p>
+              ) : (
+                <input
+                  type="text"
+                  value={item.description}
+                  onChange={(e) => {
+                    const updated = [...items];
+                    updated[index] = { ...updated[index], description: e.target.value };
+                    setItems(updated);
+                  }}
+                  placeholder="Заполните описание"
+                  style={{
+                    background: 'transparent', border: 'none', outline: 'none',
+                    fontSize: 16, color: item.description ? '#191919' : '#949494',
+                    lineHeight: '20px', letterSpacing: '0.16px',
+                    padding: 0, margin: 0, width: '100%', fontFamily: 'inherit',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f9f9f9', overflowY: 'auto' }}>
       {/* Right Panel: w=1190, pt=24, pb=24, px=32, gap=32, centered */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
-        {/* Title: w=640, gap=16, items-center */}
+        {/* Title: w=720, gap=16, items-center */}
         <div style={{ width: 720, display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* Icon Button: 40x40, rounded=8, bg=transparent-1 */}
           <button
@@ -105,18 +207,16 @@ export default function EditBiApiMethodPage() {
           </h1>
         </div>
 
-        {/* Content: w=640, pb=32 */}
+        {/* Content: w=720, pb=32 */}
         <div style={{ width: 720, paddingBottom: 32 }}>
           {/* Cards stack: gap=14 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
             {/* === Card 1: Описание документа === */}
-            {/* px=40, py=20, rounded=20, drop-shadow 0 4 8 */}
             <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px' }}>
-              {/* Content: gap=6 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* L: h=86, py=12 */}
-                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0' }}>
+                {/* L: py=12 */}
+                <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Описание документа
                   </span>
@@ -135,7 +235,7 @@ export default function EditBiApiMethodPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="new_method"
-                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
+                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: name ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                     />
                   </div>
                   {/* Description with divider */}
@@ -167,7 +267,7 @@ export default function EditBiApiMethodPage() {
                       ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                       placeholder="Пример краткого описания"
                       rows={1}
-                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: description ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -190,7 +290,7 @@ export default function EditBiApiMethodPage() {
                       ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                       placeholder="Какие нюансы есть у метода"
                       rows={1}
-                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                      style={{ background: 'transparent', border: 'none', outline: 'none', resize: 'none', overflow: 'hidden', fontSize: 16, color: detailedInfo ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -217,186 +317,101 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 2: SQL === */}
-            {/* pt=20, pb=40, px=40, rounded=20, drop-shadow 0 4 8 */}
             <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, justifyContent: 'space-between', height: '100%' }}>
-                {/* L: h=86, py=12 */}
-                <div style={{ display: 'flex', alignItems: 'center', height: 86, padding: '12px 0', flexShrink: 0 }}>
-                  <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
-                    SQL
-                  </span>
-                </div>
-
-                {/* Input-кнопка: показывает SQL или placeholder, при клике открывает модалку */}
-                <button
-                  onClick={() => { setSqlDraft(sql); setSqlError(''); setSqlModalOpen(true); }}
-                  style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', height: 20 }}>
-                      <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
-                        Текст SQL запроса
-                      </span>
-                    </div>
-                    <p style={{ fontSize: 16, color: sql ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, fontFamily: 'inherit', whiteSpace: sql ? 'pre-wrap' : 'nowrap', wordBreak: 'break-word', overflow: sql ? 'visible' : 'hidden', textOverflow: sql ? 'unset' : 'ellipsis' }}>
-                      {sql || 'Введите текст'}
-                    </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                {/* Section title */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0', flexShrink: 0 }}>
+                    <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
+                      SQL
+                    </span>
                   </div>
-                </button>
+
+                  {/* SQL text block — кликабельный для редактирования */}
+                  <button
+                    onClick={() => { setSqlDraft(sql); setSqlError(''); setSqlModalOpen(true); }}
+                    style={{
+                      background: 'rgba(25,25,25,0.05)', borderRadius: 12,
+                      padding: '12px 20px 20px 20px',
+                      border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: 8 }}>
+                      <p style={{
+                        flex: 1, minWidth: 0,
+                        fontSize: 16, fontWeight: 400, color: sql ? '#191919' : '#949494',
+                        lineHeight: '20px', letterSpacing: '0.16px',
+                        whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                        margin: 0, fontFamily: 'inherit',
+                      }}>
+                        {sql || 'Введите текст SQL запроса'}
+                      </p>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* === Card 3: Поля (таблица) === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '10px 0 20px 0', boxSizing: 'border-box' }}>
-              {/* Table Header */}
-              <div style={{ padding: '0 40px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '8px 0' }}>
-                  <div style={{ width: 250 }}>
-                    <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Поля</span>
-                  </div>
-                  {fields.length > 0 && (
-                    <>
-                      <div style={{ width: 70 }}>
-                        <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Длинна</span>
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <span style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px' }}>Описание</span>
-                      </div>
-                    </>
+            {/* === Card 3: Поля === */}
+            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {/* Заголовок */}
+                <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
+                    Поля
+                  </span>
+                </div>
+
+                {/* Список полей в формате Filter-блоков */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {fields.length > 0 ? (
+                    fields.map((field, i) => (
+                      <FilterBlock
+                        key={i}
+                        item={field}
+                        index={i}
+                        items={fields}
+                        setItems={setFields}
+                        showLength={true}
+                      />
+                    ))
+                  ) : (
+                    <p style={{ fontSize: 14, color: '#949494', lineHeight: '18px', margin: 0 }}>
+                      Поля будут извлечены из SQL запроса
+                    </p>
                   )}
                 </div>
               </div>
-              {fields.length > 0 && (
-                <>
-                  {/* Divider */}
-                  <div style={{ height: 1, position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
-                  </div>
-                  {/* Rows */}
-                  <div style={{ padding: '6px 40px 0 40px' }}>
-                    {fields.map((field, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, padding: '12px 0' }}>
-                        <div style={{ width: 250 }}>
-                          <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.name}</p>
-                          <p style={{ fontSize: 14, color: '#676767', lineHeight: '18px', letterSpacing: '0.14px', margin: 0, marginTop: 2 }}>{field.type}</p>
-                        </div>
-                        <div style={{ width: 70 }}>
-                          <p style={{ fontSize: 16, fontWeight: 500, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0 }}>{field.length}</p>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <p style={{ fontSize: 16, color: '#191919', lineHeight: '22px', letterSpacing: '0.16px', margin: 0 }}>{field.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-              {fields.length === 0 && (
-                <div style={{ padding: '12px 40px 0 40px' }}>
-                  <p style={{ fontSize: 14, color: '#949494', lineHeight: '18px', margin: 0 }}>Поля будут извлечены из SQL запроса</p>
-                </div>
-              )}
             </div>
 
             {/* === Card 4: Фильтры === */}
             <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* Заголовок: L */}
+                {/* Заголовок */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Фильтры
                   </span>
                 </div>
 
-                {/* Список фильтров: gap=16 */}
+                {/* Список фильтров в формате Filter-блоков */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {filters.map((filter, i) => {
-                    const isDisabled = filter.enabled === true;
-                    return (
-                      <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
-                        {/* M-ячейка: название + тип (текст), справа кнопка "Учитывать/Не учитывать" */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, height: 76, alignItems: 'flex-start', padding: '8px 0' }}>
-                            <div style={{
-                              flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2,
-                              justifyContent: 'center', alignSelf: 'stretch',
-                              fontSize: 16, lineHeight: '20px', letterSpacing: '0.16px',
-                              color: isDisabled ? '#949494' : undefined,
-                            }}>
-                              <p style={{ fontWeight: 500, color: isDisabled ? '#949494' : '#191919', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                {filter.name}
-                              </p>
-                              <p style={{ fontWeight: 400, color: isDisabled ? '#949494' : '#676767', margin: 0 }}>
-                                {filter.type || 'string'}
-                              </p>
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 20, flexShrink: 0, gap: 12 }}>
-                            <button
-                              onClick={() => {
-                                const updated = [...filters];
-                                updated[i] = { ...updated[i], enabled: !filter.enabled };
-                                setFilters(updated);
-                              }}
-                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 16, fontWeight: 400, color: '#676767', lineHeight: '20px', letterSpacing: '0.16px', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'inherit' }}
-                            >
-                              {isDisabled ? 'Учитывать' : 'Не учитывать'}
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Инпут «Описание» — на всю ширину */}
-                        <div style={{
-                          background: 'rgba(25,25,25,0.05)',
-                          borderRadius: 12,
-                          height: 72,
-                          padding: '0 20px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'flex-start',
-                          overflow: 'hidden',
-                          opacity: isDisabled ? 0.25 : 1,
-                          pointerEvents: isDisabled ? 'none' : 'auto',
-                        }}>
-                          <div style={{ display: 'flex', flex: 1, alignItems: 'flex-start' }}>
-                            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', height: 20, gap: 2 }}>
-                                <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px', whiteSpace: 'nowrap' }}>
-                                  Описание
-                                </span>
-                                {!isDisabled && !filter.description && (
-                                  <span style={{ fontSize: 18, fontWeight: 500, color: '#d84d4d', lineHeight: '22px', position: 'relative', top: -4, width: 8 }}>*</span>
-                                )}
-                              </div>
-                              {isDisabled ? (
-                                <p style={{ fontSize: 16, color: '#191919', lineHeight: '20px', letterSpacing: '0.16px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                  {filter.description || 'Заполните описание'}
-                                </p>
-                              ) : (
-                                <input
-                                  type="text"
-                                  value={filter.description}
-                                  onChange={(e) => {
-                                    const updated = [...filters];
-                                    updated[i] = { ...updated[i], description: e.target.value };
-                                    setFilters(updated);
-                                  }}
-                                  placeholder="Заполните описание"
-                                  style={{
-                                    background: 'transparent', border: 'none', outline: 'none',
-                                    fontSize: 16, color: filter.description ? '#191919' : '#949494',
-                                    lineHeight: '20px', letterSpacing: '0.16px',
-                                    padding: 0, margin: 0, width: '100%', fontFamily: 'inherit',
-                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                                  }}
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {filters.length > 0 ? (
+                    filters.map((filter, i) => (
+                      <FilterBlock
+                        key={i}
+                        item={filter}
+                        index={i}
+                        items={filters}
+                        setItems={setFilters}
+                        showLength={false}
+                      />
+                    ))
+                  ) : (
+                    <p style={{ fontSize: 14, color: '#949494', lineHeight: '18px', margin: 0 }}>
+                      Фильтры будут извлечены из SQL запроса
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -405,8 +420,8 @@ export default function EditBiApiMethodPage() {
         </div>
       </div>
 
-      {/* Footer: h=90, py=20, gap=10, items-center, justify-end */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box' }}>
+      {/* Footer: прибит к низу экрана */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
         <button
           onClick={handleSave}
           style={{ width: 335, height: 50, borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', position: 'relative' }}

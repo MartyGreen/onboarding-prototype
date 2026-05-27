@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
 
@@ -44,10 +44,64 @@ export default function DocumentListPage() {
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Фильтр по автору (владельцу) — одиночный выбор
+  const [selectedAuthor, setSelectedAuthor] = useState(null);
+  const [authorDropdownOpen, setAuthorDropdownOpen] = useState(false);
+  const [authorSearchQuery, setAuthorSearchQuery] = useState('');
+  const authorDropdownRef = useRef(null);
+
+  // Список уникальных авторов
+  const allAuthors = useMemo(() => {
+    const authorSet = new Set(documents.map(d => d.author).filter(Boolean));
+    return [...authorSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Авторы, отфильтрованные по поиску внутри дропдауна
+  const filteredAuthors = useMemo(() => {
+    if (!authorSearchQuery.trim()) return allAuthors;
+    const q = authorSearchQuery.toLowerCase();
+    return allAuthors.filter(a => a.toLowerCase().includes(q));
+  }, [allAuthors, authorSearchQuery]);
+
+  // Закрытие дропдауна при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (authorDropdownRef.current && !authorDropdownRef.current.contains(e.target)) {
+        setAuthorDropdownOpen(false);
+        setAuthorSearchQuery('');
+      }
+    }
+    if (authorDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [authorDropdownOpen]);
+
+  const selectAuthor = (author) => {
+    setSelectedAuthor(prev => prev === author ? null : author);
+    setAuthorDropdownOpen(false);
+    setAuthorSearchQuery('');
+  };
+
+  const clearAuthorFilter = () => {
+    setSelectedAuthor(null);
+    setAuthorSearchQuery('');
+  };
+
+  // Генерация инициалов из имени
+  const getInitials = (name) => {
+    const parts = name.split(' ').filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  };
+
   const filteredDocuments = useMemo(() => {
     let result = documents;
     if (showStarredOnly) {
       result = result.filter(d => d.starred);
+    }
+    if (selectedAuthor) {
+      result = result.filter(d => d.author === selectedAuthor);
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -59,7 +113,7 @@ export default function DocumentListPage() {
       );
     }
     return result;
-  }, [documents, showStarredOnly, searchQuery]);
+  }, [documents, showStarredOnly, searchQuery, selectedAuthor]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
@@ -132,8 +186,98 @@ export default function DocumentListPage() {
             {/* View toggle placeholder */}
           </div>
           <div className="flex-1 flex items-center gap-0.5 pl-2.5">
-            <div className="flex-1 px-2.5">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Автор</span>
+            <div className="flex-1 px-2.5 relative" ref={authorDropdownRef}>
+              <button
+                onClick={() => {
+                  setAuthorDropdownOpen(!authorDropdownOpen);
+                  if (!authorDropdownOpen) setAuthorSearchQuery('');
+                }}
+                className={`flex items-center gap-1.5 border-none cursor-pointer transition-colors rounded-lg px-2 py-1 -ml-2 ${
+                  selectedAuthor
+                    ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                    : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+                }`}
+              >
+                <span className={`text-sm leading-[18px] tracking-[0.14px] ${
+                  selectedAuthor ? 'text-[#835de1] font-medium' : 'text-[#676767]'
+                }`}>
+                  {selectedAuthor || 'Автор'}
+                </span>
+                {selectedAuthor ? (
+                  <svg
+                    width="10" height="10" viewBox="0 0 16 16" fill="none"
+                    className="shrink-0 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearAuthorFilter();
+                      setAuthorDropdownOpen(false);
+                    }}
+                  >
+                    <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${authorDropdownOpen ? 'rotate-180' : ''}`}>
+                    <path d="M4 6l4 4 4-4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Выпадающий список авторов */}
+              {authorDropdownOpen && (
+                <div className="author-dropdown absolute top-full left-0 mt-1 w-[300px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden">
+                  <div className="flex flex-col items-stretch py-[5px]">
+                    {/* Поиск внутри дропдауна */}
+                    <div className="px-[10px] pb-[6px]">
+                      <div className="author-dropdown-search bg-[rgba(25,25,25,0.05)] rounded-[12px] px-[20px] overflow-hidden">
+                        <div className="flex items-center">
+                          <div className="flex-1 py-[12px]">
+                            <input
+                              type="text"
+                              value={authorSearchQuery}
+                              onChange={(e) => setAuthorSearchQuery(e.target.value)}
+                              placeholder="Поиск по имени"
+                              className="w-full bg-transparent border-none outline-none text-[16px] text-[#191919] leading-[20px] tracking-[0.16px] placeholder:text-[#949494] p-0 m-0"
+                              autoFocus
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Список авторов */}
+                    <div className="author-dropdown-list max-h-[280px] overflow-y-auto">
+                      {filteredAuthors.length === 0 ? (
+                        <div className="px-[10px] py-[12px] text-[14px] text-[#949494] text-center leading-[18px]">Ничего не найдено</div>
+                      ) : (
+                        filteredAuthors.map((author) => (
+                          <button
+                            key={author}
+                            onClick={() => selectAuthor(author)}
+                            className={`flex items-center w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                              selectedAuthor === author ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                            }`}
+                          >
+                            {/* Аватар */}
+                            <div className="shrink-0 pr-[12px]">
+                              <div className="w-[34px] h-[34px] rounded-full bg-[#835de1] flex items-center justify-center">
+                                <span className="text-[12px] font-medium text-white leading-[15px] tracking-[0.12px]">
+                                  {getInitials(author)}
+                                </span>
+                              </div>
+                            </div>
+                            {/* Имя */}
+                            <div className="flex flex-col gap-[2px] min-w-0 flex-1 h-[40px] justify-center">
+                              <span className="text-[16px] text-[#191919] leading-[20px] tracking-[0.16px] truncate">
+                                {author}
+                              </span>
+                            </div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex-1 px-2.5">
               <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">База данных</span>

@@ -76,6 +76,33 @@
   border-radius: 2px;
 }
 
+/* Author dropdown styles (from Figma) */
+.author-dropdown {
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+.author-dropdown-search {
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.author-dropdown-search:focus-within {
+  border-color: #835de1;
+}
+
+.author-dropdown-list::-webkit-scrollbar {
+  width: 5px;
+}
+.author-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 10px 0;
+}
+.author-dropdown-list::-webkit-scrollbar-thumb {
+  background: rgba(25, 25, 25, 0.45);
+  border-radius: 6px;
+  opacity: 0.5;
+}
+
 @font-face {
   font-family: 'TT Norms Tochka Extended';
   src: url('/fonts/TT_Norms_Pro_Tochka_Regular.woff2') format('woff2');

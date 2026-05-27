@@ -12,8 +12,39 @@ export default function EditDocumentPage() {
 
   const [name, setName] = useState(doc.name);
   const [description, setDescription] = useState(doc.descriptionFull);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const maxChars = 5000;
+
+  // Генерация описания ИИ
+  const generateAIDescription = () => {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    const tableName = doc.name || 'таблица';
+    const dbName = doc.database || 'база данных';
+    const schemaName = doc.schema || 'схема';
+    const fieldNames = doc.fields ? doc.fields.map(f => f.name).join(', ') : '';
+
+    const descriptions = [
+      `Таблица ${tableName} в ${dbName}.${schemaName} содержит данные, необходимые для аналитической отчётности и формирования ключевых бизнес-метрик. Поля: ${fieldNames || 'не указаны'}. Данные обновляются ежедневно в рамках ETL-процесса и используются смежными командами для построения дашбордов и ad-hoc анализа.`,
+      `Данная таблица (${tableName}) является частью схемы ${schemaName} в ${dbName} и служит источником данных для расчёта операционных показателей. Содержит информацию, структурированную по полям: ${fieldNames || 'не указаны'}. Рекомендуется для использования в витринах данных и BI-отчётах.`,
+      `${tableName} — таблица хранилища ${dbName}, схема ${schemaName}. Предназначена для хранения и агрегации бизнес-данных. Основные поля: ${fieldNames || 'не указаны'}. Используется в процессах Data Engineering для обеспечения консистентности данных между слоями хранилища.`,
+    ];
+
+    const randomDesc = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    let i = 0;
+    setDescription('');
+    const interval = setInterval(() => {
+      if (i < randomDesc.length) {
+        setDescription(prev => prev + randomDesc[i]);
+        i++;
+      } else {
+        clearInterval(interval);
+        setIsGenerating(false);
+      }
+    }, 15);
+  };
 
   const handleSave = () => {
     updateDocument(doc.id, {
@@ -103,6 +134,24 @@ export default function EditDocumentPage() {
                 </button>
                 <button className="flex items-center justify-center w-8 h-8 rounded-lg border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors">
                   <span className="text-sm text-[#191919]">🔗</span>
+                </button>
+                <div className="w-[1px] h-5 bg-[rgba(25,25,25,0.1)] mx-1" />
+                <button
+                  onClick={generateAIDescription}
+                  disabled={isGenerating}
+                  className={`flex items-center gap-1.5 h-8 px-3 rounded-lg border-none cursor-pointer transition-colors ${
+                    isGenerating
+                      ? 'bg-[rgba(131,93,225,0.1)] cursor-wait'
+                      : 'bg-transparent hover:bg-[rgba(131,93,225,0.08)]'
+                  }`}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L9.5 5.5L14 7L9.5 8.5L8 13L6.5 8.5L2 7L6.5 5.5L8 1Z" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12.5 1.5L13 3L14.5 3.5L13 4L12.5 5.5L12 4L10.5 3.5L12 3L12.5 1.5Z" stroke="#835de1" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-xs font-medium text-[#835de1] leading-[15px] tracking-[0.12px] whitespace-nowrap">
+                    {isGenerating ? 'Генерация...' : 'Сгенерировать ИИ'}
+                  </span>
                 </button>
               </div>
               <span className="text-xs text-[rgba(25,25,25,0.45)] leading-[15px] tracking-[0.12px]">

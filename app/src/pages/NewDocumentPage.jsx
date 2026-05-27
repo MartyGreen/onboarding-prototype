@@ -132,13 +132,68 @@ export default function NewDocumentPage() {
     return [];
   });
   const [description, setDescription] = useState(existingDoc?.descriptionFull || '');
-  const [tags, setTags] = useState(existingDoc?.tags?.join(', ') || '');
+  const [tags, setTags] = useState(existingDoc?.tags || []);
+  const [tagInput, setTagInput] = useState('');
+  const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
+  const tagInputRef = useRef(null);
+  const tagDropdownRef = useRef(null);
 
   // Dropdown states
   const [owner, setOwner] = useState(existingDoc?.circles?.replace(' (Якорный Круг)', '') || '');
   const [database, setDatabase] = useState(existingDoc?.database || '');
   const [schema, setSchema] = useState(existingDoc?.schema || '');
   const [table, setTable] = useState(existingDoc?.name || '');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // Популярные теги команды (зависят от выбранного владельца)
+  const popularTagsByOwner = {
+    'Круг Data Engineering': ['ETL', 'DWH', 'Pipeline', 'Airflow', 'Data Quality', 'Spark'],
+    'Круг Data Analytics': ['BI', 'Дашборд', 'Метрики', 'A/B тест', 'Когорты', 'Отчётность'],
+    'Круг Data Science': ['ML', 'Модель', 'Фичи', 'Прогноз', 'NLP', 'Рекомендации'],
+    'Круг Platform': ['Инфраструктура', 'Kubernetes', 'CI/CD', 'Мониторинг', 'SLA'],
+    'Круг Backend': ['API', 'Микросервис', 'БД', 'Кэш', 'Очереди', 'REST'],
+    'Круг Frontend': ['UI', 'Компонент', 'Дизайн-система', 'SPA', 'Роутинг'],
+    'Круг DevOps': ['Deploy', 'Docker', 'Terraform', 'Логи', 'Алерты'],
+    'Круг Security': ['Безопасность', 'Аутентификация', 'Шифрование', 'Аудит'],
+    'Круг Product': ['Продукт', 'Фича', 'Roadmap', 'OKR', 'Гипотеза'],
+    'Круг QA': ['Тестирование', 'Автотест', 'Регресс', 'Баг', 'Покрытие'],
+  };
+  const defaultPopularTags = ['ORACLE', 'DOCUMENT', 'ЭДО', 'Документооборот', 'ЭПД', 'DWH', 'ETL', 'Метрики'];
+  const popularTags = owner ? (popularTagsByOwner[owner] || defaultPopularTags) : defaultPopularTags;
+
+  // Фильтрация тегов в дропдауне
+  const filteredPopularTags = tagInput.trim()
+    ? popularTags.filter(t => t.toLowerCase().includes(tagInput.toLowerCase()) && !tags.includes(t))
+    : popularTags.filter(t => !tags.includes(t));
+
+  const showCreateOption = tagInput.trim() && !popularTags.some(t => t.toLowerCase() === tagInput.trim().toLowerCase()) && !tags.includes(tagInput.trim());
+
+  const addTag = (tag) => {
+    const trimmed = tag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags(prev => [...prev, trimmed]);
+    }
+    setTagInput('');
+    setTagDropdownOpen(false);
+    tagInputRef.current?.focus();
+  };
+
+  const removeTag = (tag) => {
+    setTags(prev => prev.filter(t => t !== tag));
+  };
+
+  // Закрытие тег-дропдауна при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (tagDropdownRef.current && !tagDropdownRef.current.contains(e.target)) {
+        setTagDropdownOpen(false);
+      }
+    }
+    if (tagDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [tagDropdownOpen]);
 
   // Reset dependent dropdowns
   const handleDatabaseChange = (val) => {
@@ -158,6 +213,37 @@ export default function NewDocumentPage() {
 
   const addField = () => {
     setFields(prev => [...prev, { name: '', description: '' }]);
+  };
+
+  // Генерация описания ИИ
+  const generateAIDescription = () => {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    const tableName = table || 'таблица';
+    const dbName = database || 'база данных';
+    const schemaName = schema || 'схема';
+    const fieldNames = fields.filter(f => f.name).map(f => f.name).join(', ');
+
+    const descriptions = [
+      `Таблица ${tableName} в ${dbName}.${schemaName} содержит данные, необходимые для аналитической отчётности и формирования ключевых бизнес-метрик. Поля: ${fieldNames || 'не указаны'}. Данные обновляются ежедневно в рамках ETL-процесса и используются смежными командами для построения дашбордов и ad-hoc анализа.`,
+      `Данная таблица (${tableName}) является частью схемы ${schemaName} в ${dbName} и служит источником данных для расчёта операционных показателей. Содержит информацию, структурированную по полям: ${fieldNames || 'не указаны'}. Рекомендуется для использования в витринах данных и BI-отчётах.`,
+      `${tableName} — таблица хранилища ${dbName}, схема ${schemaName}. Предназначена для хранения и агрегации бизнес-данных. Основные поля: ${fieldNames || 'не указаны'}. Используется в процессах Data Engineering для обеспечения консистентности данных между слоями хранилища.`,
+    ];
+
+    const randomDesc = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    // Имитация печатания
+    let i = 0;
+    setDescription('');
+    const interval = setInterval(() => {
+      if (i < randomDesc.length) {
+        setDescription(prev => prev + randomDesc[i]);
+        i++;
+      } else {
+        clearInterval(interval);
+        setIsGenerating(false);
+      }
+    }, 15);
   };
 
   return (
@@ -299,25 +385,107 @@ export default function NewDocumentPage() {
                     <button className="flex items-center justify-center w-8 h-8 rounded-lg border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors">
                       <span className="text-sm text-[#191919]">🔗</span>
                     </button>
+                    <div className="w-[1px] h-5 bg-[rgba(25,25,25,0.1)] mx-1" />
+                    <button
+                      onClick={generateAIDescription}
+                      disabled={isGenerating}
+                      className={`flex items-center gap-1.5 h-8 px-3 rounded-lg border-none cursor-pointer transition-colors ${
+                        isGenerating
+                          ? 'bg-[rgba(131,93,225,0.1)] cursor-wait'
+                          : 'bg-transparent hover:bg-[rgba(131,93,225,0.08)]'
+                      }`}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1L9.5 5.5L14 7L9.5 8.5L8 13L6.5 8.5L2 7L6.5 5.5L8 1Z" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12.5 1.5L13 3L14.5 3.5L13 4L12.5 5.5L12 4L10.5 3.5L12 3L12.5 1.5Z" stroke="#835de1" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="text-xs font-medium text-[#835de1] leading-[15px] tracking-[0.12px] whitespace-nowrap">
+                        {isGenerating ? 'Генерация...' : 'Сгенерировать ИИ'}
+                      </span>
+                    </button>
                   </div>
-                  <span className="text-xs text-[rgba(25,25,25,0.45)] tracking-[0.12px]">0 / 5 000</span>
+                  <span className="text-xs text-[rgba(25,25,25,0.45)] tracking-[0.12px]">{description.length} / 5 000</span>
                 </div>
               </div>
             </div>
 
             {/* Tags Section */}
-            <div className="flex flex-col gap-0">
+            <div className="flex flex-col gap-0" ref={tagDropdownRef}>
               <div className="flex items-center py-2">
                 <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Теги</span>
               </div>
-              <div className="form-field bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-3">
-                <input
-                  type="text"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                  placeholder="Начните вводить (через запятую)"
-                  className="w-full bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
-                />
+              <div className="relative">
+                <div
+                  className={`bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-3 transition-all cursor-text ${
+                    tagDropdownOpen ? 'ring-2 ring-[#835de1]' : ''
+                  }`}
+                  onClick={() => { setTagDropdownOpen(true); tagInputRef.current?.focus(); }}
+                >
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {tags.map(tag => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 h-7 px-2.5 rounded-lg bg-[rgba(131,93,225,0.1)] text-sm font-medium text-[#835de1] leading-[18px] tracking-[0.14px] whitespace-nowrap"
+                      >
+                        {tag}
+                        <svg
+                          width="12" height="12" viewBox="0 0 16 16" fill="none"
+                          className="cursor-pointer shrink-0"
+                          onClick={(e) => { e.stopPropagation(); removeTag(tag); }}
+                        >
+                          <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      </span>
+                    ))}
+                    <input
+                      ref={tagInputRef}
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => { setTagInput(e.target.value); setTagDropdownOpen(true); }}
+                      onFocus={() => setTagDropdownOpen(true)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && tagInput.trim()) {
+                          e.preventDefault();
+                          addTag(tagInput);
+                        } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+                          removeTag(tags[tags.length - 1]);
+                        }
+                      }}
+                      placeholder={tags.length === 0 ? 'Начните вводить тег...' : ''}
+                      className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
+                    />
+                  </div>
+                </div>
+
+                {/* Дропдаун популярных тегов */}
+                {tagDropdownOpen && (filteredPopularTags.length > 0 || showCreateOption) && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden py-[5px]">
+                    <div className="max-h-[240px] overflow-y-auto">
+                      {filteredPopularTags.map(tag => (
+                        <button
+                          key={tag}
+                          onClick={() => addTag(tag)}
+                          className="flex items-center w-full px-5 py-[10px] border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.04)] transition-colors text-left"
+                        >
+                          <span className="flex-1 text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">{tag}</span>
+                        </button>
+                      ))}
+                      {showCreateOption && (
+                        <button
+                          onClick={() => addTag(tagInput)}
+                          className="flex items-center gap-2 w-full px-5 py-[10px] border-none bg-transparent cursor-pointer hover:bg-[rgba(131,93,225,0.04)] transition-colors text-left border-t border-[rgba(25,25,25,0.08)]"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 3v10M3 8h10" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                          <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">
+                            Создать «{tagInput.trim()}»
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -495,7 +663,7 @@ export default function NewDocumentPage() {
                   type: f.type || 'varchar',
                   description: f.description || '',
                 }));
-                const parsedTags = tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+                const parsedTags = tags.length > 0 ? tags : [];
 
                 if (isEditMode && existingDoc) {
                   updateDocument(id, {
