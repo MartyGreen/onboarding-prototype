@@ -1045,8 +1045,10 @@ export default function DocumentPage() {
         <div
           className="fixed left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]"
           style={{
-            bottom: (sqlStep === 'filters' || sqlStep === 'result') ? '24px' : '24px',
-            transition: 'bottom 0.4s ease',
+            bottom: '24px',
+            maxHeight: (sqlStep === 'filters' || sqlStep === 'result') ? 'calc(100vh - 48px)' : 'calc(100vh - 48px)',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <div className="bg-[#191919] rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.3)] px-6 py-3.5 flex items-center gap-5 min-w-[480px]">
@@ -1120,7 +1122,7 @@ export default function DocumentPage() {
 
           {/* Expanded collection panel */}
           {isCollectionOpen && (
-            <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)] max-h-[400px] overflow-y-auto">
+            <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)] overflow-y-auto" style={{ maxHeight: (sqlStep === 'filters' || sqlStep === 'result') ? '180px' : '400px', transition: 'max-height 0.3s ease' }}>
               <div className="px-6 py-4 border-b border-[rgba(25,25,25,0.08)]">
                 <div className="flex items-center justify-between">
                   <h4 className="text-base font-semibold text-[#191919] m-0">Собранная коллекция полей</h4>
@@ -1372,8 +1374,8 @@ export default function DocumentPage() {
                     </div>
                     <div className="relative">
                       <textarea
-                        className="w-full bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 max-h-[200px] overflow-y-auto border-none outline-none resize-none"
-                        style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace", minHeight: '80px' }}
+                        className="w-full bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 overflow-y-auto border-none outline-none resize-vertical"
+                        style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace", minHeight: '140px', maxHeight: '300px' }}
                         value={generatedSql}
                         onChange={(e) => setGeneratedSql(e.target.value)}
                         spellCheck={false}
