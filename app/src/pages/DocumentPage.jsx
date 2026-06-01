@@ -1051,6 +1051,7 @@ export default function DocumentPage() {
             pointerEvents: (sqlStep === 'filters' || sqlStep === 'result' || isCollectionOpen) ? 'auto' : 'none',
           }}
           onClick={() => {
+            setHighlightFields(new Set());
             if (sqlStep !== 'idle') {
               setSqlStep('idle');
               setSqlDateFrom('');
@@ -1131,13 +1132,28 @@ export default function DocumentPage() {
                 </button>
               )}
               <button
-                onClick={() => setIsCollectionOpen(!isCollectionOpen)}
+                onClick={() => {
+                  const willClose = isCollectionOpen;
+                  setIsCollectionOpen(!isCollectionOpen);
+                  if (willClose) {
+                    setHighlightFields(new Set());
+                  }
+                }}
                 className="px-4 h-9 rounded-lg bg-[rgba(255,255,255,0.12)] border-none text-sm font-medium text-white cursor-pointer hover:bg-[rgba(255,255,255,0.2)] transition-colors"
               >
                 {isCollectionOpen ? 'Скрыть' : 'Показать'}
               </button>
               <button
-                onClick={() => clearCollection()}
+                onClick={() => {
+                  clearCollection();
+                  setHighlightFields(new Set());
+                  // Убираем highlight из URL
+                  const params = new URLSearchParams(location.search);
+                  if (params.has('highlight')) {
+                    params.delete('highlight');
+                    navigate(`${location.pathname}${params.toString() ? '?' + params.toString() : ''}`, { replace: true });
+                  }
+                }}
                 className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.08)] border-none cursor-pointer hover:bg-[rgba(255,75,75,0.2)] transition-colors"
                 title="Очистить коллекцию"
               >
