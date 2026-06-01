@@ -1127,7 +1127,7 @@ export default function DocumentPage() {
 
           {/* Expanded collection panel */}
           {isCollectionOpen && (
-            <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)] overflow-y-auto" style={{ maxHeight: '400px' }}>
+            <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)]">
               <div className="px-6 py-4 border-b border-[rgba(25,25,25,0.08)]">
                 <div className="flex items-center justify-between">
                   <h4 className="text-base font-semibold text-[#191919] m-0">Собранная коллекция полей</h4>
