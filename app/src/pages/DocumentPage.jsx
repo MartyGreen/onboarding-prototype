@@ -87,6 +87,7 @@ export default function DocumentPage() {
       setOpenMenuIndex(null);
       setOpenMissingMenuIndex(null);
       setLinksPopupField(null);
+      setHighlightFields(new Set());
     };
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
