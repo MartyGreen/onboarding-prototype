@@ -29,13 +29,26 @@ export default function DocumentPage() {
   const [openMissingMenuIndex, setOpenMissingMenuIndex] = useState(null); // для missing fields
   const [editFieldIndex, setEditFieldIndex] = useState(null); // индекс поля для редактирования
 
-  // Подсветка полей из SmartSearch
+  // Подсветка полей из SmartSearch — одноразовый скролл
   const location = useLocation();
-  const highlightFields = useMemo(() => {
+  const [highlightFields, setHighlightFields] = useState(() => {
     const params = new URLSearchParams(location.search);
     const h = params.get('highlight');
     if (!h) return new Set();
     return new Set(decodeURIComponent(h).split(','));
+  });
+  const hasScrolledToHighlight = useRef(false);
+
+  // При смене location.search обновляем highlight
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const h = params.get('highlight');
+    if (h) {
+      setHighlightFields(new Set(decodeURIComponent(h).split(',')));
+      hasScrolledToHighlight.current = false;
+    } else {
+      setHighlightFields(new Set());
+    }
   }, [location.search]);
 
   // Discussions state
@@ -302,7 +315,12 @@ export default function DocumentPage() {
                 return (
                   <div
                     key={i}
-                    ref={el => { if (isHighlighted && el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                    ref={el => {
+                      if (isHighlighted && el && !hasScrolledToHighlight.current) {
+                        hasScrolledToHighlight.current = true;
+                        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                      }
+                    }}
                     className={`flex gap-[2px] mt-[2px] ${isHighlighted ? 'rounded-lg relative z-10' : ''}`}
                     style={isHighlighted ? {
                       boxShadow: '0 0 0 3px #835de1',
