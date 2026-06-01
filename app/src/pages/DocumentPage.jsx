@@ -1023,6 +1023,22 @@ export default function DocumentPage() {
       {/* Smart Search Modal */}
       <SmartSearch isOpen={smartSearchOpen} onClose={() => setSmartSearchOpen(false)} />
 
+      {/* SQL Overlay backdrop */}
+      {collection.length > 0 && (sqlStep === 'filters' || sqlStep === 'result') && (
+        <div
+          className="fixed inset-0 z-[99] transition-colors duration-300"
+          style={{
+            backgroundColor: sqlStep === 'result' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.2)',
+          }}
+          onClick={() => {
+            setSqlStep('idle');
+            setSqlDateFrom('');
+            setSqlDateTo('');
+            setSqlLimit('100');
+          }}
+        />
+      )}
+
       {/* Collection Floating Bar */}
       {collection.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]">
