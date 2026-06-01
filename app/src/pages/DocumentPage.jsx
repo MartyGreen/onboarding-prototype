@@ -1023,11 +1023,13 @@ export default function DocumentPage() {
       <SmartSearch isOpen={smartSearchOpen} onClose={() => setSmartSearchOpen(false)} />
 
       {/* SQL Overlay backdrop */}
-      {collection.length > 0 && (sqlStep === 'filters' || sqlStep === 'result') && (
+      {collection.length > 0 && (
         <div
-          className="fixed inset-0 z-[99] transition-colors duration-300"
+          className="fixed inset-0 z-[99] pointer-events-none"
           style={{
-            backgroundColor: sqlStep === 'result' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.2)',
+            backgroundColor: sqlStep === 'result' ? 'rgba(0,0,0,0.5)' : sqlStep === 'filters' ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
+            transition: 'background-color 0.4s ease',
+            pointerEvents: (sqlStep === 'filters' || sqlStep === 'result') ? 'auto' : 'none',
           }}
           onClick={() => {
             setSqlStep('idle');
@@ -1040,7 +1042,13 @@ export default function DocumentPage() {
 
       {/* Collection Floating Bar */}
       {collection.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]">
+        <div
+          className="fixed left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]"
+          style={{
+            bottom: (sqlStep === 'filters' || sqlStep === 'result') ? '24px' : '24px',
+            transition: 'bottom 0.4s ease',
+          }}
+        >
           <div className="bg-[#191919] rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.3)] px-6 py-3.5 flex items-center gap-5 min-w-[480px]">
             {/* Count */}
             <div className="flex items-center gap-2.5">
@@ -1363,9 +1371,13 @@ export default function DocumentPage() {
                       </button>
                     </div>
                     <div className="relative">
-                      <pre className="bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 overflow-x-auto max-h-[200px] overflow-y-auto" style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace" }}>
-                        {generatedSql}
-                      </pre>
+                      <textarea
+                        className="w-full bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 max-h-[200px] overflow-y-auto border-none outline-none resize-none"
+                        style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace", minHeight: '80px' }}
+                        value={generatedSql}
+                        onChange={(e) => setGeneratedSql(e.target.value)}
+                        spellCheck={false}
+                      />
                     </div>
                     <div className="flex items-center gap-2 justify-end">
                       <button
