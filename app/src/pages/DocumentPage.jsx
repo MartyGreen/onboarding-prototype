@@ -1380,7 +1380,7 @@ export default function DocumentPage() {
                     <div className="relative">
                       <textarea
                         className="w-full bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 overflow-y-auto border-none outline-none resize-vertical"
-                        style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace", minHeight: '140px', maxHeight: '300px' }}
+                        style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace", minHeight: '420px', maxHeight: '600px' }}
                         value={generatedSql}
                         onChange={(e) => setGeneratedSql(e.target.value)}
                         spellCheck={false}
