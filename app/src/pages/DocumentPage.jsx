@@ -422,61 +422,6 @@ export default function DocumentPage() {
             </div>
           </div>
 
-          {/* Experts Card */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
-            <h3 className="text-lg font-medium text-[#191919] leading-[22px] m-0 mb-3">
-              Эксперты по документу
-            </h3>
-
-            <div className="flex flex-col gap-0.5">
-              {doc.experts.map((expert, i) => (
-                <div key={i} className="flex items-center gap-3 py-2">
-                  <div className="w-10 h-10 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
-                    <img src={`${import.meta.env.BASE_URL}${expert.avatar}`} alt="" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">{expert.role}</span>
-                    <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">{expert.name}</span>
-                  </div>
-                  {expert.isSelf && (
-                    <button
-                      onClick={() => {
-                        const newExperts = doc.experts.filter((_, idx) => idx !== i);
-                        updateDocument(doc.id, { experts: newExperts });
-                      }}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors shrink-0"
-                    >
-                      <img src={`${import.meta.env.BASE_URL}assets/icon-trash-red.svg`} alt="Удалить" className="w-5 h-5" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Add Expert — скрываем если уже добавлен */}
-            {!doc.experts.some(e => e.isSelf) && (
-              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4 mt-3">
-                <div>
-                  <div
-                    className="flex items-center gap-3 cursor-pointer"
-                    onClick={() => {
-                      const selfExpert = {
-                        name: 'Бесстрашный исследователь',
-                        role: 'Эксперт',
-                        avatar: 'assets/avatar-girl-2.jpg',
-                        isSelf: true,
-                      };
-                      updateDocument(doc.id, { experts: [...doc.experts, selfExpert] });
-                    }}
-                  >
-                    <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
-                    <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить себя как эксперта</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Discussions Card */}
           <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-8">
             <div className="flex items-center justify-between mb-4">
@@ -772,6 +717,61 @@ export default function DocumentPage() {
                 >
                   <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                   <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Создать тему обсуждения</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Experts Card */}
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+            <h3 className="text-lg font-medium text-[#191919] leading-[22px] m-0 mb-3">
+              Эксперты по документу
+            </h3>
+
+            <div className="flex flex-col gap-0.5">
+              {doc.experts.map((expert, i) => (
+                <div key={i} className="flex items-center gap-3 py-2">
+                  <div className="w-10 h-10 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
+                    <img src={`${import.meta.env.BASE_URL}${expert.avatar}`} alt="" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 flex-1">
+                    <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">{expert.role}</span>
+                    <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">{expert.name}</span>
+                  </div>
+                  {expert.isSelf && (
+                    <button
+                      onClick={() => {
+                        const newExperts = doc.experts.filter((_, idx) => idx !== i);
+                        updateDocument(doc.id, { experts: newExperts });
+                      }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors shrink-0"
+                    >
+                      <img src={`${import.meta.env.BASE_URL}assets/icon-trash-red.svg`} alt="Удалить" className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Add Expert — скрываем если уже добавлен */}
+            {!doc.experts.some(e => e.isSelf) && (
+              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4 mt-3">
+                <div>
+                  <div
+                    className="flex items-center gap-3 cursor-pointer"
+                    onClick={() => {
+                      const selfExpert = {
+                        name: 'Бесстрашный исследователь',
+                        role: 'Эксперт',
+                        avatar: 'assets/avatar-girl-2.jpg',
+                        isSelf: true,
+                      };
+                      updateDocument(doc.id, { experts: [...doc.experts, selfExpert] });
+                    }}
+                  >
+                    <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
+                    <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить себя как эксперта</span>
+                  </div>
                 </div>
               </div>
             )}
