@@ -13,6 +13,7 @@ export default function SmartSearch({ isOpen, onClose }) {
   const { documents } = useDocuments();
   const [query, setQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
+  const [expandedDesc, setExpandedDesc] = useState({}); // { docId: true }
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -254,6 +255,32 @@ export default function SmartSearch({ isOpen, onClose }) {
                         <span className="text-xs text-[#949494] leading-[15px] truncate">
                           {doc.fullPath}
                         </span>
+                        {/* Краткое описание таблицы */}
+                        {(doc.descriptionFull || doc.description) && (() => {
+                          const DESC_LIMIT = 120;
+                          const fullText = doc.descriptionFull || doc.description;
+                          const isLong = fullText.length > DESC_LIMIT;
+                          const isExpanded = expandedDesc[doc.id];
+                          const displayText = isLong && !isExpanded
+                            ? fullText.slice(0, DESC_LIMIT).replace(/\s+\S*$/, '') + '…'
+                            : fullText;
+                          return (
+                            <span className="text-xs text-[#676767] leading-[16px] mt-0.5" style={{ whiteSpace: isExpanded ? 'pre-wrap' : 'normal' }}>
+                              {displayText}
+                              {isLong && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedDesc(prev => ({ ...prev, [doc.id]: !prev[doc.id] }));
+                                  }}
+                                  className="ml-1 text-xs font-medium text-[#835de1] bg-transparent border-none cursor-pointer hover:underline p-0"
+                                >
+                                  {isExpanded ? 'свернуть' : 'ещё'}
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })()}
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {concepts.map(c => (

@@ -1099,20 +1099,32 @@ export default function DocumentPage() {
                 </div>
               </div>
               <div className="px-6 py-3">
-                {groupedByDoc.map((group) => (
+                {groupedByDoc.map((group) => {
+                  const groupDoc = documents.find(d => d.id === group.docId);
+                  const groupDesc = groupDoc?.descriptionFull || groupDoc?.description || '';
+                  const DESC_LIMIT = 100;
+                  const isLongDesc = groupDesc.length > DESC_LIMIT;
+                  return (
                   <div key={group.docId} className="mb-4 last:mb-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#835de1]" />
-                      <span
-                        className="text-sm font-medium text-[#835de1] leading-[18px] cursor-pointer hover:underline"
-                        onClick={() => {
-                          setIsCollectionOpen(false);
-                          navigate(`/document/${group.docId}`);
-                        }}
-                      >
-                        {group.docName}
-                      </span>
-                      <span className="text-xs text-[#949494]">({group.fields.length})</span>
+                    <div className="flex flex-col gap-1 mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#835de1] shrink-0 mt-0.5" />
+                        <span
+                          className="text-sm font-medium text-[#835de1] leading-[18px] cursor-pointer hover:underline"
+                          onClick={() => {
+                            setIsCollectionOpen(false);
+                            navigate(`/document/${group.docId}`);
+                          }}
+                        >
+                          {group.docName}
+                        </span>
+                        <span className="text-xs text-[#949494]">({group.fields.length})</span>
+                      </div>
+                      {groupDesc && (
+                        <p className="text-xs text-[#676767] leading-[16px] m-0 pl-[14px]" title={groupDesc}>
+                          {isLongDesc ? groupDesc.slice(0, DESC_LIMIT).replace(/\s+\S*$/, '') + '…' : groupDesc}
+                        </p>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-1.5 pl-4">
                       {group.fields.map((field) => (
@@ -1134,7 +1146,8 @@ export default function DocumentPage() {
                       ))}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
               {/* SQL Generator Footer */}
               <div className="px-6 py-3 border-t border-[rgba(25,25,25,0.08)]">
