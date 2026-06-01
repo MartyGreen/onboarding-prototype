@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
+import SmartSearch from '../components/SmartSearch';
 
 // Иконки аватаров по статусам из Figma
 
@@ -43,6 +44,7 @@ export default function DocumentListPage() {
   const { documents, toggleStarred, statusConfig } = useDocuments();
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [smartSearchOpen, setSmartSearchOpen] = useState(false);
 
   // Фильтр по владельцу (кругу) — одиночный выбор
   const [selectedOwner, setSelectedOwner] = useState(null);
@@ -275,6 +277,19 @@ export default function DocumentListPage() {
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-5 h-5" />
+          </button>
+          {/* Smart Search Button */}
+          <button
+            onClick={() => setSmartSearchOpen(true)}
+            className="flex items-center gap-2 h-10 px-3 rounded-lg border border-[#835de1] bg-white cursor-pointer hover:bg-[rgba(131,93,225,0.06)] transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="7" cy="7" r="5" stroke="#835de1" strokeWidth="1.5"/>
+              <path d="M11 11L14 14" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <span className="text-sm font-medium text-[#835de1] leading-[18px] tracking-[0.14px] whitespace-nowrap">
+              Умный поиск
+            </span>
           </button>
           {/* New Document Button */}
           <button
@@ -757,6 +772,9 @@ export default function DocumentListPage() {
           ))}
         </div>
       </div>
+
+      {/* Smart Search Modal */}
+      <SmartSearch isOpen={smartSearchOpen} onClose={() => setSmartSearchOpen(false)} />
     </div>
   );
 }
