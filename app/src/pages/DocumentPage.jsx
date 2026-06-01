@@ -8,7 +8,7 @@ import { useAlert } from '../components/SuccessAlert';
 export default function DocumentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { documents, updateDocument, statusConfig, toggleStarred } = useDocuments();
+  const { documents, updateDocument, statusConfig, toggleStarred, fieldLinks } = useDocuments();
   const { showAlert } = useAlert();
   const doc = documents.find(d => d.id === id) || documents[0];
   const [fieldSearch, setFieldSearch] = useState('');
@@ -25,16 +25,38 @@ export default function DocumentPage() {
   const [replyText, setReplyText] = useState('');
   const [sentToChannel, setSentToChannel] = useState({});
 
-  // Закрытие меню при клике вне
+  // Field links popup
+  const [linksPopupField, setLinksPopupField] = useState(null); // fieldName or null
+
+  // Helper: get links for a field in current doc (both directions)
+  const getFieldLinks = (fieldName) => {
+    if (!fieldLinks) return [];
+    return fieldLinks
+      .filter(l =>
+        (l.fromDoc === doc.id && l.fromField === fieldName) ||
+        (l.toDoc === doc.id && l.toField === fieldName)
+      )
+      .map(l => {
+        const isOutgoing = l.fromDoc === doc.id && l.fromField === fieldName;
+        const targetDocId = isOutgoing ? l.toDoc : l.fromDoc;
+        const targetField = isOutgoing ? l.toField : l.fromField;
+        const targetDoc = documents.find(d => d.id === targetDocId);
+        return { ...l, targetDocId, targetField, targetDoc };
+      })
+      .filter(l => l.targetDoc);
+  };
+
+  // Закрытие меню и попапов при клике вне
   React.useEffect(() => {
-    if (openMenuIndex === null && openMissingMenuIndex === null) return;
+    if (openMenuIndex === null && openMissingMenuIndex === null && linksPopupField === null) return;
     const handleClick = () => {
       setOpenMenuIndex(null);
       setOpenMissingMenuIndex(null);
+      setLinksPopupField(null);
     };
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
-  }, [openMenuIndex, openMissingMenuIndex]);
+  }, [openMenuIndex, openMissingMenuIndex, linksPopupField]);
 
   const handleDeleteField = (fieldIndex) => {
     const newFields = doc.fields.filter((_, i) => i !== fieldIndex);
@@ -256,15 +278,79 @@ export default function DocumentPage() {
                 const isEmpty = !row.description || row.description === '—' || row.description.trim() === '';
                 return (
                   <div key={i} className="flex gap-[2px] mt-[2px]">
-                    <div className={`w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3.5 ${isLast ? 'rounded-bl-xl' : ''}`}>
+                    <div className={`w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`}>
                       <div className="flex flex-col gap-1">
-                        <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">
-                          {row.name}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">
+                            {row.name}
+                          </span>
+                          {(() => {
+                            const links = getFieldLinks(row.name);
+                            if (links.length === 0) return null;
+                            return (
+                              <button
+                                className="inline-flex items-center gap-1 px-1.5 h-5 rounded-md bg-[rgba(131,93,225,0.12)] border-none cursor-pointer hover:bg-[rgba(131,93,225,0.22)] transition-colors shrink-0"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setLinksPopupField(linksPopupField === row.name ? null : row.name);
+                                }}
+                              >
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path d="M5 2.5H3.5C2.67157 2.5 2 3.17157 2 4V4C2 4.82843 2.67157 5.5 3.5 5.5H5M7 5.5H8.5C9.32843 5.5 10 4.82843 10 4V4C10 3.17157 9.32843 2.5 8.5 2.5H7M4 4H8M5 9.5H3.5C2.67157 9.5 2 8.82843 2 8V8C2 7.17157 2.67157 6.5 3.5 6.5H5M7 6.5H8.5C9.32843 6.5 10 7.17157 10 8V8C10 8.82843 9.32843 9.5 8.5 9.5H7M4 8H8" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                                </svg>
+                                <span className="text-[10px] font-semibold text-[#835de1] leading-none">{links.length}</span>
+                              </button>
+                            );
+                          })()}
+                        </div>
                         <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">
                           {row.type}
                         </span>
                       </div>
+
+                      {/* Links popup */}
+                      {linksPopupField === row.name && (() => {
+                        const links = getFieldLinks(row.name);
+                        if (links.length === 0) return null;
+                        return (
+                          <div
+                            className="absolute left-0 top-full mt-1 z-50 bg-white rounded-xl shadow-[0px_20px_40px_rgba(0,0,0,0.15)] py-3 min-w-[320px] max-w-[420px]"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="px-4 pb-2 border-b border-[rgba(25,25,25,0.08)]">
+                              <span className="text-xs font-medium text-[#676767] leading-[15px]">
+                                Связи поля <span className="text-[#191919] font-semibold">{row.name}</span> ({links.length})
+                              </span>
+                            </div>
+                            <div className="flex flex-col max-h-[250px] overflow-y-auto">
+                              {links.map((link, li) => (
+                                <div
+                                  key={li}
+                                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-[rgba(25,25,25,0.03)] cursor-pointer transition-colors"
+                                  onClick={() => {
+                                    setLinksPopupField(null);
+                                    navigate(`/document/${link.targetDocId}`);
+                                  }}
+                                >
+                                  <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                    <span className="text-sm font-medium text-[#835de1] leading-[18px] truncate">
+                                      {link.targetDoc.name}
+                                    </span>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-xs text-[#191919] font-medium">{link.targetField}</span>
+                                      <span className="text-[10px] text-[#949494] px-1 py-0.5 rounded bg-[rgba(25,25,25,0.06)]">{link.joinType}</span>
+                                    </div>
+                                    <span className="text-xs text-[#676767] leading-[14px]">{link.description}</span>
+                                  </div>
+                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                                    <path d="M6 4L10 8L6 12" stroke="#949494" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                     <div
                       className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-3.5 flex items-start gap-2 cursor-text"

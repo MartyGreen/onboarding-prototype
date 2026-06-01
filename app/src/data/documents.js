@@ -1,4 +1,60 @@
+// Глобальный реестр связей между полями таблиц
+// docId:fieldName → [{targetDocId, targetFieldName, joinType}]
+export const fieldLinks = [
+  // test_quest.id связан с несколькими таблицами через user/entity id
+  { fromDoc: '31', fromField: 'id', toDoc: '1', toField: 'id', joinType: 'INNER JOIN', description: 'По идентификатору записи' },
+  { fromDoc: '31', fromField: 'id', toDoc: '3', toField: 'id', joinType: 'LEFT JOIN', description: 'По идентификатору клиента' },
+  { fromDoc: '31', fromField: 'id', toDoc: '2', toField: 'id', joinType: 'INNER JOIN', description: 'По идентификатору словаря' },
+  { fromDoc: '31', fromField: 'id', toDoc: '4', toField: 'id', joinType: 'LEFT JOIN', description: 'По идентификатору расчёта' },
+  // test_quest.status связан
+  { fromDoc: '31', fromField: 'status', toDoc: '1', toField: 'seller_code', joinType: 'LEFT JOIN', description: 'Маппинг статуса на код продавца' },
+  { fromDoc: '31', fromField: 'status', toDoc: '3', toField: 'segment', joinType: 'LEFT JOIN', description: 'Статус → клиентский сегмент' },
+  // test_quest.created_at связан
+  { fromDoc: '31', fromField: 'created_at', toDoc: '1', toField: 'sign_date', joinType: 'INNER JOIN', description: 'По дате' },
+  { fromDoc: '31', fromField: 'created_at', toDoc: '3', toField: 'created_at', joinType: 'INNER JOIN', description: 'По дате создания' },
+  { fromDoc: '31', fromField: 'created_at', toDoc: '4', toField: 'created_at', joinType: 'INNER JOIN', description: 'По дате создания' },
+  // Связи между другими документами (для графа)
+  { fromDoc: '1', fromField: 'id', toDoc: '3', toField: 'id', joinType: 'INNER JOIN', description: 'По ID записи' },
+  { fromDoc: '1', fromField: 'region_code', toDoc: '3', toField: 'region_id', joinType: 'LEFT JOIN', description: 'По региону' },
+  { fromDoc: '3', fromField: 'manager_id', toDoc: '2', toField: 'id', joinType: 'LEFT JOIN', description: 'Менеджер → справочник' },
+  { fromDoc: '3', fromField: 'created_at', toDoc: '4', toField: 'created_at', joinType: 'INNER JOIN', description: 'По дате создания' },
+  { fromDoc: '2', fromField: 'id', toDoc: '4', toField: 'id', joinType: 'LEFT JOIN', description: 'По идентификатору' },
+];
+
 export const documents = [
+  {
+    id: '31',
+    name: 'test_quest',
+    fullPath: 'CLICKHOUSE > STAGE > test_quest',
+    description: 'Тестовый документ для экспериментов с обсуждениями',
+    descriptionFull: 'Тестовый документ для проверки функциональности обсуждений и тредов. Используется для экспериментов с привязкой к каналам мессенджера.',
+    author: 'Антон Вараксин',
+    authorAvatar: 'assets/avatar-boy.jpg',
+    database: 'ClickHouse',
+    dbColor: '#facc15',
+    schema: 'STAGE',
+    status: 'Черновик',
+    starred: false,
+    createdAt: 'только что',
+    updatedAt: 'только что',
+    circles: 'Дата Платформа (Якорный Круг)',
+    roles: [
+      { name: 'READ_TEST', label: 'Запросить роль' },
+    ],
+    tags: ['Тест', 'Эксперимент'],
+    fields: [
+      { name: 'id', type: 'bigint', description: 'PK' },
+      { name: 'question', type: 'text', description: 'Текст вопроса' },
+      { name: 'answer', type: 'text', description: 'Текст ответа' },
+      { name: 'status', type: 'varchar(20)', description: 'Статус: open, resolved, closed' },
+      { name: 'created_at', type: 'timestamp', description: 'Дата создания' },
+    ],
+    missingFields: [],
+    experts: [
+      { role: 'Дизайнер Дата Платформы', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+    ],
+    discussions: [],
+  },
   {
     id: '1',
     name: 'ecom_team.prelead_seller_sign',

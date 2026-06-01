@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { documents as initialDocuments, statusConfig } from './documents';
+import { documents as initialDocuments, statusConfig, fieldLinks } from './documents';
 
 const DocumentsContext = createContext();
 
@@ -19,7 +19,7 @@ export function DocumentsProvider({ children }) {
   };
 
   return (
-    <DocumentsContext.Provider value={{ documents, addDocument, updateDocument, toggleStarred, statusConfig }}>
+    <DocumentsContext.Provider value={{ documents, addDocument, updateDocument, toggleStarred, statusConfig, fieldLinks }}>
       {children}
     </DocumentsContext.Provider>
   );
