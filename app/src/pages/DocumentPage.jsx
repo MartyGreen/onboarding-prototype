@@ -1061,16 +1061,18 @@ export default function DocumentPage() {
 
             {/* Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setSmartSearchOpen(true)}
-                className="flex items-center gap-1.5 px-4 h-9 rounded-lg border border-[#835de1] bg-transparent text-sm font-medium text-[#835de1] cursor-pointer hover:bg-[rgba(131,93,225,0.15)] transition-colors"
-              >
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <circle cx="7" cy="7" r="5" stroke="#835de1" strokeWidth="1.5"/>
-                  <path d="M11 11L14 14" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-                Найти таблицу
-              </button>
+              {groupedByDoc.length >= 2 && (
+                <button
+                  onClick={() => setSmartSearchOpen(true)}
+                  className="flex items-center gap-1.5 px-4 h-9 rounded-lg border border-[#835de1] bg-transparent text-sm font-medium text-[#835de1] cursor-pointer hover:bg-[rgba(131,93,225,0.15)] transition-colors"
+                >
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <circle cx="7" cy="7" r="5" stroke="#835de1" strokeWidth="1.5"/>
+                    <path d="M11 11L14 14" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  Найти таблицу
+                </button>
+              )}
               <button
                 onClick={() => setIsCollectionOpen(!isCollectionOpen)}
                 className="px-4 h-9 rounded-lg bg-[rgba(255,255,255,0.12)] border-none text-sm font-medium text-white cursor-pointer hover:bg-[rgba(255,255,255,0.2)] transition-colors"
@@ -1149,7 +1151,8 @@ export default function DocumentPage() {
                   );
                 })}
               </div>
-              {/* SQL Generator Footer */}
+              {/* SQL Generator Footer — показываем только при 2+ таблицах */}
+              {groupedByDoc.length >= 2 && (
               <div className="px-6 py-3 border-t border-[rgba(25,25,25,0.08)]">
                 {sqlStep === 'idle' && (
                   <div className="flex justify-end">
@@ -1360,6 +1363,7 @@ export default function DocumentPage() {
                   </div>
                 )}
               </div>
+              )}
             </div>
           )}
         </div>
