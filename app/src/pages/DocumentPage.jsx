@@ -355,7 +355,9 @@ export default function DocumentPage() {
                                 }}
                               >
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                  <path d="M5 2.5H3.5C2.67157 2.5 2 3.17157 2 4V4C2 4.82843 2.67157 5.5 3.5 5.5H5M7 5.5H8.5C9.32843 5.5 10 4.82843 10 4V4C10 3.17157 9.32843 2.5 8.5 2.5H7M4 4H8M5 9.5H3.5C2.67157 9.5 2 8.82843 2 8V8C2 7.17157 2.67157 6.5 3.5 6.5H5M7 6.5H8.5C9.32843 6.5 10 7.17157 10 8V8C10 8.82843 9.32843 9.5 8.5 9.5H7M4 8H8" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M5 7L7 5" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M3.5 8.5L2.15 9.85C1.56 10.44 1.56 11.39 2.15 11.98V11.98C2.74 12.57 3.69 12.57 4.28 11.98L5.5 10.76" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M8.5 3.5L9.85 2.15C10.44 1.56 10.44 0.61 9.85 0.02V0.02C9.26 -0.57 8.31 -0.57 7.72 0.02L6.5 1.24" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
                                 </svg>
                                 <span className="text-[10px] font-semibold text-[#835de1] leading-none">{links.length}</span>
                               </button>
