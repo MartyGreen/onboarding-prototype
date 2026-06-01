@@ -5,6 +5,7 @@ import AddFieldModal from '../components/AddFieldModal';
 import WarningTooltip from '../components/WarningTooltip';
 import { useAlert } from '../components/SuccessAlert';
 import { useCollection } from '../data/CollectionContext';
+import SmartSearch from '../components/SmartSearch';
 
 export default function DocumentPage() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function DocumentPage() {
   const { showAlert } = useAlert();
   const { collection, addToCollection, removeFromCollection, isInCollection, clearCollection, groupedByDoc } = useCollection();
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  const [smartSearchOpen, setSmartSearchOpen] = useState(false);
   const doc = documents.find(d => d.id === id) || documents[0];
   const [fieldSearch, setFieldSearch] = useState('');
   const [isAddFieldOpen, setIsAddFieldOpen] = useState(false);
@@ -290,8 +292,17 @@ export default function DocumentPage() {
                 const isEmpty = !row.description || row.description === '—' || row.description.trim() === '';
                 const isHighlighted = highlightFields.has(row.name);
                 return (
-                  <div key={i} className={`flex gap-[2px] mt-[2px] ${isHighlighted ? 'ring-2 ring-[#835de1] ring-offset-1 rounded-lg relative z-10' : ''}`} style={isHighlighted ? { animation: 'highlightPulse 2s ease-out' } : {}}>
-                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''} ${isHighlighted ? 'bg-[rgba(131,93,225,0.08)]' : 'bg-[rgba(25,25,25,0.05)]'}`}>
+                  <div
+                    key={i}
+                    ref={el => { if (isHighlighted && el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                    className={`flex gap-[2px] mt-[2px] ${isHighlighted ? 'rounded-lg relative z-10' : ''}`}
+                    style={isHighlighted ? {
+                      boxShadow: '0 0 0 3px #835de1',
+                      borderRadius: '12px',
+                      animation: 'highlightPulse 2.5s ease-out',
+                    } : {}}
+                  >
+                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           {/* Collection checkbox */}
@@ -998,6 +1009,9 @@ export default function DocumentPage() {
         initialData={editFieldIndex !== null ? doc.fields[editFieldIndex] : null}
       />
 
+      {/* Smart Search Modal */}
+      <SmartSearch isOpen={smartSearchOpen} onClose={() => setSmartSearchOpen(false)} />
+
       {/* Collection Floating Bar */}
       {collection.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]">
@@ -1040,6 +1054,16 @@ export default function DocumentPage() {
 
             {/* Actions */}
             <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setSmartSearchOpen(true)}
+                className="flex items-center gap-1.5 px-4 h-9 rounded-lg border border-[#835de1] bg-transparent text-sm font-medium text-[#835de1] cursor-pointer hover:bg-[rgba(131,93,225,0.15)] transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="7" cy="7" r="5" stroke="#835de1" strokeWidth="1.5"/>
+                  <path d="M11 11L14 14" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                Найти таблицу
+              </button>
               <button
                 onClick={() => setIsCollectionOpen(!isCollectionOpen)}
                 className="px-4 h-9 rounded-lg bg-[rgba(255,255,255,0.12)] border-none text-sm font-medium text-white cursor-pointer hover:bg-[rgba(255,255,255,0.2)] transition-colors"
