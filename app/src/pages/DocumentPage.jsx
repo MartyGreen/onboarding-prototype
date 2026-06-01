@@ -310,7 +310,7 @@ export default function DocumentPage() {
                       animation: 'highlightPulse 2.5s ease-out',
                     } : {}}
                   >
-                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : hasLinks ? { backgroundColor: 'rgba(131, 93, 225, 0.04)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
+                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           {/* Collection checkbox */}
@@ -391,7 +391,7 @@ export default function DocumentPage() {
                                   className="flex items-center gap-3 px-4 py-2.5 hover:bg-[rgba(25,25,25,0.03)] cursor-pointer transition-colors"
                                   onClick={() => {
                                     setLinksPopupField(null);
-                                    navigate(`/document/${link.targetDocId}`);
+                                    navigate(`/document/${link.targetDocId}?highlight=${encodeURIComponent(link.targetField)}`);
                                   }}
                                 >
                                   <div className="flex flex-col gap-0.5 flex-1 min-w-0">
@@ -415,8 +415,7 @@ export default function DocumentPage() {
                       })()}
                     </div>
                     <div
-                      className="flex-1 px-5 py-3.5 flex items-start gap-2 cursor-text"
-                      style={{ backgroundColor: hasLinks ? 'rgba(131, 93, 225, 0.04)' : 'rgba(25, 25, 25, 0.05)' }}
+                      className="flex-1 px-5 py-3.5 flex items-start gap-2 cursor-text bg-[rgba(25,25,25,0.05)]"
                       onClick={(e) => {
                         const ta = e.currentTarget.querySelector('textarea');
                         if (ta) ta.focus();
