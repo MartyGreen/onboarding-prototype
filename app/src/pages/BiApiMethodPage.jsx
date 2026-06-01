@@ -285,6 +285,16 @@ resp, _ := http.DefaultClient.Do(req)`,
           <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
             <img src={`${import.meta.env.BASE_URL}assets/icon-trash-black.svg`} alt="" className="w-5 h-5" />
           </button>
+          {data.status === 'На проверке' && (
+            <button
+              onClick={() => navigate(`/api/${id}/moderate`)}
+              className="flex items-center gap-2 h-10 px-3 rounded-lg border-[1.4px] border-[#835de1] bg-transparent cursor-pointer hover:bg-[rgba(131,93,225,0.05)] transition-colors"
+            >
+              <span className="text-sm font-medium text-[#835de1] leading-[18px] tracking-[0.14px] whitespace-nowrap">
+                Модерация
+              </span>
+            </button>
+          )}
           <button
             onClick={() => navigate(`/api/${id}/edit`)}
             className="flex items-center gap-2 h-10 px-3 rounded-lg bg-[#191919] border-none cursor-pointer hover:bg-[#333] transition-colors"

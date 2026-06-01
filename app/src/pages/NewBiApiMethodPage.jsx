@@ -1,47 +1,31 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/SuccessAlert';
 import { useBiApiMethods } from '../data/BiApiMethodsContext';
 
-export default function EditBiApiMethodPage() {
+export default function NewBiApiMethodPage() {
   const navigate = useNavigate();
-  const { id } = useParams();
   const { showAlert } = useAlert();
-  const { getMethod, updateMethod } = useBiApiMethods();
+  const { addMethod } = useBiApiMethods();
 
-  const methodData = getMethod(id);
-
-  const [name, setName] = useState(methodData?.name || '');
-  const [description, setDescription] = useState(methodData?.description || '');
-  const [detailedInfo, setDetailedInfo] = useState(methodData?.detailedInfo || '');
-  const [sql, setSql] = useState(methodData?.sql || '');
-  const [techAccount] = useState(methodData?.techAccount || 'TEST_TEAM');
-  const [needsPagination, setNeedsPagination] = useState(methodData?.needsPagination || 'Нет');
-  const [recordsPerRequest, setRecordsPerRequest] = useState(methodData?.recordsPerRequest || '10 000');
-  const [fields, setFields] = useState(() =>
-    (methodData?.fields || []).map(f => ({ ...f, enabled: f.enabled !== undefined ? f.enabled : true }))
-  );
-  const [filters, setFilters] = useState(() =>
-    (methodData?.filters || []).map(f => ({ ...f, enabled: f.enabled !== undefined ? f.enabled : true }))
-  );
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [detailedInfo, setDetailedInfo] = useState('');
+  const [sql, setSql] = useState('');
+  const [techAccount] = useState('TEST_TEAM');
+  const [needsPagination, setNeedsPagination] = useState('Нет');
+  const [recordsPerRequest, setRecordsPerRequest] = useState('10 000');
+  const [fields, setFields] = useState([]);
+  const [filters, setFilters] = useState([]);
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
   const [sqlDraft, setSqlDraft] = useState('');
   const [sqlError, setSqlError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
 
-  if (!methodData) {
-    return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f9f9f9' }}>
-        <p style={{ fontSize: 18, color: '#949494' }}>Метод не найден</p>
-      </div>
-    );
-  }
-
   // Парсинг SQL: извлечение полей из SELECT и фильтров из WHERE (:param)
   const parseSqlFieldsAndFilters = (sqlText) => {
     const text = sqlText.trim();
     
-    // Извлекаем поля между SELECT и FROM
     const selectFromMatch = text.match(/select\s+([\s\S]*?)\s+from\s/i);
     if (selectFromMatch) {
       const fieldsPart = selectFromMatch[1];
@@ -50,22 +34,18 @@ export default function EditBiApiMethodPage() {
         .map(f => f.trim())
         .filter(f => f.length > 0)
         .map(f => {
-          // Убираем алиас таблицы (cl.client_inn -> CLIENT_INN)
           const parts = f.split('.');
           const fieldName = (parts.length > 1 ? parts[parts.length - 1] : parts[0]).trim().toUpperCase();
-          // Проверяем, есть ли уже такое поле — если да, сохраняем его данные
           const existing = fields.find(ef => ef.name === fieldName);
           return existing || { name: fieldName, type: 'VARCHAR2', length: '', description: '', enabled: true };
         });
       setFields(parsedFields);
     }
     
-    // Извлекаем фильтры — параметры :param из SQL
     const paramMatches = [...text.matchAll(/:(\w+)/g)];
     if (paramMatches.length > 0) {
       const uniqueParams = [...new Set(paramMatches.map(m => m[1]))];
       const parsedFilters = uniqueParams.map(paramName => {
-        // Сохраняем существующий фильтр, если есть
         const existing = filters.find(ef => ef.name === paramName);
         return existing || { name: paramName, type: 'VARCHAR2', description: '', enabled: true };
       });
@@ -75,7 +55,7 @@ export default function EditBiApiMethodPage() {
     }
   };
 
-  const handleSave = () => {
+  const handleCreate = () => {
     const errors = {};
     if (!name.trim()) errors.name = 'Укажите название метода';
     if (!description.trim()) errors.description = 'Укажите краткое описание метода';
@@ -86,7 +66,7 @@ export default function EditBiApiMethodPage() {
     filters.forEach((f, i) => { if (f.enabled !== false && (!f.description || !f.description.trim())) errors[`filter_${i}`] = 'Заполните описание фильтра'; });
     if (Object.keys(errors).length > 0) { setValidationErrors(errors); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     setValidationErrors({});
-    updateMethod(id, {
+    const newId = addMethod({
       name,
       description,
       detailedInfo,
@@ -97,8 +77,8 @@ export default function EditBiApiMethodPage() {
       fields,
       filters,
     });
-    showAlert('Изменения сохранены');
-    navigate(`/api/${id}`);
+    showAlert('Метод создан');
+    navigate(`/api/${newId}`);
   };
 
   const base = import.meta.env.BASE_URL;
@@ -109,7 +89,6 @@ export default function EditBiApiMethodPage() {
     const fieldError = validationErrors[errorKey];
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, borderRadius: 12, overflow: 'hidden' }}>
-        {/* M-ячейка: название + тип, справа "Учитывать/Не учитывать" */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, alignItems: 'center', padding: '8px 0' }}>
             <div style={{
@@ -152,7 +131,6 @@ export default function EditBiApiMethodPage() {
           )}
         </div>
 
-        {/* Инпут «Описание» */}
         <div style={{
           background: 'rgba(25,25,25,0.05)',
           borderRadius: 12,
@@ -218,33 +196,28 @@ export default function EditBiApiMethodPage() {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f9f9f9', overflowY: 'auto' }}>
-      {/* Right Panel: w=1190, pt=24, pb=24, px=32, gap=32, centered */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
-        {/* Title: w=720, gap=16, items-center */}
+        {/* Title */}
         <div style={{ width: 720, display: 'flex', alignItems: 'center', gap: 16 }}>
-          {/* Icon Button: 40x40, rounded=8, bg=transparent-1 */}
           <button
-            onClick={() => navigate(`/api/${id}`)}
+            onClick={() => navigate('/api')}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 8, background: 'rgba(25,25,25,0.05)', border: 'none', cursor: 'pointer', flexShrink: 0 }}
           >
             <img src={`${base}assets/icon-arrow-left.svg`} alt="Назад" style={{ width: 20, height: 20 }} />
           </button>
-          {/* 3XL: 30px DemiBold, lh=36, ls=-0.3 */}
           <h1 style={{ fontSize: 30, fontWeight: 600, color: '#191919', lineHeight: '36px', letterSpacing: '-0.3px', margin: 0 }}>
-            Редактирование
+            Создание метода
           </h1>
         </div>
 
-        {/* Content: w=720, pb=32 */}
+        {/* Content */}
         <div style={{ width: 720, paddingBottom: 32 }}>
-          {/* Cards stack: gap=14 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
             {/* === Card 1: Описание документа === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px' }}>
+            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* L: py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Описание документа
@@ -252,7 +225,7 @@ export default function EditBiApiMethodPage() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                {/* Input: Название метода — with description */}
+                {/* Input: Название метода */}
                 <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', overflow: 'hidden' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', height: 20, gap: 2 }}>
@@ -269,7 +242,6 @@ export default function EditBiApiMethodPage() {
                       style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: name ? '#191919' : '#949494', lineHeight: '20px', letterSpacing: '0.16px', padding: 0, margin: 0, width: '100%', fontFamily: 'inherit' }}
                     />
                   </div>
-                  {/* Description with divider */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingBottom: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', height: 2 }}>
                       <div style={{ flex: 1, height: validationErrors.name ? 2 : 0.5, background: validationErrors.name ? '#d84d4d' : 'rgba(25,25,25,0.2)' }} />
@@ -390,7 +362,7 @@ export default function EditBiApiMethodPage() {
                   </div>
                 </div>
 
-                {/* M-ячейка: Количество записей за один запрос — только при включённой пагинации */}
+                {/* M-ячейка: Количество записей за один запрос */}
                 {needsPagination === 'Да' && (
                   <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', height: 44, display: 'flex', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
@@ -442,7 +414,6 @@ export default function EditBiApiMethodPage() {
             {/* === Card 2: SQL === */}
             <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {/* Section title */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0', flexShrink: 0 }}>
                     <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
@@ -450,7 +421,6 @@ export default function EditBiApiMethodPage() {
                     </span>
                   </div>
 
-                  {/* SQL text block — кликабельный для редактирования */}
                   <button
                     onClick={() => { setSqlDraft(sql); setSqlError(''); setSqlModalOpen(true); if (validationErrors.sql) { const v = {...validationErrors}; delete v.sql; setValidationErrors(v); } }}
                     style={{
@@ -484,16 +454,14 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 3: Поля === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            {sql && fields.length > 0 && <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* Заголовок */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Поля
                   </span>
                 </div>
 
-                {/* Список полей в формате Filter-блоков */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {fields.length > 0 ? (
                     fields.map((field, i) => (
@@ -515,19 +483,17 @@ export default function EditBiApiMethodPage() {
                   )}
                 </div>
               </div>
-            </div>
+            </div>}
 
             {/* === Card 4: Фильтры === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            {sql && filters.length > 0 && <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {/* Заголовок */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
                     Фильтры
                   </span>
                 </div>
 
-                {/* Список фильтров в формате Filter-блоков */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {filters.length > 0 ? (
                     filters.map((filter, i) => (
@@ -548,20 +514,20 @@ export default function EditBiApiMethodPage() {
                   )}
                 </div>
               </div>
-            </div>
+            </div>}
 
           </div>
         </div>
       </div>
 
-      {/* Footer: прибит к низу экрана */}
+      {/* Footer */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
         <button
-          onClick={handleSave}
+          onClick={handleCreate}
           style={{ width: 335, height: 50, borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', position: 'relative' }}
         >
           <span style={{ fontSize: 18, fontWeight: 500, color: 'white', lineHeight: '22px', textAlign: 'center' }}>
-            Сохранить
+            Создать
           </span>
         </button>
       </div>
@@ -576,7 +542,6 @@ export default function EditBiApiMethodPage() {
             onClick={(e) => e.stopPropagation()}
             style={{ background: 'white', borderRadius: 12, width: 680, height: 620, minWidth: 320, maxWidth: 900, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0px 20px 40px rgba(0,0,0,0.1)' }}
           >
-            {/* Header: h=56, title centered, cross right */}
             <div style={{ flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', height: 56, padding: '0 20px', position: 'relative' }}>
                 <div style={{ flex: 1, overflow: 'hidden', position: 'relative', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -591,25 +556,20 @@ export default function EditBiApiMethodPage() {
                   </button>
                 </div>
               </div>
-              {/* Divider */}
               <div style={{ height: 1, position: 'relative' }}>
                 <div style={{ position: 'absolute', left: 0, right: 0, top: 0.5, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
               </div>
             </div>
 
-            {/* Content: TextArea fills available space */}
             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 20px', height: '100%', boxSizing: 'border-box' }}>
                 <div style={{ background: 'rgba(25,25,25,0.05)', borderRadius: 12, padding: '0 20px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  {/* TextArea content */}
                   <div style={{ flex: 1, minHeight: 0, padding: '12px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {/* Title */}
                     <div style={{ display: 'flex', alignItems: 'center', height: 20, flexShrink: 0 }}>
                       <span style={{ fontSize: 14, fontWeight: 500, color: '#191919', lineHeight: '18px', letterSpacing: '0.14px' }}>
                         Текст SQL запроса
                       </span>
                     </div>
-                    {/* Input area */}
                     <div style={{ flex: 1, minHeight: 0 }}>
                       <textarea
                         value={sqlDraft}
@@ -624,7 +584,6 @@ export default function EditBiApiMethodPage() {
                       />
                     </div>
                   </div>
-                  {/* Description/Error with divider */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingBottom: 12, flexShrink: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', height: 2 }}>
                       <div style={{ flex: 1, height: sqlError ? 2 : 0.5, background: sqlError ? '#d84d4d' : 'rgba(25,25,25,0.2)' }} />
@@ -637,24 +596,19 @@ export default function EditBiApiMethodPage() {
               </div>
             </div>
 
-            {/* Footer: divider + button */}
             <div style={{ flexShrink: 0 }}>
-              {/* Divider */}
               <div style={{ height: 1, position: 'relative' }}>
                 <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 0.5, background: 'rgba(25,25,25,0.2)' }} />
               </div>
-              {/* Button area */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px' }}>
                 <button
                   onClick={() => {
-                    // Валидация: проверяем, что SQL содержит перечисление полей после SELECT
                     const trimmed = sqlDraft.trim().toLowerCase();
                     const selectMatch = trimmed.match(/^(select|with)\s+/i);
                     if (!selectMatch) {
                       setSqlError('В методе не указаны поля для обращения');
                       return;
                     }
-                    // Проверяем что после SELECT есть что-то кроме пробелов до FROM
                     const afterSelect = trimmed.replace(/^select\s+/i, '').trim();
                     if (!afterSelect || afterSelect.startsWith('from')) {
                       setSqlError('В методе не указаны поля для обращения');

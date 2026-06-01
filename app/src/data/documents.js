@@ -33,6 +33,35 @@ export const documents = [
       { role: 'Аналитик E-Commerce', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
       { role: 'Инженер данных, отдел DWH', name: 'Дмитрий Лебедев', avatar: 'assets/avatar-boy-2.jpg' },
     ],
+    discussions: [
+      {
+        id: 'd1',
+        tag: '#ecom_team.prelead_seller_sign',
+        title: 'Что означает поле seller_code?',
+        author: 'Мария Петрова',
+        authorAvatar: 'assets/avatar-girl-2.jpg',
+        createdAt: '2 часа назад',
+        status: 'open',
+        messages: [
+          { author: 'Мария Петрова', avatar: 'assets/avatar-girl-2.jpg', text: 'Коллеги, подскажите — поле seller_code это код продавца в нашей системе или внешний идентификатор из партнёрки?', time: '2 часа назад' },
+          { author: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg', text: 'Это внутренний код продавца из CRM. Формат: 2 буквы региона + 6 цифр.', time: '1 час назад' },
+          { author: 'Мария Петрова', avatar: 'assets/avatar-girl-2.jpg', text: 'Спасибо! Тогда стоит добавить это в описание поля.', time: '45 минут назад' },
+        ],
+      },
+      {
+        id: 'd2',
+        tag: '#ecom_team.prelead_seller_sign',
+        title: 'Партиционирование таблицы',
+        author: 'Дмитрий Лебедев',
+        authorAvatar: 'assets/avatar-boy-2.jpg',
+        createdAt: '1 день назад',
+        status: 'resolved',
+        messages: [
+          { author: 'Дмитрий Лебедев', avatar: 'assets/avatar-boy-2.jpg', text: 'Планируется ли партиционирование? Таблица растёт на ~200K записей в день.', time: '1 день назад' },
+          { author: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg', text: 'Да, добавим партиционирование по sign_date (monthly) на следующей неделе.', time: '23 часа назад' },
+        ],
+      },
+    ],
   },
   {
     id: '2',
@@ -95,6 +124,21 @@ export const documents = [
       { role: 'HR Tech. Разработчик', name: 'Никита Сокол', avatar: 'assets/avatar-boy-2.jpg' },
       { role: 'Аналитик данных HR', name: 'Мария Петрова', avatar: 'assets/avatar-boy.jpg' },
       { role: 'Инженер данных, отдел DWH', name: 'Дмитрий Лебедев', avatar: 'assets/avatar-boy-2.jpg' },
+    ],
+    discussions: [
+      {
+        id: 'd3',
+        tag: '#HUNTFLOW_V2_DICTIONARY_DETAILS',
+        title: 'Как работает SCD Type 2 в этой таблице?',
+        author: 'Мария Петрова',
+        authorAvatar: 'assets/avatar-girl-2.jpg',
+        createdAt: '3 часа назад',
+        status: 'open',
+        messages: [
+          { author: 'Мария Петрова', avatar: 'assets/avatar-girl-2.jpg', text: 'Коллеги, правильно ли я понимаю что valid_from/valid_to обновляются автоматически при изменении записи в Huntflow?', time: '3 часа назад' },
+          { author: 'Никита Сокол', avatar: 'assets/avatar-boy-3.jpg', text: 'Да, ETL-процесс при обнаружении изменения закрывает текущую версию (valid_to = now, is_current = false) и создаёт новую.', time: '2 часа назад' },
+        ],
+      },
     ],
   },
   {

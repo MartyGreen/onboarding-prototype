@@ -130,8 +130,32 @@ export function BiApiMethodsProvider({ children }) {
     setMethods(prev => prev.map(m => m.id === Number(id) ? { ...m, ...updates } : m));
   };
 
+  const addMethod = (data) => {
+    const newId = Math.max(0, ...methods.map(m => m.id)) + 1;
+    const now = new Date();
+    const newMethod = {
+      id: newId,
+      name: data.name || 'new_method',
+      description: data.description || '',
+      detailedInfo: data.detailedInfo || '',
+      author: 'current_user',
+      status: 'На проверке',
+      avatarColor: '#835DE1',
+      needsPagination: data.needsPagination || 'Нет',
+      recordsPerRequest: data.recordsPerRequest || '10 000',
+      created: 'только что',
+      updated: 'только что',
+      techAccount: data.techAccount || 'TEST_TEAM',
+      sql: data.sql || '',
+      fields: data.fields || [],
+      filters: data.filters || [],
+    };
+    setMethods(prev => [newMethod, ...prev]);
+    return newId;
+  };
+
   return (
-    <BiApiMethodsContext.Provider value={{ methods, getMethod, updateMethod }}>
+    <BiApiMethodsContext.Provider value={{ methods, getMethod, updateMethod, addMethod }}>
       {children}
     </BiApiMethodsContext.Provider>
   );

@@ -50,7 +50,7 @@ export default function BiApiMethodsPage() {
           <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0 flex-1">
             Методы Bi-API
           </h1>
-          <button className="flex items-center gap-2 h-10 px-3 rounded-lg bg-[#835de1] border-none cursor-pointer hover:bg-[#7249d1] transition-colors">
+          <button onClick={() => navigate('/api/new')} className="flex items-center gap-2 h-10 px-3 rounded-lg bg-[#835de1] border-none cursor-pointer hover:bg-[#7249d1] transition-colors">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M8 3v10M3 8h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
             </svg>

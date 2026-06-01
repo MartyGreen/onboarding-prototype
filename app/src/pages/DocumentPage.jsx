@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
 import AddFieldModal from '../components/AddFieldModal';
@@ -16,6 +16,14 @@ export default function DocumentPage() {
   const [openMenuIndex, setOpenMenuIndex] = useState(null); // индекс поля с открытым меню
   const [openMissingMenuIndex, setOpenMissingMenuIndex] = useState(null); // для missing fields
   const [editFieldIndex, setEditFieldIndex] = useState(null); // индекс поля для редактирования
+
+  // Discussions state
+  const [expandedDiscussion, setExpandedDiscussion] = useState(null);
+  const [isNewTopicOpen, setIsNewTopicOpen] = useState(false);
+  const [newTopicTitle, setNewTopicTitle] = useState('');
+  const [newTopicMessage, setNewTopicMessage] = useState('');
+  const [replyText, setReplyText] = useState('');
+  const [sentToChannel, setSentToChannel] = useState({});
 
   // Закрытие меню при клике вне
   React.useEffect(() => {
@@ -464,6 +472,306 @@ export default function DocumentPage() {
                     <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
                     <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Добавить себя как эксперта</span>
                   </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Discussions Card */}
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium text-[#191919] leading-[22px] m-0">
+                  Обсуждения
+                </h3>
+                {(doc.discussions || []).length > 0 && (
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#835de1] text-xs font-medium text-white">
+                    {(doc.discussions || []).length}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-[#676767] leading-[15px] tracking-[0.12px]">
+                  Канал: #{doc.name}
+                </span>
+              </div>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] m-0 mb-5">
+              Вопросы и ответы по таблице. Новые темы автоматически отправляются в канал мессенджера с тегом <span className="font-medium text-[#835de1]">#{doc.name}</span>
+            </p>
+
+            {/* Discussion threads */}
+            {(doc.discussions || []).length > 0 && (
+              <div className="flex flex-col gap-2 mb-4">
+                {(doc.discussions || []).map((discussion) => {
+                  const isExpanded = expandedDiscussion === discussion.id;
+                  const isResolved = discussion.status === 'resolved';
+                  return (
+                    <div key={discussion.id} className="rounded-xl border border-[rgba(25,25,25,0.1)] overflow-hidden">
+                      {/* Thread header */}
+                      <div
+                        className="flex items-center gap-3 px-5 py-3.5 cursor-pointer hover:bg-[rgba(25,25,25,0.02)] transition-colors"
+                        onClick={() => setExpandedDiscussion(isExpanded ? null : discussion.id)}
+                      >
+                        {/* Status indicator */}
+                        <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${isResolved ? 'bg-[#5cad9a]' : 'bg-[#835de1]'}`} />
+                        
+                        {/* Author avatar */}
+                        <div className="w-8 h-8 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
+                          <img src={`${import.meta.env.BASE_URL}${discussion.authorAvatar}`} alt="" className="w-full h-full object-cover" />
+                        </div>
+
+                        {/* Title & meta */}
+                        <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                          <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px] truncate">
+                            {discussion.title}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-[#676767] leading-[15px] tracking-[0.12px]">
+                              {discussion.author}
+                            </span>
+                            <span className="text-xs text-[#949494]">·</span>
+                            <span className="text-xs text-[#949494] leading-[15px] tracking-[0.12px]">
+                              {discussion.createdAt}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Messages count & status */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex items-center gap-1.5">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M2 3C2 2.44772 2.44772 2 3 2H13C13.5523 2 14 2.44772 14 3V10C14 10.5523 13.5523 11 13 11H9.5L6 14V11H3C2.44772 11 2 10.5523 2 10V3Z" stroke="#949494" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span className="text-xs text-[#949494] font-medium">{discussion.messages.length}</span>
+                          </div>
+                          {isResolved && (
+                            <span className="inline-flex items-center px-2 h-5 rounded-md bg-[rgba(92,173,154,0.1)] text-xs font-medium text-[#5cad9a]">
+                              Решено
+                            </span>
+                          )}
+                          <svg
+                            width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                          >
+                            <path d="M4 6L8 10L12 6" stroke="#676767" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Expanded thread messages */}
+                      {isExpanded && (
+                        <div className="border-t border-[rgba(25,25,25,0.08)]">
+                          <div className="flex flex-col gap-0">
+                            {discussion.messages.map((msg, mi) => (
+                              <div key={mi} className={`flex gap-3 px-5 py-3 ${mi > 0 ? 'border-t border-[rgba(25,25,25,0.05)]' : ''}`}>
+                                <div className="w-8 h-8 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0 mt-0.5">
+                                  <img src={`${import.meta.env.BASE_URL}${msg.avatar}`} alt="" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex flex-col gap-1 flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-medium text-[#191919] leading-[18px]">{msg.author}</span>
+                                    <span className="text-xs text-[#949494] leading-[15px]">{msg.time}</span>
+                                  </div>
+                                  <p className="text-sm text-[#191919] leading-[20px] tracking-[0.14px] m-0">{msg.text}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Reply input */}
+                          <div className="px-5 py-3 border-t border-[rgba(25,25,25,0.08)] bg-[rgba(25,25,25,0.02)]">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-[#e1e1e1] overflow-hidden shrink-0">
+                                <img src={`${import.meta.env.BASE_URL}assets/avatar-girl-2.jpg`} alt="" className="w-full h-full object-cover" />
+                              </div>
+                              <div className="flex-1 flex gap-2">
+                                <textarea
+                                  value={replyText}
+                                  onChange={(e) => setReplyText(e.target.value)}
+                                  placeholder="Написать ответ..."
+                                  className="flex-1 bg-white border border-[rgba(25,25,25,0.12)] rounded-lg px-3 py-2 text-sm text-[#191919] leading-[18px] tracking-[0.14px] placeholder:text-[#949494] resize-none outline-none focus:border-[#835de1] transition-colors"
+                                  rows={1}
+                                  style={{ fontFamily: 'inherit' }}
+                                  onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey && replyText.trim()) {
+                                      e.preventDefault();
+                                      const discussions = [...(doc.discussions || [])];
+                                      const dIdx = discussions.findIndex(d => d.id === discussion.id);
+                                      if (dIdx !== -1) {
+                                        discussions[dIdx] = {
+                                          ...discussions[dIdx],
+                                          messages: [
+                                            ...discussions[dIdx].messages,
+                                            {
+                                              author: 'Бесстрашный исследователь',
+                                              avatar: 'assets/avatar-girl-2.jpg',
+                                              text: replyText.trim(),
+                                              time: 'только что',
+                                            },
+                                          ],
+                                        };
+                                        updateDocument(doc.id, { discussions });
+                                        setReplyText('');
+                                        showAlert('Ответ отправлен в тред и в канал мессенджера');
+                                      }
+                                    }
+                                  }}
+                                />
+                                <button
+                                  onClick={() => {
+                                    if (!replyText.trim()) return;
+                                    const discussions = [...(doc.discussions || [])];
+                                    const dIdx = discussions.findIndex(d => d.id === discussion.id);
+                                    if (dIdx !== -1) {
+                                      discussions[dIdx] = {
+                                        ...discussions[dIdx],
+                                        messages: [
+                                          ...discussions[dIdx].messages,
+                                          {
+                                            author: 'Бесстрашный исследователь',
+                                            avatar: 'assets/avatar-girl-2.jpg',
+                                            text: replyText.trim(),
+                                            time: 'только что',
+                                          },
+                                        ],
+                                      };
+                                      updateDocument(doc.id, { discussions });
+                                      setReplyText('');
+                                      showAlert('Ответ отправлен в тред и в канал мессенджера');
+                                    }
+                                  }}
+                                  className="self-end flex items-center justify-center w-9 h-9 rounded-lg bg-[#835de1] border-none cursor-pointer hover:bg-[#7249d1] transition-colors shrink-0 disabled:opacity-40 disabled:cursor-default"
+                                  disabled={!replyText.trim()}
+                                >
+                                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M2 9L16 2L12 16L9 10L2 9Z" fill="white" stroke="white" strokeWidth="1.2" strokeLinejoin="round"/>
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {(doc.discussions || []).length === 0 && !isNewTopicOpen && (
+              <div className="flex flex-col items-center py-8 text-center">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="mb-3 opacity-30">
+                  <path d="M6 9C6 7.34315 7.34315 6 9 6H39C40.6569 6 42 7.34315 42 9V30C42 31.6569 40.6569 33 39 33H28.5L18 42V33H9C7.34315 33 6 31.6569 6 30V9Z" stroke="#191919" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="16" cy="19.5" r="2" fill="#191919"/>
+                  <circle cx="24" cy="19.5" r="2" fill="#191919"/>
+                  <circle cx="32" cy="19.5" r="2" fill="#191919"/>
+                </svg>
+                <span className="text-sm text-[#949494] leading-[18px]">Обсуждений пока нет</span>
+              </div>
+            )}
+
+            {/* New topic form */}
+            {isNewTopicOpen && (
+              <div className="rounded-xl border border-[#835de1] bg-[rgba(131,93,225,0.03)] p-5 mb-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 5C2.5 4.17157 3.17157 3.5 4 3.5H16C16.8284 3.5 17.5 4.17157 17.5 5V13C17.5 13.8284 16.8284 14.5 16 14.5H11.5L7.5 18V14.5H4C3.17157 14.5 2.5 13.8284 2.5 13V5Z" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-sm font-medium text-[#835de1] leading-[18px]">Новая тема обсуждения</span>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <input
+                    type="text"
+                    value={newTopicTitle}
+                    onChange={(e) => setNewTopicTitle(e.target.value)}
+                    placeholder="Заголовок вопроса..."
+                    className="w-full bg-white border border-[rgba(25,25,25,0.12)] rounded-lg px-4 py-2.5 text-base text-[#191919] leading-5 tracking-[0.16px] placeholder:text-[#949494] outline-none focus:border-[#835de1] transition-colors"
+                    style={{ fontFamily: 'inherit' }}
+                  />
+                  <textarea
+                    value={newTopicMessage}
+                    onChange={(e) => setNewTopicMessage(e.target.value)}
+                    placeholder="Опишите ваш вопрос подробнее..."
+                    className="w-full bg-white border border-[rgba(25,25,25,0.12)] rounded-lg px-4 py-2.5 text-sm text-[#191919] leading-[20px] tracking-[0.14px] placeholder:text-[#949494] resize-none outline-none focus:border-[#835de1] transition-colors"
+                    rows={3}
+                    style={{ fontFamily: 'inherit' }}
+                  />
+                  <div className="flex items-center gap-2 px-1">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M7 1V13M1 7H13" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
+                    </svg>
+                    <span className="text-xs text-[#676767] leading-[15px]">
+                      Будет отправлено в канал мессенджера с тегом <span className="font-medium text-[#835de1]">#{doc.name}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end mt-1">
+                    <button
+                      onClick={() => {
+                        setIsNewTopicOpen(false);
+                        setNewTopicTitle('');
+                        setNewTopicMessage('');
+                      }}
+                      className="px-4 h-9 rounded-lg border border-[rgba(25,25,25,0.15)] bg-white text-sm font-medium text-[#191919] cursor-pointer hover:bg-[rgba(25,25,25,0.03)] transition-colors"
+                    >
+                      Отмена
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (!newTopicTitle.trim() || !newTopicMessage.trim()) return;
+                        const newDiscussion = {
+                          id: `d_new_${Date.now()}`,
+                          tag: `#${doc.name}`,
+                          title: newTopicTitle.trim(),
+                          author: 'Бесстрашный исследователь',
+                          authorAvatar: 'assets/avatar-girl-2.jpg',
+                          createdAt: 'только что',
+                          status: 'open',
+                          messages: [
+                            {
+                              author: 'Бесстрашный исследователь',
+                              avatar: 'assets/avatar-girl-2.jpg',
+                              text: newTopicMessage.trim(),
+                              time: 'только что',
+                            },
+                          ],
+                        };
+                        updateDocument(doc.id, {
+                          discussions: [...(doc.discussions || []), newDiscussion],
+                        });
+                        setIsNewTopicOpen(false);
+                        setNewTopicTitle('');
+                        setNewTopicMessage('');
+                        setExpandedDiscussion(newDiscussion.id);
+                        showAlert('Тема создана и отправлена в канал мессенджера');
+                      }}
+                      disabled={!newTopicTitle.trim() || !newTopicMessage.trim()}
+                      className="px-4 h-9 rounded-lg border-none bg-[#835de1] text-sm font-medium text-white cursor-pointer hover:bg-[#7249d1] transition-colors disabled:opacity-40 disabled:cursor-default"
+                    >
+                      Создать и отправить в канал
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Create new topic button */}
+            {!isNewTopicOpen && (
+              <div className="bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-4">
+                <div
+                  className="flex items-center gap-3 cursor-pointer"
+                  onClick={() => setIsNewTopicOpen(true)}
+                >
+                  <img src={`${import.meta.env.BASE_URL}assets/icon-plus-circle.svg`} alt="" className="w-6 h-6" />
+                  <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">Создать тему обсуждения</span>
                 </div>
               </div>
             )}
