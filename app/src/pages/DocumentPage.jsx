@@ -1133,13 +1133,32 @@ export default function DocumentPage() {
                       )}
                     </div>
                     <div className="flex flex-wrap gap-1.5 pl-4">
-                      {group.fields.map((field) => (
+                      {group.fields.map((field) => {
+                        // Проверяем, является ли поле ключом связи с другой таблицей в коллекции
+                        const isLinkKey = fieldLinks?.some(l => {
+                          const otherDocIds = groupedByDoc.filter(g => g.docId !== field.docId).map(g => g.docId);
+                          return (
+                            (l.fromDoc === field.docId && l.fromField === field.fieldName && otherDocIds.includes(l.toDoc)) ||
+                            (l.toDoc === field.docId && l.toField === field.fieldName && otherDocIds.includes(l.fromDoc))
+                          );
+                        });
+                        return (
                         <span
                           key={field.fieldName}
-                          className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-[rgba(25,25,25,0.05)] text-sm"
+                          className={`inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg text-sm ${
+                            isLinkKey
+                              ? 'bg-[rgba(131,93,225,0.12)] border border-[rgba(131,93,225,0.3)]'
+                              : 'bg-[rgba(25,25,25,0.05)]'
+                          }`}
                         >
-                          <span className="font-medium text-[#191919]">{field.fieldName}</span>
-                          <span className="text-[#949494]">{field.fieldType}</span>
+                          {isLinkKey && (
+                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="shrink-0">
+                              <path d="M5 7L7 5" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                              <path d="M3.5 8.5L2.5 9.5C2 10 2 10.8 2.5 11.3C3 11.8 3.8 11.8 4.3 11.3L5.3 10.3" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                              <path d="M8.5 3.5L9.5 2.5C10 2 10 1.2 9.5 0.7C9 0.2 8.2 0.2 7.7 0.7L6.7 1.7" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                            </svg>
+                          )}
+                          <span className={`font-medium ${isLinkKey ? 'text-[#835de1]' : 'text-[#191919]'}`}>{field.fieldName}</span>
                           <button
                             onClick={() => removeFromCollection(field.docId, field.fieldName)}
                             className="ml-0.5 flex items-center justify-center w-4 h-4 rounded bg-transparent border-none cursor-pointer hover:bg-[rgba(215,75,75,0.1)] transition-colors"
@@ -1149,7 +1168,8 @@ export default function DocumentPage() {
                             </svg>
                           </button>
                         </span>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                   );
