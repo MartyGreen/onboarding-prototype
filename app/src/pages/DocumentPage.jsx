@@ -1215,12 +1215,18 @@ export default function DocumentPage() {
                     <div className="flex flex-wrap gap-1.5 pl-4">
                       {group.fields.map((field) => {
                         // Проверяем, является ли поле ключом связи с другой таблицей в коллекции
+                        // Выделяем только если и это поле, и парное поле на другой стороне связи оба в коллекции
                         const isLinkKey = fieldLinks?.some(l => {
-                          const otherDocIds = groupedByDoc.filter(g => g.docId !== field.docId).map(g => g.docId);
-                          return (
-                            (l.fromDoc === field.docId && l.fromField === field.fieldName && otherDocIds.includes(l.toDoc)) ||
-                            (l.toDoc === field.docId && l.toField === field.fieldName && otherDocIds.includes(l.fromDoc))
-                          );
+                          const otherGroups = groupedByDoc.filter(g => g.docId !== field.docId);
+                          if (l.fromDoc === field.docId && l.fromField === field.fieldName) {
+                            const targetGroup = otherGroups.find(g => g.docId === l.toDoc);
+                            return targetGroup && targetGroup.fields.some(f => f.fieldName === l.toField);
+                          }
+                          if (l.toDoc === field.docId && l.toField === field.fieldName) {
+                            const targetGroup = otherGroups.find(g => g.docId === l.fromDoc);
+                            return targetGroup && targetGroup.fields.some(f => f.fieldName === l.fromField);
+                          }
+                          return false;
                         });
                         return (
                         <span
