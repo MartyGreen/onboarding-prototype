@@ -1027,15 +1027,19 @@ export default function DocumentPage() {
         <div
           className="fixed inset-0 z-[99] pointer-events-none"
           style={{
-            backgroundColor: sqlStep === 'result' ? 'rgba(0,0,0,0.5)' : sqlStep === 'filters' ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
+            backgroundColor: sqlStep === 'result' ? 'rgba(0,0,0,0.5)' : sqlStep === 'filters' ? 'rgba(0,0,0,0.2)' : isCollectionOpen ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0)',
             transition: 'background-color 0.4s ease',
-            pointerEvents: (sqlStep === 'filters' || sqlStep === 'result') ? 'auto' : 'none',
+            pointerEvents: (sqlStep === 'filters' || sqlStep === 'result' || isCollectionOpen) ? 'auto' : 'none',
           }}
           onClick={() => {
-            setSqlStep('idle');
-            setSqlDateFrom('');
-            setSqlDateTo('');
-            setSqlLimit('100');
+            if (sqlStep !== 'idle') {
+              setSqlStep('idle');
+              setSqlDateFrom('');
+              setSqlDateTo('');
+              setSqlLimit('100');
+            } else if (isCollectionOpen) {
+              setIsCollectionOpen(false);
+            }
           }}
         />
       )}
