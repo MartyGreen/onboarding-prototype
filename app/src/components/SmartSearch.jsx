@@ -243,7 +243,11 @@ export default function SmartSearch({ isOpen, onClose }) {
                       <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                         <span
                           className="text-base font-semibold text-[#835de1] leading-5 cursor-pointer hover:underline truncate"
-                          onClick={() => { onClose(); navigate(`/document/${doc.id}`); }}
+                          onClick={() => {
+                            const fieldNames = matchedFields.map(f => f.name).join(',');
+                            onClose();
+                            navigate(`/document/${doc.id}${fieldNames ? `?highlight=${encodeURIComponent(fieldNames)}` : ''}`);
+                          }}
                         >
                           {doc.name}
                         </span>
@@ -279,7 +283,11 @@ export default function SmartSearch({ isOpen, onClose }) {
                         </div>
                         {/* Open document button */}
                         <button
-                          onClick={() => { onClose(); navigate(`/document/${doc.id}`); }}
+                          onClick={() => {
+                            const fieldNames = matchedFields.map(f => f.name).join(',');
+                            onClose();
+                            navigate(`/document/${doc.id}${fieldNames ? `?highlight=${encodeURIComponent(fieldNames)}` : ''}`);
+                          }}
                           className="mt-2 text-xs font-medium text-[#835de1] bg-transparent border-none cursor-pointer hover:underline"
                         >
                           Открыть таблицу →

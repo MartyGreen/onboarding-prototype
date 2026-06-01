@@ -20,6 +20,15 @@ export default function DocumentPage() {
   const [openMissingMenuIndex, setOpenMissingMenuIndex] = useState(null); // для missing fields
   const [editFieldIndex, setEditFieldIndex] = useState(null); // индекс поля для редактирования
 
+  // Подсветка полей из SmartSearch
+  const location = useLocation();
+  const highlightFields = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    const h = params.get('highlight');
+    if (!h) return new Set();
+    return new Set(decodeURIComponent(h).split(','));
+  }, [location.search]);
+
   // Discussions state
   const [expandedDiscussion, setExpandedDiscussion] = useState(null);
   const [isNewTopicOpen, setIsNewTopicOpen] = useState(false);
@@ -279,9 +288,10 @@ export default function DocumentPage() {
                 const isLast = i === filteredFields.length - 1;
                 const isNearBottom = i >= filteredFields.length - 2;
                 const isEmpty = !row.description || row.description === '—' || row.description.trim() === '';
+                const isHighlighted = highlightFields.has(row.name);
                 return (
-                  <div key={i} className="flex gap-[2px] mt-[2px]">
-                    <div className={`w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`}>
+                  <div key={i} className={`flex gap-[2px] mt-[2px] ${isHighlighted ? 'ring-2 ring-[#835de1] ring-offset-1 rounded-lg relative z-10' : ''}`} style={isHighlighted ? { animation: 'highlightPulse 2s ease-out' } : {}}>
+                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''} ${isHighlighted ? 'bg-[rgba(131,93,225,0.08)]' : 'bg-[rgba(25,25,25,0.05)]'}`}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           {/* Collection checkbox */}
