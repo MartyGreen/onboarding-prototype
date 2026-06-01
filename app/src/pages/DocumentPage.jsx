@@ -1131,17 +1131,20 @@ export default function DocumentPage() {
                             ))}
                           </div>
                         )}
-                        {groupDesc && (
-                          <div className="relative group/info ml-auto">
-                            <button className="flex items-center justify-center w-5 h-5 rounded-full border border-[rgba(25,25,25,0.15)] bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors shrink-0">
-                              <span className="text-[10px] font-semibold text-[#949494] leading-none">i</span>
-                            </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-[#191919] text-white text-xs leading-[16px] rounded-lg max-w-[280px] whitespace-normal opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all z-50 pointer-events-none shadow-[0px_8px_24px_rgba(0,0,0,0.2)]">
-                              {groupDesc.length > 150 ? groupDesc.slice(0, 150).replace(/\s+\S*$/, '') + '…' : groupDesc}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-[#191919]" />
-                            </div>
-                          </div>
-                        )}
+                        <button
+                          className="flex items-center justify-center w-5 h-5 rounded bg-transparent border-none cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors shrink-0 ml-auto"
+                          title="Открыть таблицу"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`${window.location.origin}${import.meta.env.BASE_URL}document/${group.docId}`, '_blank');
+                          }}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M11 7.5V11.5C11 12.05 10.55 12.5 10 12.5H2.5C1.95 12.5 1.5 12.05 1.5 11.5V4C1.5 3.45 1.95 3 2.5 3H6.5" stroke="#949494" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M9 1.5H12.5V5" stroke="#949494" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M6 8L12.5 1.5" stroke="#949494" strokeWidth="1.2" strokeLinecap="round"/>
+                          </svg>
+                        </button>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-1.5 pl-4">
