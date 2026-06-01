@@ -1069,15 +1069,11 @@ export default function DocumentPage() {
         <div
           className="fixed left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]"
           style={{
-            ...(sqlStep === 'filters' || sqlStep === 'result'
-              ? { top: '24px', bottom: '24px' }
-              : { bottom: '24px' }
-            ),
+            bottom: '24px',
             maxHeight: 'calc(100vh - 48px)',
             display: 'flex',
             flexDirection: 'column',
             overflowY: 'auto',
-            transition: 'top 0.3s ease, bottom 0.3s ease',
           }}
         >
           <div className="bg-[#191919] rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.3)] px-6 py-3.5 flex items-center gap-5 min-w-[480px]">
@@ -1277,7 +1273,7 @@ export default function DocumentPage() {
                 )}
 
                 {sqlStep === 'filters' && (
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 animate-[expandIn_0.35s_ease-out]" style={{ transformOrigin: 'top center' }}>
                     <div className="flex items-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 3H13L9 8V12L7 13V8L3 3Z" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
