@@ -1127,7 +1127,7 @@ export default function DocumentPage() {
                         {groupDoc?.tags?.length > 0 && (
                           <div className="flex items-center gap-1 ml-1">
                             {groupDoc.tags.map((tag, ti) => (
-                              <span key={ti} className="inline-flex items-center px-1.5 h-[18px] rounded-full bg-[#aeaeae] text-[10px] font-medium text-white leading-none">{tag}</span>
+                              <span key={ti} className="inline-flex items-center px-1.5 h-[18px] rounded-full border border-[rgba(25,25,25,0.2)] text-[10px] font-medium text-[#949494] leading-none">{tag}</span>
                             ))}
                           </div>
                         )}
