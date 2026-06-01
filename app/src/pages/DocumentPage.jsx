@@ -1238,10 +1238,10 @@ export default function DocumentPage() {
                           }`}
                         >
                           {isLinkKey && (
-                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="shrink-0">
-                              <path d="M5 7L7 5" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
-                              <path d="M3.5 8.5L2.5 9.5C2 10 2 10.8 2.5 11.3C3 11.8 3.8 11.8 4.3 11.3L5.3 10.3" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
-                              <path d="M8.5 3.5L9.5 2.5C10 2 10 1.2 9.5 0.7C9 0.2 8.2 0.2 7.7 0.7L6.7 1.7" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                              <circle cx="4.5" cy="4.5" r="3" stroke="#835de1" strokeWidth="1.4"/>
+                              <path d="M6.5 6.5L12.5 12.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
+                              <path d="M10 10L12.5 7.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
                             </svg>
                           )}
                           <span className={`font-medium ${isLinkKey ? 'text-[#835de1]' : 'text-[#191919]'}`}>{field.fieldName}</span>
