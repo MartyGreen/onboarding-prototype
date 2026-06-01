@@ -298,6 +298,7 @@ export default function DocumentPage() {
                 const isNearBottom = i >= filteredFields.length - 2;
                 const isEmpty = !row.description || row.description === '—' || row.description.trim() === '';
                 const isHighlighted = highlightFields.has(row.name);
+                const hasLinks = getFieldLinks(row.name).length > 0;
                 return (
                   <div
                     key={i}
@@ -309,7 +310,7 @@ export default function DocumentPage() {
                       animation: 'highlightPulse 2.5s ease-out',
                     } : {}}
                   >
-                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
+                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : hasLinks ? { backgroundColor: 'rgba(131, 93, 225, 0.04)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           {/* Collection checkbox */}
@@ -414,7 +415,8 @@ export default function DocumentPage() {
                       })()}
                     </div>
                     <div
-                      className="flex-1 bg-[rgba(25,25,25,0.05)] px-5 py-3.5 flex items-start gap-2 cursor-text"
+                      className="flex-1 px-5 py-3.5 flex items-start gap-2 cursor-text"
+                      style={{ backgroundColor: hasLinks ? 'rgba(131, 93, 225, 0.04)' : 'rgba(25, 25, 25, 0.05)' }}
                       onClick={(e) => {
                         const ta = e.currentTarget.querySelector('textarea');
                         if (ta) ta.focus();
