@@ -1131,12 +1131,18 @@ export default function DocumentPage() {
                             ))}
                           </div>
                         )}
+                        {groupDesc && (
+                          <div className="relative group/info ml-auto">
+                            <button className="flex items-center justify-center w-5 h-5 rounded-full border border-[rgba(25,25,25,0.15)] bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.05)] transition-colors shrink-0">
+                              <span className="text-[10px] font-semibold text-[#949494] leading-none">i</span>
+                            </button>
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-[#191919] text-white text-xs leading-[16px] rounded-lg max-w-[280px] whitespace-normal opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all z-50 pointer-events-none shadow-[0px_8px_24px_rgba(0,0,0,0.2)]">
+                              {groupDesc.length > 150 ? groupDesc.slice(0, 150).replace(/\s+\S*$/, '') + '…' : groupDesc}
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-[#191919]" />
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      {groupDesc && (
-                        <p className="text-xs text-[#676767] leading-[16px] m-0 pl-[14px]" title={groupDesc}>
-                          {isLongDesc ? groupDesc.slice(0, DESC_LIMIT).replace(/\s+\S*$/, '') + '…' : groupDesc}
-                        </p>
-                      )}
                     </div>
                     <div className="flex flex-wrap gap-1.5 pl-4">
                       {group.fields.map((field) => {
