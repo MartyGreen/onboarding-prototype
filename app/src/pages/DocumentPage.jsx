@@ -4,12 +4,15 @@ import { useDocuments } from '../data/DocumentsContext';
 import AddFieldModal from '../components/AddFieldModal';
 import WarningTooltip from '../components/WarningTooltip';
 import { useAlert } from '../components/SuccessAlert';
+import { useCollection } from '../data/CollectionContext';
 
 export default function DocumentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { documents, updateDocument, statusConfig, toggleStarred, fieldLinks } = useDocuments();
   const { showAlert } = useAlert();
+  const { collection, addToCollection, removeFromCollection, isInCollection, clearCollection, groupedByDoc } = useCollection();
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
   const doc = documents.find(d => d.id === id) || documents[0];
   const [fieldSearch, setFieldSearch] = useState('');
   const [isAddFieldOpen, setIsAddFieldOpen] = useState(false);
@@ -281,6 +284,34 @@ export default function DocumentPage() {
                     <div className={`w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
+                          {/* Collection checkbox */}
+                          <button
+                            className={`w-[18px] h-[18px] rounded border-[1.5px] flex items-center justify-center shrink-0 cursor-pointer transition-all ${
+                              isInCollection(doc.id, row.name)
+                                ? 'bg-[#835de1] border-[#835de1]'
+                                : 'bg-white border-[#c4c4c4] hover:border-[#835de1]'
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (isInCollection(doc.id, row.name)) {
+                                removeFromCollection(doc.id, row.name);
+                              } else {
+                                addToCollection({
+                                  docId: doc.id,
+                                  docName: doc.name,
+                                  fieldName: row.name,
+                                  fieldType: row.type,
+                                  fieldDescription: row.description || '',
+                                });
+                              }
+                            }}
+                          >
+                            {isInCollection(doc.id, row.name) && (
+                              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </button>
                           <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">
                             {row.name}
                           </span>
@@ -956,6 +987,128 @@ export default function DocumentPage() {
         onAdd={handleEditField}
         initialData={editFieldIndex !== null ? doc.fields[editFieldIndex] : null}
       />
+
+      {/* Collection Floating Bar */}
+      {collection.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]">
+          <div className="bg-[#191919] rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.3)] px-6 py-3.5 flex items-center gap-5 min-w-[480px]">
+            {/* Count */}
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#835de1] flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 3H7V7H3V3ZM11 3H15V7H11V3ZM3 11H7V15H3V11ZM11 13H15M13 11V15" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-white leading-[18px]">
+                  {collection.length} {collection.length === 1 ? 'поле' : collection.length < 5 ? 'поля' : 'полей'}
+                </span>
+                <span className="text-xs text-[rgba(255,255,255,0.5)] leading-[14px]">
+                  из {groupedByDoc.length} {groupedByDoc.length === 1 ? 'таблицы' : 'таблиц'}
+                </span>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="w-px h-8 bg-[rgba(255,255,255,0.15)]" />
+
+            {/* Preview chips */}
+            <div className="flex items-center gap-1.5 flex-1 min-w-0 overflow-hidden">
+              {collection.slice(0, 4).map((item, i) => (
+                <span
+                  key={`${item.docId}-${item.fieldName}`}
+                  className="inline-flex items-center gap-1 px-2 h-6 rounded-md bg-[rgba(255,255,255,0.1)] text-xs text-white whitespace-nowrap shrink-0"
+                >
+                  <span className="text-[rgba(255,255,255,0.5)]">{item.docName.length > 12 ? item.docName.slice(0, 12) + '…' : item.docName}.</span>
+                  <span className="font-medium">{item.fieldName}</span>
+                </span>
+              ))}
+              {collection.length > 4 && (
+                <span className="text-xs text-[rgba(255,255,255,0.5)] shrink-0">+{collection.length - 4}</span>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setIsCollectionOpen(!isCollectionOpen)}
+                className="px-4 h-9 rounded-lg bg-[rgba(255,255,255,0.12)] border-none text-sm font-medium text-white cursor-pointer hover:bg-[rgba(255,255,255,0.2)] transition-colors"
+              >
+                {isCollectionOpen ? 'Скрыть' : 'Показать'}
+              </button>
+              <button
+                onClick={() => clearCollection()}
+                className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.08)] border-none cursor-pointer hover:bg-[rgba(255,75,75,0.2)] transition-colors"
+                title="Очистить коллекцию"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 4L12 12M12 4L4 12" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Expanded collection panel */}
+          {isCollectionOpen && (
+            <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)] max-h-[400px] overflow-y-auto">
+              <div className="px-6 py-4 border-b border-[rgba(25,25,25,0.08)]">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-base font-semibold text-[#191919] m-0">Собранная коллекция полей</h4>
+                  <span className="text-xs text-[#676767]">{collection.length} полей из {groupedByDoc.length} таблиц</span>
+                </div>
+              </div>
+              <div className="px-6 py-3">
+                {groupedByDoc.map((group) => (
+                  <div key={group.docId} className="mb-4 last:mb-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#835de1]" />
+                      <span
+                        className="text-sm font-medium text-[#835de1] leading-[18px] cursor-pointer hover:underline"
+                        onClick={() => {
+                          setIsCollectionOpen(false);
+                          navigate(`/document/${group.docId}`);
+                        }}
+                      >
+                        {group.docName}
+                      </span>
+                      <span className="text-xs text-[#949494]">({group.fields.length})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 pl-4">
+                      {group.fields.map((field) => (
+                        <span
+                          key={field.fieldName}
+                          className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-[rgba(25,25,25,0.05)] text-sm"
+                        >
+                          <span className="font-medium text-[#191919]">{field.fieldName}</span>
+                          <span className="text-[#949494]">{field.fieldType}</span>
+                          <button
+                            onClick={() => removeFromCollection(field.docId, field.fieldName)}
+                            className="ml-0.5 flex items-center justify-center w-4 h-4 rounded bg-transparent border-none cursor-pointer hover:bg-[rgba(215,75,75,0.1)] transition-colors"
+                          >
+                            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                              <path d="M1 1L7 7M7 1L1 7" stroke="#949494" strokeWidth="1.3" strokeLinecap="round"/>
+                            </svg>
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="px-6 py-3 border-t border-[rgba(25,25,25,0.08)] flex justify-end">
+                <button
+                  className="px-5 h-10 rounded-xl bg-[#835de1] border-none text-sm font-semibold text-white cursor-pointer hover:bg-[#7249d1] transition-colors"
+                  onClick={() => {
+                    showAlert(`Коллекция из ${collection.length} полей готова к генерации таблицы`);
+                  }}
+                >
+                  Сгенерировать таблицу
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

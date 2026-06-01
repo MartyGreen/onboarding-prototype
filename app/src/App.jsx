@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DocumentsProvider } from './data/DocumentsContext';
 import { BiApiMethodsProvider } from './data/BiApiMethodsContext';
+import { CollectionProvider } from './data/CollectionContext';
 import Layout from './components/Layout';
 import DocumentListPage from './pages/DocumentListPage';
 import DocumentPage from './pages/DocumentPage';
@@ -29,6 +30,7 @@ export default function App() {
   return (
     <DocumentsProvider>
     <BiApiMethodsProvider>
+    <CollectionProvider>
     <BrowserRouter basename="/onboarding-prototype">
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -53,6 +55,7 @@ export default function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </CollectionProvider>
     </BiApiMethodsProvider>
     </DocumentsProvider>
   );
