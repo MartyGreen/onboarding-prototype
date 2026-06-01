@@ -15,6 +15,13 @@ export default function DocumentPage() {
   const { collection, addToCollection, removeFromCollection, isInCollection, clearCollection, groupedByDoc } = useCollection();
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
   const [smartSearchOpen, setSmartSearchOpen] = useState(false);
+  // SQL Generator state
+  const [sqlStep, setSqlStep] = useState('idle'); // 'idle' | 'filters' | 'result'
+  const [sqlDateFrom, setSqlDateFrom] = useState('');
+  const [sqlDateTo, setSqlDateTo] = useState('');
+  const [sqlLimit, setSqlLimit] = useState('100');
+  const [generatedSql, setGeneratedSql] = useState('');
+  const [sqlCopied, setSqlCopied] = useState(false);
   const doc = documents.find(d => d.id === id) || documents[0];
   const [fieldSearch, setFieldSearch] = useState('');
   const [isAddFieldOpen, setIsAddFieldOpen] = useState(false);
@@ -1129,15 +1136,216 @@ export default function DocumentPage() {
                   </div>
                 ))}
               </div>
-              <div className="px-6 py-3 border-t border-[rgba(25,25,25,0.08)] flex justify-end">
-                <button
-                  className="px-5 h-10 rounded-xl bg-[#835de1] border-none text-sm font-semibold text-white cursor-pointer hover:bg-[#7249d1] transition-colors"
-                  onClick={() => {
-                    showAlert(`Коллекция из ${collection.length} полей готова к генерации таблицы`);
-                  }}
-                >
-                  Сгенерировать таблицу
-                </button>
+              {/* SQL Generator Footer */}
+              <div className="px-6 py-3 border-t border-[rgba(25,25,25,0.08)]">
+                {sqlStep === 'idle' && (
+                  <div className="flex justify-end">
+                    <button
+                      className="flex items-center gap-2 px-5 h-10 rounded-xl bg-[#835de1] border-none text-sm font-semibold text-white cursor-pointer hover:bg-[#7249d1] transition-colors"
+                      onClick={() => setSqlStep('filters')}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 3H13L9 8V12L7 13V8L3 3Z" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Сформировать SQL
+                    </button>
+                  </div>
+                )}
+
+                {sqlStep === 'filters' && (
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 3H13L9 8V12L7 13V8L3 3Z" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="text-sm font-semibold text-[#191919]">Параметры запроса</span>
+                    </div>
+                    <p className="text-xs text-[#676767] m-0 -mt-1">Укажите фильтры для SQL-запроса. Оставьте пустыми для выборки без ограничений.</p>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col gap-1 flex-1">
+                        <label className="text-xs text-[#676767]">Период от</label>
+                        <input
+                          type="date"
+                          value={sqlDateFrom}
+                          onChange={(e) => setSqlDateFrom(e.target.value)}
+                          className="h-9 px-3 rounded-lg border border-[rgba(25,25,25,0.15)] bg-white text-sm text-[#191919] outline-none focus:border-[#835de1] transition-colors"
+                          style={{ fontFamily: 'inherit' }}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1 flex-1">
+                        <label className="text-xs text-[#676767]">Период до</label>
+                        <input
+                          type="date"
+                          value={sqlDateTo}
+                          onChange={(e) => setSqlDateTo(e.target.value)}
+                          className="h-9 px-3 rounded-lg border border-[rgba(25,25,25,0.15)] bg-white text-sm text-[#191919] outline-none focus:border-[#835de1] transition-colors"
+                          style={{ fontFamily: 'inherit' }}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1 w-[100px]">
+                        <label className="text-xs text-[#676767]">Лимит</label>
+                        <input
+                          type="number"
+                          value={sqlLimit}
+                          onChange={(e) => setSqlLimit(e.target.value)}
+                          placeholder="100"
+                          className="h-9 px-3 rounded-lg border border-[rgba(25,25,25,0.15)] bg-white text-sm text-[#191919] outline-none focus:border-[#835de1] transition-colors"
+                          style={{ fontFamily: 'inherit' }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 justify-end mt-1">
+                      <button
+                        onClick={() => { setSqlStep('idle'); setSqlDateFrom(''); setSqlDateTo(''); setSqlLimit('100'); }}
+                        className="px-4 h-9 rounded-lg border border-[rgba(25,25,25,0.15)] bg-white text-sm font-medium text-[#191919] cursor-pointer hover:bg-[rgba(25,25,25,0.03)] transition-colors"
+                      >
+                        Отмена
+                      </button>
+                      <button
+                        className="flex items-center gap-2 px-5 h-9 rounded-lg bg-[#835de1] border-none text-sm font-semibold text-white cursor-pointer hover:bg-[#7249d1] transition-colors"
+                        onClick={() => {
+                          // Generate SQL from collection
+                          const groups = groupedByDoc;
+                          if (groups.length === 0) return;
+                          const mainGroup = groups[0];
+                          const mainDoc = documents.find(d => d.id === mainGroup.docId);
+                          const mainAlias = 't0';
+                          // SELECT fields
+                          const selectParts = [];
+                          groups.forEach((g, gi) => {
+                            const alias = `t${gi}`;
+                            g.fields.forEach(f => {
+                              selectParts.push(`  ${alias}.${f.fieldName}`);
+                            });
+                          });
+                          // FROM
+                          let sql = `SELECT\n${selectParts.join(',\n')}\nFROM ${mainDoc?.name || mainGroup.docName} AS ${mainAlias}`;
+                          // JOINs for additional tables
+                          for (let gi = 1; gi < groups.length; gi++) {
+                            const g = groups[gi];
+                            const targetDoc = documents.find(d => d.id === g.docId);
+                            const alias = `t${gi}`;
+                            // Find a link between main doc and this doc
+                            const link = fieldLinks?.find(l =>
+                              (l.fromDoc === mainGroup.docId && l.toDoc === g.docId) ||
+                              (l.toDoc === mainGroup.docId && l.fromDoc === g.docId)
+                            );
+                            const joinType = link?.joinType || 'LEFT JOIN';
+                            const onFrom = link ? (link.fromDoc === mainGroup.docId ? link.fromField : link.toField) : 'id';
+                            const onTo = link ? (link.fromDoc === mainGroup.docId ? link.toField : link.fromField) : 'id';
+                            sql += `\n${joinType} ${targetDoc?.name || g.docName} AS ${alias}\n  ON ${mainAlias}.${onFrom} = ${alias}.${onTo}`;
+                          }
+                          // WHERE
+                          const whereParts = [];
+                          // Ищем поле с датой в любой из таблиц коллекции
+                          let dateField = null;
+                          for (const g of groups) {
+                            const d = documents.find(dd => dd.id === g.docId);
+                            if (d) {
+                              const df = d.fields?.find(f => f.type?.toLowerCase().includes('date') || f.type?.toLowerCase().includes('timestamp') || f.name?.toLowerCase().includes('date') || f.name?.toLowerCase().includes('created'));
+                              if (df) {
+                                const alias = `t${groups.indexOf(g)}`;
+                                dateField = `${alias}.${df.name}`;
+                                break;
+                              }
+                            }
+                          }
+                          if (sqlDateFrom && dateField) whereParts.push(`${dateField} >= '${sqlDateFrom}'`);
+                          if (sqlDateTo && dateField) whereParts.push(`${dateField} <= '${sqlDateTo}'`);
+                          if (!dateField && (sqlDateFrom || sqlDateTo)) {
+                            // fallback — добавим как комментарий
+                            if (sqlDateFrom) whereParts.push(`/* date_column */ created_at >= '${sqlDateFrom}'`);
+                            if (sqlDateTo) whereParts.push(`/* date_column */ created_at <= '${sqlDateTo}'`);
+                          }
+                          if (whereParts.length > 0) {
+                            sql += `\nWHERE ${whereParts.join('\n  AND ')}`;
+                          }
+                          if (sqlLimit && parseInt(sqlLimit) > 0) {
+                            sql += `\nLIMIT ${parseInt(sqlLimit)}`;
+                          }
+                          sql += ';';
+                          setGeneratedSql(sql);
+                          setSqlStep('result');
+                          setSqlCopied(false);
+                        }}
+                      >
+                        Сгенерировать SQL
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {sqlStep === 'result' && (
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <rect x="2" y="2" width="12" height="12" rx="2" stroke="#5cad9a" strokeWidth="1.4"/>
+                          <path d="M5 8L7 10L11 6" stroke="#5cad9a" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span className="text-sm font-semibold text-[#191919]">SQL-запрос сформирован</span>
+                      </div>
+                      <button
+                        onClick={() => { setSqlStep('filters'); setSqlCopied(false); }}
+                        className="text-xs text-[#835de1] bg-transparent border-none cursor-pointer hover:underline font-medium"
+                      >
+                        Изменить параметры
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <pre className="bg-[#1e1e2e] text-[#cdd6f4] text-xs leading-[18px] rounded-xl p-4 m-0 overflow-x-auto max-h-[200px] overflow-y-auto" style={{ fontFamily: "'SF Mono', 'Fira Code', 'Consolas', monospace" }}>
+                        {generatedSql}
+                      </pre>
+                    </div>
+                    <div className="flex items-center gap-2 justify-end">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(generatedSql);
+                          setSqlCopied(true);
+                          setTimeout(() => setSqlCopied(false), 2000);
+                        }}
+                        className={`flex items-center gap-1.5 px-4 h-9 rounded-lg border text-sm font-medium cursor-pointer transition-colors ${
+                          sqlCopied
+                            ? 'border-[#5cad9a] bg-[rgba(92,173,154,0.08)] text-[#5cad9a]'
+                            : 'border-[rgba(25,25,25,0.15)] bg-white text-[#191919] hover:bg-[rgba(25,25,25,0.03)]'
+                        }`}
+                      >
+                        {sqlCopied ? (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                              <path d="M4 8L7 11L12 5" stroke="#5cad9a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            Скопировано
+                          </>
+                        ) : (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                              <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="#191919" strokeWidth="1.3"/>
+                              <path d="M3 11V3H11" stroke="#191919" strokeWidth="1.3" strokeLinecap="round"/>
+                            </svg>
+                            Скопировать
+                          </>
+                        )}
+                      </button>
+                      <button
+                        className="flex items-center gap-1.5 px-5 h-9 rounded-lg bg-[#835de1] border-none text-sm font-semibold text-white cursor-pointer hover:bg-[#7249d1] transition-colors"
+                        onClick={() => {
+                          showAlert('SQL-запрос открыт в SQL-редакторе Data Gate');
+                          setSqlStep('idle');
+                          setSqlDateFrom('');
+                          setSqlDateTo('');
+                          setSqlLimit('100');
+                        }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 4L8 8L2 12V4Z" fill="white"/>
+                          <rect x="10" y="4" width="4" height="8" rx="0.5" fill="white"/>
+                        </svg>
+                        Открыть в SQL-редакторе
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
