@@ -1,5 +1,36 @@
 import React, { createContext, useContext, useState } from 'react';
 
+// Справочник кругов и ролей для доступов
+export const circles = [
+  { id: 'c1', name: 'Якорный круг' },
+  { id: 'c2', name: 'Круг Data Engineering' },
+  { id: 'c3', name: 'Круг BI & Analytics' },
+  { id: 'c4', name: 'Круг Продукта' },
+  { id: 'c5', name: 'Круг Инфраструктуры' },
+];
+
+export const holaspiritRoles = [
+  { id: 'r1', name: 'Аналитик' },
+  { id: 'r2', name: 'Дата-инженер' },
+  { id: 'r3', name: 'Продакт-менеджер' },
+  { id: 'r4', name: 'Тимлид' },
+  { id: 'r5', name: 'Администратор' },
+  { id: 'r6', name: 'DevOps-инженер' },
+];
+
+export const dwhRoles = [
+  { id: 'd1', name: 'DWH_READER' },
+  { id: 'd2', name: 'DWH_WRITER' },
+  { id: 'd3', name: 'DWH_ADMIN' },
+  { id: 'd4', name: 'DWH_ANALYST' },
+];
+
+export const accessLevels = [
+  { id: 'manage', label: 'Управление', color: '#d84d4d', icon: '🔑' },
+  { id: 'edit', label: 'Редактирование', color: '#F2994A', icon: '✏️' },
+  { id: 'view', label: 'Просмотр', color: '#5cad9a', icon: '👁' },
+];
+
 const initialMethods = [
   {
     id: 1,
@@ -14,6 +45,19 @@ const initialMethods = [
     created: '3 дня назад',
     updated: 'минуту назад',
     techAccount: 'TEST_TEAM',
+    // Правила доступа
+    accessRules: [
+      // Управление → Якорный круг + роль Тимлид (И)
+      { id: 'ar1', level: 'manage', conditions: [{ circleId: 'c1', roleId: 'r4', roleType: 'holaspirit' }] },
+      // Редактирование → роль Дата-инженер в любом круге (ИЛИ)
+      { id: 'ar2', level: 'edit', conditions: [{ circleId: null, roleId: 'r2', roleType: 'holaspirit' }] },
+      // Редактирование → Круг BI & Analytics + роль Аналитик (И)
+      { id: 'ar3', level: 'edit', conditions: [{ circleId: 'c3', roleId: 'r1', roleType: 'holaspirit' }] },
+      // Просмотр → DWH_READER (любой круг)
+      { id: 'ar4', level: 'view', conditions: [{ circleId: null, roleId: 'd1', roleType: 'dwh' }] },
+      // Просмотр → весь Круг Продукта (любая роль)
+      { id: 'ar5', level: 'view', conditions: [{ circleId: 'c4', roleId: null, roleType: null }] },
+    ],
     sql: `select    cl.client_inn,
                  customer_code,
                  atr.tid

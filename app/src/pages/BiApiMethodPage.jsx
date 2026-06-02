@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useBiApiMethods } from '../data/BiApiMethodsContext';
+import { useBiApiMethods, circles, holaspiritRoles, dwhRoles, accessLevels } from '../data/BiApiMethodsContext';
 
 const statusStyles = {
   'Активен': { color: '#5cad9a', borderColor: '#5cad9a' },
@@ -8,7 +8,7 @@ const statusStyles = {
   'Отклонён': { color: '#d84d4d', borderColor: '#d84d4d' },
 };
 
-const tabs = ['Описание', 'Запросы', 'Статистика'];
+const tabs = ['Описание', 'Запросы', 'Роли и доступы', 'Статистика'];
 
 // Парсинг SQL строки в токены для подсветки
 const SQL_KEYWORDS = ['select', 'from', 'join', 'and', 'or', 'where', 'on', 'left', 'right', 'inner', 'outer', 'group', 'order', 'by', 'having', 'insert', 'update', 'delete', 'create', 'alter', 'drop', 'into', 'values', 'set', 'as', 'in', 'not', 'null', 'is', 'like', 'between', 'exists', 'case', 'when', 'then', 'else', 'end', 'union', 'all', 'distinct', 'limit', 'offset'];
@@ -545,6 +545,137 @@ resp, _ := http.DefaultClient.Do(req)`,
             </div>
           </div>
           </>)}
+
+          {/* ===== Таб «Роли и доступы» ===== */}
+          {activeTab === 'Роли и доступы' && (() => {
+            const rules = data.accessRules || [];
+            const grouped = accessLevels.map(level => ({
+              ...level,
+              rules: rules.filter(r => r.level === level.id),
+            }));
+            const getRoleName = (roleId, roleType) => {
+              if (!roleId) return null;
+              if (roleType === 'dwh') return dwhRoles.find(r => r.id === roleId)?.name;
+              return holaspiritRoles.find(r => r.id === roleId)?.name;
+            };
+            const getCircleName = (circleId) => circleId ? circles.find(c => c.id === circleId)?.name : null;
+            const getRoleTypeLabel = (roleType) => roleType === 'dwh' ? 'DWH Роль' : 'Holaspirit Роль';
+
+            return (
+              <>
+                <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-8">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-lg font-medium text-[#191919] leading-[22px] m-0">Матрица доступов</h2>
+                    <span className="text-xs text-[#676767]">{rules.length} {rules.length === 1 ? 'правило' : rules.length < 5 ? 'правила' : 'правил'}</span>
+                  </div>
+                  <p className="text-sm text-[#676767] leading-[18px] m-0 mb-6">
+                    Каждое правило определяет, кто получает доступ. Круг <span className="font-medium text-[#191919]">+</span> Роль означает «И» — нужно быть в этом круге <em>и</em> иметь эту роль. Несколько правил одного уровня работают по принципу «ИЛИ».
+                  </p>
+
+                  <div className="flex flex-col gap-6">
+                    {grouped.map(level => (
+                      <div key={level.id}>
+                        {/* Level header */}
+                        <div className="flex items-center gap-2.5 mb-3">
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: level.color }} />
+                          <span className="text-base font-semibold text-[#191919] leading-5">{level.label}</span>
+                          <span className="text-xs text-[#949494] ml-1">{level.rules.length} {level.rules.length === 1 ? 'правило' : level.rules.length < 5 ? 'правила' : 'правил'}</span>
+                        </div>
+
+                        {level.rules.length === 0 ? (
+                          <div className="pl-5 py-3">
+                            <span className="text-sm text-[#949494] italic">Нет правил доступа</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-2 pl-5">
+                            {level.rules.map((rule, ri) => {
+                              const cond = rule.conditions[0];
+                              const circleName = getCircleName(cond.circleId);
+                              const roleName = getRoleName(cond.roleId, cond.roleType);
+                              const isAndCondition = circleName && roleName;
+                              const roleTypeLabel = cond.roleType ? getRoleTypeLabel(cond.roleType) : null;
+
+                              return (
+                                <div key={rule.id} className="flex items-center gap-2 flex-wrap">
+                                  {ri > 0 && (
+                                    <span className="text-xs font-semibold text-[#949494] uppercase tracking-wider w-8 text-center shrink-0">или</span>
+                                  )}
+                                  {ri === 0 && level.rules.length > 1 && <div className="w-8 shrink-0" />}
+                                  
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    {circleName && (
+                                      <span className="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[rgba(25,25,25,0.06)] text-sm">
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                                          <circle cx="7" cy="7" r="5.5" stroke="#676767" strokeWidth="1.2"/>
+                                          <circle cx="7" cy="7" r="2" fill="#676767"/>
+                                        </svg>
+                                        <span className="font-medium text-[#191919]">{circleName}</span>
+                                      </span>
+                                    )}
+                                    {isAndCondition && (
+                                      <span className="text-xs font-bold text-[#835de1] mx-0.5">+</span>
+                                    )}
+                                    {roleName && (
+                                      <span className="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg text-sm" style={{ backgroundColor: cond.roleType === 'dwh' ? 'rgba(131,93,225,0.08)' : 'rgba(92,173,154,0.1)' }}>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                                          <path d="M7 2C8.1 2 9 2.9 9 4C9 5.1 8.1 6 7 6C5.9 6 5 5.1 5 4C5 2.9 5.9 2 7 2Z" stroke={cond.roleType === 'dwh' ? '#835de1' : '#5cad9a'} strokeWidth="1.2"/>
+                                          <path d="M3 11.5C3 9.3 4.8 7.5 7 7.5C9.2 7.5 11 9.3 11 11.5" stroke={cond.roleType === 'dwh' ? '#835de1' : '#5cad9a'} strokeWidth="1.2" strokeLinecap="round"/>
+                                        </svg>
+                                        <span className="font-medium" style={{ color: cond.roleType === 'dwh' ? '#835de1' : '#5cad9a' }}>{roleName}</span>
+                                      </span>
+                                    )}
+                                    {!circleName && roleName && (
+                                      <span className="text-xs text-[#949494] ml-1">в любом круге</span>
+                                    )}
+                                    {circleName && !roleName && (
+                                      <span className="text-xs text-[#949494] ml-1">все роли</span>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Легенда */}
+                <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-6">
+                  <h3 className="text-sm font-medium text-[#676767] m-0 mb-3">Как читать правила</h3>
+                  <div className="flex flex-col gap-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-2.5 h-7 rounded-md bg-[rgba(25,25,25,0.06)] text-xs font-medium text-[#191919]">Круг</span>
+                        <span className="text-xs font-bold text-[#835de1]">+</span>
+                        <span className="inline-flex items-center px-2.5 h-7 rounded-md bg-[rgba(92,173,154,0.1)] text-xs font-medium text-[#5cad9a]">Роль</span>
+                      </div>
+                      <span className="text-sm text-[#676767]">— нужно быть <strong>в круге</strong> и <strong>иметь роль</strong> одновременно (И)</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-2.5 h-7 rounded-md bg-[rgba(131,93,225,0.08)] text-xs font-medium text-[#835de1]">DWH Роль</span>
+                        <span className="text-xs text-[#949494]">в любом круге</span>
+                      </div>
+                      <span className="text-sm text-[#676767]">— достаточно <strong>только роли</strong>, круг не важен</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-2.5 h-7 rounded-md bg-[rgba(25,25,25,0.06)] text-xs font-medium text-[#191919]">Круг</span>
+                        <span className="text-xs text-[#949494]">все роли</span>
+                      </div>
+                      <span className="text-sm text-[#676767]">— достаточно быть <strong>в круге</strong>, роль не важна</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-semibold text-[#949494] uppercase tracking-wider">или</span>
+                      <span className="text-sm text-[#676767]">— между правилами одного уровня: подходит <strong>любое</strong> из условий</span>
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
 
           {/* Таб «Статистика» — заглушка */}
           {activeTab === 'Статистика' && (
