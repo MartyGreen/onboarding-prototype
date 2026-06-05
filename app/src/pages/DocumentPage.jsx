@@ -10,7 +10,7 @@ import SmartSearch from '../components/SmartSearch';
 export default function DocumentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { documents, updateDocument, statusConfig, toggleStarred, fieldLinks } = useDocuments();
+  const { documents, updateDocument, statusConfig, toggleStarred, fieldLinks, tableOrigins } = useDocuments();
   const { showAlert } = useAlert();
   const { collection, addToCollection, removeFromCollection, isInCollection, clearCollection, groupedByDoc } = useCollection();
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
@@ -61,6 +61,7 @@ export default function DocumentPage() {
 
   // Field links popup
   const [linksPopupField, setLinksPopupField] = useState(null); // fieldName or null
+  const [linksSearch, setLinksSearch] = useState(''); // поиск внутри попапа связей
 
   // Helper: get links for a field in current doc (both directions)
   const getFieldLinks = (fieldName) => {
@@ -87,6 +88,7 @@ export default function DocumentPage() {
       setOpenMenuIndex(null);
       setOpenMissingMenuIndex(null);
       setLinksPopupField(null);
+      setLinksSearch('');
       setHighlightFields(new Set());
     };
     document.addEventListener('click', handleClick);
@@ -389,27 +391,102 @@ export default function DocumentPage() {
                         </span>
                       </div>
 
-                      {/* Links popup */}
+                      {/* Links popup — улучшенный: источник + ключи + поиск */}
                       {linksPopupField === row.name && (() => {
                         const links = getFieldLinks(row.name);
                         if (links.length === 0) return null;
+                        const origin = tableOrigins?.[doc.id];
+                        const originDoc = origin ? documents.find(d => d.id === origin.sourceDocId) : null;
+                        const showSearch = links.length >= 5;
+                        const q = linksSearch.toLowerCase();
+                        const filtered = q ? links.filter(l =>
+                          l.targetDoc.name.toLowerCase().includes(q) ||
+                          l.targetField.toLowerCase().includes(q) ||
+                          (l.description && l.description.toLowerCase().includes(q))
+                        ) : links;
                         return (
                           <div
-                            className="absolute left-0 top-full mt-1 z-50 bg-white rounded-xl shadow-[0px_20px_40px_rgba(0,0,0,0.15)] py-3 min-w-[320px] max-w-[420px]"
+                            className="absolute left-0 top-full mt-1 z-50 bg-white rounded-xl shadow-[0px_20px_40px_rgba(0,0,0,0.15)] min-w-[340px] max-w-[440px]"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="px-4 pb-2 border-b border-[rgba(25,25,25,0.08)]">
+                            {/* Заголовок */}
+                            <div className="px-4 pt-3 pb-2">
                               <span className="text-xs font-medium text-[#676767] leading-[15px]">
-                                Связи поля <span className="text-[#191919] font-semibold">{row.name}</span> ({links.length})
+                                Связи поля <span className="text-[#191919] font-semibold">{row.name}</span>
                               </span>
                             </div>
-                            <div className="flex flex-col max-h-[250px] overflow-y-auto">
-                              {links.map((link, li) => (
+
+                            {/* Секция: Таблица-источник */}
+                            {originDoc && (
+                              <div className="mx-3 mb-1">
+                                <div className="text-[10px] font-semibold text-[#949494] uppercase tracking-wider px-1 pb-1">Источник</div>
                                 <div
-                                  key={li}
-                                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-[rgba(25,25,25,0.03)] cursor-pointer transition-colors"
+                                  className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[rgba(131,93,225,0.06)] hover:bg-[rgba(131,93,225,0.12)] cursor-pointer transition-colors"
                                   onClick={() => {
                                     setLinksPopupField(null);
+                                    setLinksSearch('');
+                                    navigate(`/document/${originDoc.id}`);
+                                  }}
+                                >
+                                  <div className="w-7 h-7 rounded-lg bg-[rgba(131,93,225,0.15)] flex items-center justify-center shrink-0">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                                      <path d="M2 4C2 2.89543 2.89543 2 4 2H12C13.1046 2 14 2.89543 14 4V12C14 13.1046 13.1046 14 12 14H4C2.89543 14 2 13.1046 2 12V4Z" stroke="#835de1" strokeWidth="1.3"/>
+                                      <path d="M5 6H11M5 8.5H11M5 11H8" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+                                    </svg>
+                                  </div>
+                                  <div className="flex flex-col gap-0 flex-1 min-w-0">
+                                    <span className="text-sm font-medium text-[#835de1] leading-[18px] truncate">{originDoc.name}</span>
+                                    <span className="text-[11px] text-[#676767] leading-[14px] truncate">{origin.description}</span>
+                                  </div>
+                                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                                    <path d="M6 4L10 8L6 12" stroke="#949494" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Разделитель */}
+                            {originDoc && <div className="h-px bg-[rgba(25,25,25,0.08)] mx-3 my-1" />}
+
+                            {/* Секция: Связи по ключам */}
+                            <div className="mx-3 mt-1">
+                              <div className="text-[10px] font-semibold text-[#949494] uppercase tracking-wider px-1 pb-1">
+                                Связи по ключам · {links.length}
+                              </div>
+                            </div>
+
+                            {/* Поиск при 5+ */}
+                            {showSearch && (
+                              <div className="px-3 pb-1">
+                                <div className="flex items-center bg-[rgba(25,25,25,0.05)] rounded-lg h-8 px-2.5">
+                                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 mr-1.5">
+                                    <circle cx="7" cy="7" r="4.5" stroke="#949494" strokeWidth="1.3"/>
+                                    <path d="M10.5 10.5L13.5 13.5" stroke="#949494" strokeWidth="1.3" strokeLinecap="round"/>
+                                  </svg>
+                                  <input
+                                    type="text"
+                                    value={linksSearch}
+                                    onChange={(e) => setLinksSearch(e.target.value)}
+                                    placeholder="Поиск связи..."
+                                    className="flex-1 bg-transparent border-none outline-none text-xs text-[#191919] leading-[15px] placeholder:text-[#949494]"
+                                    autoFocus
+                                  />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Список связей */}
+                            <div className="flex flex-col max-h-[220px] overflow-y-auto pb-2 px-1">
+                              {filtered.length === 0 && (
+                                <div className="px-4 py-3 text-xs text-[#949494] text-center">Ничего не найдено</div>
+                              )}
+                              {filtered.map((link, li) => (
+                                <div
+                                  key={li}
+                                  className="flex items-center gap-3 mx-2 px-3 py-2 rounded-lg hover:bg-[rgba(25,25,25,0.04)] cursor-pointer transition-colors"
+                                  onClick={() => {
+                                    setLinksPopupField(null);
+                                    setLinksSearch('');
                                     navigate(`/document/${link.targetDocId}?highlight=${encodeURIComponent(link.targetField)}`);
                                   }}
                                 >
@@ -421,9 +498,11 @@ export default function DocumentPage() {
                                       <span className="text-xs text-[#191919] font-medium">{link.targetField}</span>
                                       <span className="text-[10px] text-[#949494] px-1 py-0.5 rounded bg-[rgba(25,25,25,0.06)]">{link.joinType}</span>
                                     </div>
-                                    <span className="text-xs text-[#676767] leading-[14px]">{link.description}</span>
+                                    {link.description && (
+                                      <span className="text-[11px] text-[#676767] leading-[14px]">{link.description}</span>
+                                    )}
                                   </div>
-                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0">
                                     <path d="M6 4L10 8L6 12" stroke="#949494" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
                                 </div>

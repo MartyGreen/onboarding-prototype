@@ -19,7 +19,26 @@ export const fieldLinks = [
   { fromDoc: '3', fromField: 'manager_id', toDoc: '2', toField: 'id', joinType: 'LEFT JOIN', description: 'Менеджер → справочник' },
   { fromDoc: '3', fromField: 'created_at', toDoc: '4', toField: 'created_at', joinType: 'INNER JOIN', description: 'По дате создания' },
   { fromDoc: '2', fromField: 'id', toDoc: '4', toField: 'id', joinType: 'LEFT JOIN', description: 'По идентификатору' },
+  // Больше связей для ecom doc 3 — поле id (6+ для демо поиска)
+  { fromDoc: '3', fromField: 'id', toDoc: '1', toField: 'id', joinType: 'INNER JOIN', description: 'По идентификатору записи' },
+  { fromDoc: '3', fromField: 'id', toDoc: '4', toField: 'id', joinType: 'LEFT JOIN', description: 'По идентификатору расчёта' },
+  { fromDoc: '3', fromField: 'id', toDoc: '5', toField: 'id', joinType: 'LEFT JOIN', description: 'Онбординг → клиент' },
+  { fromDoc: '3', fromField: 'id', toDoc: '6', toField: 'id', joinType: 'LEFT JOIN', description: 'Выручка → клиент' },
+  { fromDoc: '3', fromField: 'id', toDoc: '10', toField: 'id', joinType: 'INNER JOIN', description: 'CRM-профиль клиента' },
+  { fromDoc: '3', fromField: 'id', toDoc: '13', toField: 'id', joinType: 'LEFT JOIN', description: 'Сверка транзакций' },
+  { fromDoc: '3', fromField: 'id', toDoc: '15', toField: 'id', joinType: 'LEFT JOIN', description: 'Время решения тикетов' },
+  // ecom doc 3 — поле inn
+  { fromDoc: '3', fromField: 'inn', toDoc: '10', toField: 'id', joinType: 'LEFT JOIN', description: 'ИНН → CRM профиль' },
+  { fromDoc: '3', fromField: 'inn', toDoc: '1', toField: 'seller_code', joinType: 'LEFT JOIN', description: 'ИНН → код продавца' },
 ];
+
+// Таблицы-источники: docId → { sourceDocId, description }
+// Показывает откуда «пришла» таблица (родительская/источник)
+export const tableOrigins = {
+  '3': { sourceDocId: '1', description: 'Витрина построена на основе raw-данных из ecom_team.prelead_seller_sign (STAGE)' },
+  '4': { sourceDocId: '2', description: 'Данные получены из справочника HUNTFLOW_V2_DICTIONARY_DETAILS' },
+  '31': { sourceDocId: '3', description: 'Тестовая таблица создана из витрины ecom_team.prelead_seller_sign (datamart)' },
+};
 
 export const documents = [
   {
