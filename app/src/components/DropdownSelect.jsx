@@ -53,11 +53,11 @@ export default function DropdownSelect({ sourceDoc, links = [], onNavigate }) {
         }}
         className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-[rgba(131,93,225,0.1)] border-none cursor-pointer hover:bg-[rgba(131,93,225,0.2)] transition-colors"
       >
-        {/* Link icon 12px */}
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M5 7L7 5" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
-          <path d="M3.5 8.5L2.15 9.85C1.56 10.44 1.56 11.39 2.15 11.98C2.74 12.57 3.69 12.57 4.28 11.98L5.5 10.76" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
-          <path d="M8.5 3.5L9.85 2.15C10.44 1.56 10.44 0.61 9.85 0.02C9.26 -0.57 8.31 -0.57 7.72 0.02L6.5 1.24" stroke="#835de1" strokeWidth="1.2" strokeLinecap="round"/>
+        {/* Link/chain icon 12px */}
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+          <path d="M6.5 9.5L9.5 6.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
+          <path d="M9 4L11.5 1.5C12.3284 0.671573 13.6716 0.671573 14.5 1.5C15.3284 2.32843 15.3284 3.67157 14.5 4.5L12 7L10.5 8.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M7 12L4.5 14.5C3.67157 15.3284 2.32843 15.3284 1.5 14.5C0.671573 13.6716 0.671573 12.3284 1.5 11.5L4 9L5.5 7.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         <span className="text-[11px] font-semibold text-[#835de1] leading-none">{links.length}</span>
         {/* Chevron down 10px */}
