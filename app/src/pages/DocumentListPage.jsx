@@ -256,7 +256,7 @@ export default function DocumentListPage() {
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
       {/* Title Row */}
       <div className="flex items-center gap-4">
-        <h1 className="text-[30px] font-semibold text-[#191919] leading-9 tracking-[-0.3px] m-0 flex-1">
+        <h1 className="ts-600-3xl m-0 flex-1" style={{ color: 'var(--primitive-primary)' }}>
           Документация
         </h1>
         <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export default function DocumentListPage() {
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M8 3v10M3 8h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            <span className="text-sm font-medium text-white leading-[18px] tracking-[0.14px] whitespace-nowrap">
+            <span className="ts-500-s text-white whitespace-nowrap">
               Новый документ
             </span>
           </button>
@@ -698,27 +698,27 @@ export default function DocumentListPage() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0">
-                  <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px] truncate">
+                  <span className="ts-500-m truncate" style={{ color: 'var(--primitive-primary)' }}>
                     {doc.name}
                   </span>
-                  <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] truncate">
+                  <span className="ts-400-s truncate" style={{ color: 'var(--primitive-secondary)' }}>
                     {doc.description}
                   </span>
                 </div>
               </div>
               <div className="flex-1 flex items-center gap-0.5 pl-2.5">
                 <div className="flex-1 px-2.5">
-                  <span className="text-base font-medium text-[#676767] leading-5 tracking-[0.16px]">
+                  <span className="ts-500-m" style={{ color: 'var(--primitive-secondary)' }}>
                     {doc.author}
                   </span>
                 </div>
                 <div className="flex-1 px-2.5">
-                  <span className="text-base font-medium text-[#676767] leading-5 tracking-[0.16px]">
+                  <span className="ts-500-m" style={{ color: 'var(--primitive-secondary)' }}>
                     {doc.database}
                   </span>
                 </div>
                 <div className="flex-1 px-2.5">
-                  <span className="text-base font-medium text-[#676767] leading-5 tracking-[0.16px]">
+                  <span className="ts-500-m" style={{ color: 'var(--primitive-secondary)' }}>
                     {doc.schema}
                   </span>
                 </div>
