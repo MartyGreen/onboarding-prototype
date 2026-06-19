@@ -1033,9 +1033,11 @@ export default function DocumentPage() {
       {/* Collection Floating Bar */}
       {collection.length > 0 && (
         <div
-          className="fixed left-1/2 -translate-x-1/2 z-[100] animate-[slideUp_0.3s_ease-out]"
+          className="fixed z-[100] animate-[slideUp_0.3s_ease-out]"
           style={{
             bottom: '24px',
+            left: '269px',
+            right: '24px',
             maxHeight: 'calc(100vh - 48px)',
             display: 'flex',
             flexDirection: 'column',
@@ -1204,10 +1206,10 @@ export default function DocumentPage() {
                           }`}
                         >
                           {isLinkKey && (
-                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" className="shrink-0">
-                              <circle cx="4.5" cy="4.5" r="3" stroke="#835de1" strokeWidth="1.4"/>
-                              <path d="M6.5 6.5L12.5 12.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
-                              <path d="M10 10L12.5 7.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
+                            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                              <path d="M6.5 9.5L9.5 6.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round"/>
+                              <path d="M9 4L11.5 1.5C12.3284 0.671573 13.6716 0.671573 14.5 1.5C15.3284 2.32843 15.3284 3.67157 14.5 4.5L12 7L10.5 8.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M7 12L4.5 14.5C3.67157 15.3284 2.32843 15.3284 1.5 14.5C0.671573 13.6716 0.671573 12.3284 1.5 11.5L4 9L5.5 7.5" stroke="#835de1" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           )}
                           <span className={`font-medium ${isLinkKey ? 'text-[#835de1]' : 'text-[#191919]'}`}>{field.fieldName}</span>
