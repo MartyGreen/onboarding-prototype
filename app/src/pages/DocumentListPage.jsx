@@ -245,8 +245,15 @@ export default function DocumentListPage() {
       result = result.filter(d =>
         d.name.toLowerCase().includes(q) ||
         (d.description && d.description.toLowerCase().includes(q)) ||
+        (d.descriptionFull && d.descriptionFull.toLowerCase().includes(q)) ||
         (d.author && d.author.toLowerCase().includes(q)) ||
-        (d.schema && d.schema.toLowerCase().includes(q))
+        (d.schema && d.schema.toLowerCase().includes(q)) ||
+        (d.database && d.database.toLowerCase().includes(q)) ||
+        (d.circles && d.circles.toLowerCase().includes(q)) ||
+        (d.fields && d.fields.some(f =>
+          f.name.toLowerCase().includes(q) ||
+          (f.description && f.description.toLowerCase().includes(q))
+        ))
       );
     }
     return result;
@@ -389,7 +396,7 @@ export default function DocumentListPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Название, автор или описание"
+            placeholder="Таблица, поле, автор или описание"
             className="flex-1 bg-transparent border-none outline-none text-sm text-[#191919] leading-[18px] tracking-[0.14px] placeholder:text-[#949494]"
           />
         </div>
