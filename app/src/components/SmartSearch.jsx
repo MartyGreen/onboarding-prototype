@@ -39,12 +39,13 @@ export default function SmartSearch({ isOpen, onClose }) {
     });
   }, [query]);
 
-  // Собираем уникальные таблицы и их поля из найденных концептов
+  // Собираем уникальные таблицы и их поля из найденных концептов + прямой поиск
   const searchResults = useMemo(() => {
-    if (matchedConcepts.length === 0) return [];
+    if (!query.trim()) return [];
 
     const docFieldMap = new Map(); // docId → { fields: Set, concepts: Set }
 
+    // 1. Результаты из семантических концептов
     matchedConcepts.forEach(concept => {
       concept.matches.forEach(match => {
         if (!docFieldMap.has(match.docId)) {
@@ -56,13 +57,40 @@ export default function SmartSearch({ isOpen, onClose }) {
       });
     });
 
+    // 2. Прямой поиск по названию таблицы, описанию и названиям полей
+    const q = query.toLowerCase().trim();
+    documents.forEach(doc => {
+      const nameMatch = doc.name.toLowerCase().includes(q);
+      const descMatch = doc.description && doc.description.toLowerCase().includes(q);
+      const descFullMatch = doc.descriptionFull && doc.descriptionFull.toLowerCase().includes(q);
+      const fieldMatches = doc.fields
+        ? doc.fields.filter(f =>
+            f.name.toLowerCase().includes(q) ||
+            (f.description && f.description.toLowerCase().includes(q))
+          )
+        : [];
+
+      if (nameMatch || descMatch || descFullMatch || fieldMatches.length > 0) {
+        if (!docFieldMap.has(doc.id)) {
+          docFieldMap.set(doc.id, { fields: new Set(), concepts: new Set() });
+        }
+        const entry = docFieldMap.get(doc.id);
+        fieldMatches.forEach(f => entry.fields.add(f.name));
+        // Если совпало по имени таблицы — добавляем все поля для контекста не нужно,
+        // но помечаем что таблица найдена напрямую
+        if (nameMatch) entry.concepts.add('по названию');
+        if (descMatch || descFullMatch) entry.concepts.add('по описанию');
+        if (fieldMatches.length > 0) entry.concepts.add('по полям');
+      }
+    });
+
     // Конвертируем в массив и обогащаем данными о документе
     const results = [];
     docFieldMap.forEach((value, docId) => {
       const doc = documents.find(d => d.id === docId);
       if (!doc) return;
       
-      const matchedFields = doc.fields.filter(f => value.fields.has(f.name));
+      const matchedFields = doc.fields ? doc.fields.filter(f => value.fields.has(f.name)) : [];
       
       results.push({
         doc,
@@ -75,7 +103,7 @@ export default function SmartSearch({ isOpen, onClose }) {
 
     results.sort((a, b) => b.relevance - a.relevance);
     return results;
-  }, [matchedConcepts, documents]);
+  }, [query, matchedConcepts, documents]);
 
   // Связи между таблицами (пока не реализовано — заглушка)
   const relevantLinks = [];
