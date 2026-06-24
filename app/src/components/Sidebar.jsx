@@ -13,7 +13,7 @@ const menuItems = [
 ];
 
 const bottomItems = [
-  { icon: 'assets/icon-document-book-2.svg', label: 'Есть идея', to: '/idea' },
+  { icon: 'assets/icon-document-book-2.svg', label: 'Есть идея', to: '/idea', disabled: true },
   { icon: 'assets/icon-help-circle.svg', label: 'Нужна помощь', to: '/help' },
 ];
 
@@ -53,16 +53,26 @@ export default function Sidebar() {
 
         {/* Bottom menu */}
         <div className="mt-6">
-          {bottomItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#191919] no-underline rounded-lg hover:bg-[rgba(25,25,25,0.05)] transition-colors"
-            >
-              <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
+          {bottomItems.map((item) =>
+            item.disabled ? (
+              <div
+                key={item.to}
+                className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#949494] no-underline rounded-lg cursor-default select-none"
+              >
+                <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6 opacity-40" />
+                <span>{item.label}</span>
+              </div>
+            ) : (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#191919] no-underline rounded-lg hover:bg-[rgba(25,25,25,0.05)] transition-colors"
+              >
+                <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
+                <span>{item.label}</span>
+              </NavLink>
+            )
+          )}
         </div>
 
         {/* User */}
