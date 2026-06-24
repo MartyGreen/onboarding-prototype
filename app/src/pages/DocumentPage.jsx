@@ -16,6 +16,8 @@ export default function DocumentPage() {
   const { collection, addToCollection, removeFromCollection, isInCollection, clearCollection, groupedByDoc } = useCollection();
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
   const [smartSearchOpen, setSmartSearchOpen] = useState(false);
+  const [collectionSearch, setCollectionSearch] = useState('');
+  const [expandedCollectionDesc, setExpandedCollectionDesc] = useState({}); // { docId: true }
   // SQL Generator state
   const [sqlStep, setSqlStep] = useState('idle'); // 'idle' | 'filters' | 'result'
   const [sqlDateFrom, setSqlDateFrom] = useState('');
@@ -1132,17 +1134,47 @@ export default function DocumentPage() {
           {isCollectionOpen && (
             <div className="mt-3 bg-white rounded-2xl shadow-[0px_20px_60px_rgba(0,0,0,0.2)] animate-[expandIn_0.25s_ease-out] origin-top">
               <div className="px-6 py-4 border-b border-[rgba(25,25,25,0.08)]">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-3">
                   <h4 className="text-base font-semibold text-[#191919] m-0">Собранная коллекция полей</h4>
                   <span className="text-xs text-[#676767]">{collection.length} полей из {groupedByDoc.length} таблиц</span>
                 </div>
+                {/* Поиск в корзине */}
+                <div className="flex items-center bg-[rgba(25,25,25,0.05)] rounded-lg h-9 px-3">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="shrink-0 mr-2">
+                    <circle cx="9" cy="9" r="6" stroke="#949494" strokeWidth="1.5"/>
+                    <path d="M13.5 13.5L17 17" stroke="#949494" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <input
+                    type="text"
+                    value={collectionSearch}
+                    onChange={(e) => setCollectionSearch(e.target.value)}
+                    placeholder="Поиск по полям в коллекции..."
+                    className="flex-1 bg-transparent border-none outline-none text-sm text-[#191919] leading-[18px] placeholder:text-[#949494]"
+                  />
+                  {collectionSearch && (
+                    <button onClick={() => setCollectionSearch('')} className="bg-transparent border-none cursor-pointer p-0 ml-1">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4L10 10M10 4L4 10" stroke="#949494" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="px-6 py-3">
+              <div className="px-6 py-3" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
                 {groupedByDoc.map((group) => {
                   const groupDoc = documents.find(d => d.id === group.docId);
                   const groupDesc = groupDoc?.descriptionFull || groupDoc?.description || '';
-                  const DESC_LIMIT = 100;
+                  const DESC_LIMIT = 120;
                   const isLongDesc = groupDesc.length > DESC_LIMIT;
+                  const isDescExpanded = expandedCollectionDesc[group.docId];
+                  // Фильтрация полей по поиску
+                  const cq = collectionSearch.toLowerCase().trim();
+                  const filteredGroupFields = cq
+                    ? group.fields.filter(f =>
+                        f.fieldName.toLowerCase().includes(cq) ||
+                        (f.fieldType && f.fieldType.toLowerCase().includes(cq)) ||
+                        (f.fieldDescription && f.fieldDescription.toLowerCase().includes(cq))
+                      )
+                    : group.fields;
+                  if (cq && filteredGroupFields.length === 0) return null;
                   return (
                   <div key={group.docId} className="mb-4 last:mb-0">
                     <div className="flex flex-col gap-1 mb-2">
@@ -1164,6 +1196,23 @@ export default function DocumentPage() {
                             ))}
                           </div>
                         )}
+                        {/* Кнопка показа описания таблицы */}
+                        {groupDesc && (
+                          <button
+                            className="flex items-center justify-center w-5 h-5 rounded bg-transparent border-none cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors shrink-0"
+                            title="Описание таблицы"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedCollectionDesc(prev => ({ ...prev, [group.docId]: !prev[group.docId] }));
+                            }}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                              <circle cx="8" cy="8" r="6.5" stroke="#949494" strokeWidth="1.2"/>
+                              <path d="M8 7V11" stroke="#949494" strokeWidth="1.3" strokeLinecap="round"/>
+                              <circle cx="8" cy="5.5" r="0.8" fill="#949494"/>
+                            </svg>
+                          </button>
+                        )}
                         <button
                           className="flex items-center justify-center w-5 h-5 rounded bg-transparent border-none cursor-pointer hover:bg-[rgba(25,25,25,0.08)] transition-colors shrink-0 ml-auto"
                           title="Открыть таблицу"
@@ -1179,9 +1228,28 @@ export default function DocumentPage() {
                           </svg>
                         </button>
                       </div>
+                      {/* Описание таблицы — раскрывается по клику */}
+                      {isDescExpanded && groupDesc && (
+                        <div className="ml-4 mt-1 mb-1 px-3 py-2 rounded-lg bg-[rgba(25,25,25,0.03)] border border-[rgba(25,25,25,0.08)]">
+                          <p className="text-xs text-[#676767] leading-[17px] m-0">
+                            {isLongDesc && !expandedCollectionDesc[group.docId + '_full']
+                              ? groupDesc.slice(0, DESC_LIMIT) + '…'
+                              : groupDesc
+                            }
+                          </p>
+                          {isLongDesc && (
+                            <button
+                              className="text-xs text-[#835de1] bg-transparent border-none cursor-pointer mt-1 p-0 hover:underline"
+                              onClick={() => setExpandedCollectionDesc(prev => ({ ...prev, [group.docId + '_full']: !prev[group.docId + '_full'] }))}
+                            >
+                              {expandedCollectionDesc[group.docId + '_full'] ? 'Свернуть' : 'Показать полностью'}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-1.5 pl-4">
-                      {group.fields.map((field) => {
+                      {filteredGroupFields.map((field) => {
                         // Проверяем, является ли поле ключом связи с другой таблицей в коллекции
                         // Выделяем только если и это поле, и парное поле на другой стороне связи оба в коллекции
                         const isLinkKey = fieldLinks?.some(l => {
