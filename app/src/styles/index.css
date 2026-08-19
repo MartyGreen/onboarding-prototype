@@ -186,7 +186,7 @@
 
 /* Logo */
 .sidebar-logo {
-  padding: 69px 20px 0 34px;
+  padding: 25px 20px 0 34px;
   display: flex;
   align-items: center;
   position: relative;
@@ -254,7 +254,7 @@
   transition: width 0.3s, opacity 0.2s;
 }
 .sidebar-collapsed .sidebar-logo {
-  padding: 69px 0 0 18px;
+  padding: 25px 0 0 18px;
   justify-content: flex-start;
 }
 .sidebar-collapsed .sidebar-collapse-btn {
@@ -312,7 +312,7 @@
 /* Menu group */
 .sidebar-menu-group {
   padding: 10px 0 20px;
-  margin-top: 7px;
+  margin-top: 10px;
   margin-left: 20px;
   display: flex;
   flex-direction: column;
