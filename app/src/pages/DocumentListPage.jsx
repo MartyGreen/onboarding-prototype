@@ -469,6 +469,37 @@ export default function DocumentListPage() {
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
+          {/* Переключатель вида: список / дерево — один в один по макету Figma */}
+          <div className="relative w-[80px] h-[40px] rounded-[8px] bg-[rgba(25,25,25,0.05)] overflow-hidden shrink-0">
+            {/* Кнопка «Список» (List Bulleted) */}
+            <button
+              onClick={() => setViewMode('list')}
+              className={`absolute top-0 left-0 w-[40px] h-[40px] flex items-center justify-center rounded-[8px] border-none cursor-pointer transition-colors ${
+                viewMode === 'list' ? 'bg-[#835de1]' : 'bg-transparent'
+              }`}
+              title="Список"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12C3.10446 12 3.99982 12.8956 4 14C4 15.1046 3.10457 16 2 16C0.89558 15.9998 0 15.1045 0 14C0.00017588 12.8957 0.895689 12.0002 2 12ZM15 13C15.5522 13 15.9998 13.4479 16 14C16 14.5523 15.5523 15 15 15H7C6.44786 14.9998 6 14.5522 6 14C6.00018 13.448 6.44797 13.0002 7 13H15ZM2 6C3.10446 6 3.99982 6.89558 4 8C4 9.10457 3.10457 10 2 10C0.89558 9.99982 0 9.10446 0 8C0.00017588 6.89569 0.895689 6.00018 2 6ZM15 7C15.5522 7 15.9998 7.44786 16 8C16 8.55229 15.5523 9 15 9H7C6.44786 8.99982 6 8.55218 6 8C6.00018 7.44797 6.44797 7.00018 7 7H15ZM2 0C3.10446 0 3.99982 0.89558 4 2C4 3.10457 3.10457 4 2 4C0.89558 3.99982 0 3.10446 0 2C0.00017588 0.895689 0.895689 0.00017588 2 0ZM15 1C15.5522 1 15.9998 1.44786 16 2C16 2.55228 15.5523 3 15 3H7C6.44786 2.99982 6 2.55218 6 2C6.00018 1.44797 6.44797 1.00018 7 1H15Z" fill={viewMode === 'list' ? 'white' : '#676767'} />
+              </svg>
+            </button>
+            {/* Кнопка «Дерево» (Catalog) — иконка зеркалирована по X как в макете */}
+            <button
+              onClick={switchToTree}
+              className={`absolute top-0 left-[40px] w-[40px] h-[40px] flex items-center justify-center rounded-[8px] border-none cursor-pointer transition-colors ${
+                viewMode === 'tree' ? 'bg-[#835de1]' : 'bg-transparent'
+              }`}
+              title="Структура дерева"
+            >
+              <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'scaleX(-1)' }}>
+                <path fillRule="evenodd" clipRule="evenodd" d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M2 9C2.55228 9 3 8.55228 3 8C3 7.44772 2.55228 7 2 7C1.44772 7 1 7.44772 1 8C1 8.55228 1.44772 9 2 9Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M16 9C16.5523 9 17 8.55228 17 8C17 7.44772 16.5523 7 16 7C15.4477 7 15 7.44772 15 8C15 8.55228 15.4477 9 16 9Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
+                <path d="M12 8H10M10 8V3C10 2.44772 9.55228 2 9 2H7M10 8H7M10 8V13C10 13.5523 9.55228 14 9 14H7" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="1.7" strokeLinecap="round" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M2 15C2.55228 15 3 14.5523 3 14C3 13.4477 2.55228 13 2 13C1.44772 13 1 13.4477 1 14C1 14.5523 1.44772 15 2 15Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
+              </svg>
+            </button>
+          </div>
           <div className="relative" ref={ownerDropdownRef}>
             <button
               onClick={() => {
@@ -659,38 +690,8 @@ export default function DocumentListPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Table Header */}
         <div className="flex items-center px-5 py-3 border-b border-[rgba(25,25,25,0.1)]">
-          <div className="w-[400px] pl-3 flex items-center gap-[5px]">
-            {/* Переключатель вида: список / дерево — один в один по макету Figma */}
-            <div className="relative w-[80px] h-[40px] rounded-[8px] bg-[rgba(25,25,25,0.05)] overflow-hidden shrink-0">
-              {/* Кнопка «Список» (List Bulleted) */}
-              <button
-                onClick={() => setViewMode('list')}
-                className={`absolute top-0 left-0 w-[40px] h-[40px] flex items-center justify-center rounded-[8px] border-none cursor-pointer transition-colors ${
-                  viewMode === 'list' ? 'bg-[#835de1]' : 'bg-transparent'
-                }`}
-                title="Список"
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 12C3.10446 12 3.99982 12.8956 4 14C4 15.1046 3.10457 16 2 16C0.89558 15.9998 0 15.1045 0 14C0.00017588 12.8957 0.895689 12.0002 2 12ZM15 13C15.5522 13 15.9998 13.4479 16 14C16 14.5523 15.5523 15 15 15H7C6.44786 14.9998 6 14.5522 6 14C6.00018 13.448 6.44797 13.0002 7 13H15ZM2 6C3.10446 6 3.99982 6.89558 4 8C4 9.10457 3.10457 10 2 10C0.89558 9.99982 0 9.10446 0 8C0.00017588 6.89569 0.895689 6.00018 2 6ZM15 7C15.5522 7 15.9998 7.44786 16 8C16 8.55229 15.5523 9 15 9H7C6.44786 8.99982 6 8.55218 6 8C6.00018 7.44797 6.44797 7.00018 7 7H15ZM2 0C3.10446 0 3.99982 0.89558 4 2C4 3.10457 3.10457 4 2 4C0.89558 3.99982 0 3.10446 0 2C0.00017588 0.895689 0.895689 0.00017588 2 0ZM15 1C15.5522 1 15.9998 1.44786 16 2C16 2.55228 15.5523 3 15 3H7C6.44786 2.99982 6 2.55218 6 2C6.00018 1.44797 6.44797 1.00018 7 1H15Z" fill={viewMode === 'list' ? 'white' : '#676767'} />
-                </svg>
-              </button>
-              {/* Кнопка «Дерево» (Catalog) — иконка зеркалирована по X как в макете */}
-              <button
-                onClick={switchToTree}
-                className={`absolute top-0 left-[40px] w-[40px] h-[40px] flex items-center justify-center rounded-[8px] border-none cursor-pointer transition-colors ${
-                  viewMode === 'tree' ? 'bg-[#835de1]' : 'bg-transparent'
-                }`}
-                title="Структура дерева"
-              >
-                <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'scaleX(-1)' }}>
-                  <path fillRule="evenodd" clipRule="evenodd" d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
-                  <path fillRule="evenodd" clipRule="evenodd" d="M2 9C2.55228 9 3 8.55228 3 8C3 7.44772 2.55228 7 2 7C1.44772 7 1 7.44772 1 8C1 8.55228 1.44772 9 2 9Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
-                  <path fillRule="evenodd" clipRule="evenodd" d="M16 9C16.5523 9 17 8.55228 17 8C17 7.44772 16.5523 7 16 7C15.4477 7 15 7.44772 15 8C15 8.55228 15.4477 9 16 9Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
-                  <path d="M12 8H10M10 8V3C10 2.44772 9.55228 2 9 2H7M10 8H7M10 8V13C10 13.5523 9.55228 14 9 14H7" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="1.7" strokeLinecap="round" />
-                  <path fillRule="evenodd" clipRule="evenodd" d="M2 15C2.55228 15 3 14.5523 3 14C3 13.4477 2.55228 13 2 13C1.44772 13 1 13.4477 1 14C1 14.5523 1.44772 15 2 15Z" stroke={viewMode === 'tree' ? 'white' : '#676767'} strokeWidth="2" />
-                </svg>
-              </button>
-            </div>
+          <div className="w-[400px] pl-3">
+            {/* Колонка «Название» — заголовок скрыт как в макете Figma */}
           </div>
           {viewMode === 'list' && (
           <div className="flex-1 flex items-center gap-0.5 pl-2.5">
