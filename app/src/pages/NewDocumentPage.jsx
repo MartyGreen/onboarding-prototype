@@ -869,7 +869,8 @@ export default function NewDocumentPage() {
                       padding: 'var(--spacing-1-5x) 0',
                     }}
                   >
-                    {/* Тоггл «Используемые в выбранном круге» */}
+                    {/* Тоггл «Используемые в выбранном круге» — только когда круг выбран */}
+                    {owner && (
                     <div
                       className="flex items-center justify-between"
                       style={{ padding: 'var(--spacing-2-5x) var(--spacing-5x)', borderBottom: '1px solid var(--translucent-primitives-neutral-2)' }}
@@ -884,19 +885,18 @@ export default function NewDocumentPage() {
                           width: '56px',
                           height: '32px',
                           borderRadius: 'var(--rounding-4x)',
-                          background: !owner ? 'var(--container-transparent-2)' : tagCircleOnly ? 'var(--bg-brand)' : 'var(--container-transparent-2)',
-                          cursor: !owner ? 'not-allowed' : 'pointer',
-                          opacity: !owner ? 0.5 : 1,
+                          background: tagCircleOnly ? 'var(--bg-brand)' : 'var(--container-transparent-2)',
+                          cursor: 'pointer',
                         }}
-                        onClick={() => owner && setTagCircleOnly(prev => !prev)}
-                        disabled={!owner}
+                        onClick={() => setTagCircleOnly(prev => !prev)}
                       >
                         <div
                           className="absolute rounded-full bg-white transition-[left] duration-200"
-                          style={{ top: '50%', transform: 'translateY(-50%)', width: '24px', height: '24px', left: tagCircleOnly && owner ? 'auto' : '4px', right: tagCircleOnly && owner ? '4px' : 'auto' }}
+                          style={{ top: '50%', transform: 'translateY(-50%)', width: '24px', height: '24px', left: tagCircleOnly ? 'auto' : '4px', right: tagCircleOnly ? '4px' : 'auto' }}
                         />
                       </button>
                     </div>
+                    )}
                     <div className="overflow-y-auto" style={{ maxHeight: '240px' }}>
                       {filteredPopularTags.map(tag => (
                         <button
