@@ -5,7 +5,7 @@ import LogoSvg from './LogoSvg';
 const base = import.meta.env.BASE_URL;
 
 const mainMenuItems = [
-  { icon: `${base}assets/icon-document-book.svg`, label: 'Документация', to: '/' },
+  { icon: `${base}assets/icon-document-book.svg`, label: 'Документация', to: '/', badge: '5' },
   { icon: `${base}assets/icon-person.svg`, label: 'Команда', to: '/team' },
   { icon: `${base}assets/icon-integration.svg`, label: 'Сессия', to: '/session' },
   { icon: `${base}assets/icon-file.svg`, label: 'Загрузчик файлов', to: '/files' },
@@ -78,7 +78,10 @@ export default function Sidebar() {
               )}
             </NavLink>
           ))}
+        </div>
 
+        {/* Map section */}
+        <div className="sidebar-menu-group map-group">
           <NavLink
             to={mapItem.to}
             className={({ isActive }) =>

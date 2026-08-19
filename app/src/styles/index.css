@@ -32,8 +32,9 @@
   pointer-events: none;
 }
 .sidebar-top-bar-company { color: #949494; }
+.sidebar-top-bar-company span { color: #191919; }
 .sidebar-top-bar-release { color: #949494; }
-.sidebar-top-bar-release span { color: #835de1; font-weight: 600; }
+.sidebar-top-bar-release span { color: #191919; font-weight: 600; }
 
 /* === Main Area === */
 .main-area {
@@ -192,12 +193,15 @@
   margin-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .sidebar-menu-group.map-group {
   padding: 10px 0;
-  margin-top: 14px;
+  margin-top: 25px;
 }
 
 /* Menu item */
@@ -206,7 +210,7 @@
   align-items: center;
   gap: 12px;
   padding: 8px 12px;
-  color: #949494;
+  color: #191919;
   font-size: 14px;
   font-weight: 500;
   line-height: 18px;
@@ -246,7 +250,7 @@
   letter-spacing: 0.1px;
   border-radius: 16px;
   min-width: 16px;
-  height: 18px;
+  height: 16px;
   padding: 0 4px;
   display: flex;
   align-items: center;
@@ -266,7 +270,7 @@
   margin-top: auto;
   padding: 0;
   padding-left: 20px;
-  gap: 10px;
+  gap: 4px;
   transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .sidebar-bottom-card {
@@ -275,6 +279,7 @@
   border-radius: 14px;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 /* User */

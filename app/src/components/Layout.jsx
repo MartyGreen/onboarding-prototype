@@ -7,8 +7,8 @@ export default function Layout() {
   return (
     <>
       <div className="sidebar-top-bar">
-        <span className="sidebar-top-bar-company">ООО "Банк Точка"</span>
-        <span className="sidebar-top-bar-release">последний релиз: <span>02.11.2026</span></span>
+        <span className="sidebar-top-bar-company">ООО <span>"Банк Точка"</span></span>
+        <span className="sidebar-top-bar-release">последний релиз: <span>02.11.2026 🦀</span></span>
       </div>
       <div className="layout">
         <Sidebar />
