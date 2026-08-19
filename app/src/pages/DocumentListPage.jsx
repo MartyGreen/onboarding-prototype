@@ -38,12 +38,53 @@ const statusAvatars = {
   'Активен': { bgColor: '#7AC6B2', Icon: DocCheckIcon },
 };
 
+// Иконка базы данных
+function DatabaseIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+      <ellipse cx="10" cy="5" rx="7" ry="2.5" stroke="#835de1" strokeWidth="1.4" fill="none" />
+      <path d="M3 5v4c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5V5" stroke="#835de1" strokeWidth="1.4" />
+      <path d="M3 9v4c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5V9" stroke="#835de1" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+// Подсветка совпадений поиска (оранжевый #F5A623)
+function HighlightText({ text, highlight }) {
+  if (!highlight || !highlight.trim()) return <>{text}</>;
+  const escaped = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === highlight.toLowerCase()
+          ? <mark key={i} style={{ background: '#F5A623', color: '#fff', borderRadius: '2px', padding: '0 1px' }}>{part}</mark>
+          : part
+      )}
+    </>
+  );
+}
+
+// Иконка схемы
+function SchemaIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+      <path d="M2 5l6-3 6 3v8l-6 3-6-3V5z" stroke="#676767" strokeWidth="1.3" strokeLinejoin="round" fill="none" />
+      <path d="M2 5l6 3 6-3M8 8v8" stroke="#676767" strokeWidth="1.2" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function DocumentListPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { documents, toggleStarred, statusConfig } = useDocuments();
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Переключатель вида: список / дерево
+  const [viewMode, setViewMode] = useState('list'); // 'list' | 'tree'
+  const [expandedNodes, setExpandedNodes] = useState(new Set());
 
   // Фильтр по владельцу (кругу) — одиночный выбор
   const [selectedOwner, setSelectedOwner] = useState(null);
@@ -318,6 +359,90 @@ export default function DocumentListPage() {
     return result;
   }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner, selectedDatabase, selectedSchema, selectedStatus, selectedTag]);
 
+  // Построение дерева: database → schema → documents
+  const treeData = useMemo(() => {
+    const tree = {};
+    filteredDocuments.forEach((doc) => {
+      const db = doc.database || 'Не указана';
+      const schema = doc.schema || 'Не указана';
+      if (!tree[db]) tree[db] = {};
+      if (!tree[db][schema]) tree[db][schema] = [];
+      tree[db][schema].push(doc);
+    });
+    // Сортируем по имени
+    const sorted = Object.keys(tree).sort((a, b) => a.localeCompare(b, 'ru'));
+    return sorted.map((db) => ({
+      key: db,
+      label: db,
+      schemas: Object.keys(tree[db]).sort((a, b) => a.localeCompare(b, 'ru')).map((schema) => ({
+        key: `${db}/${schema}`,
+        label: schema,
+        docs: tree[db][schema],
+      })),
+    }));
+  }, [filteredDocuments]);
+
+  const toggleNode = (nodeKey) => {
+    setExpandedNodes((prev) => {
+      const next = new Set(prev);
+      if (next.has(nodeKey)) {
+        next.delete(nodeKey);
+      } else {
+        next.add(nodeKey);
+      }
+      return next;
+    });
+  };
+
+  // При переключении на дерево — раскрываем всё
+  const switchToTree = () => {
+    setViewMode('tree');
+    // Раскрываем все узлы при переключении
+    const allKeys = new Set();
+    treeData.forEach((db) => {
+      allKeys.add(db.key);
+      db.schemas.forEach((schema) => {
+        allKeys.add(schema.key);
+      });
+    });
+    setExpandedNodes(allKeys);
+  };
+
+  // Рендер строки документа в режиме дерева
+  const renderTreeDoc = (doc) => (
+    <div key={doc.id}
+      className="group flex items-center pl-[76px] pr-5 py-1 hover:bg-[rgba(25,25,25,0.02)] cursor-pointer transition-colors"
+      onClick={() => navigate(`/document/${doc.id}`)}>
+      <div className="flex-1 flex items-center gap-3 py-2 min-w-0">
+        <div className="w-8 h-8 shrink-0 relative">
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0">
+            <path d="M16 0C26.9091 0 32 5.09091 32 16C32 26.9091 26.9091 32 16 32C5.09091 32 0 26.9091 0 16C0 5.09091 5.09091 0 16 0Z" fill={statusAvatars[doc.status]?.bgColor || '#949494'}/>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center scale-[0.8]">
+            {(() => { const a = statusAvatars[doc.status]; const I = a?.Icon || PencilIcon; return <I />; })()}
+          </div>
+        </div>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="ts-500-m truncate" style={{ color: 'var(--primitive-primary)' }}><HighlightText text={doc.name} highlight={searchQuery} /></span>
+          <span className="ts-400-s truncate" style={{ color: 'var(--primitive-secondary)' }}><HighlightText text={doc.description} highlight={searchQuery} /></span>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 shrink-0">
+        <span className="ts-400-s whitespace-nowrap" style={{ color: 'var(--primitive-secondary)' }}>{doc.author}</span>
+        <span className="inline-flex items-center justify-center px-2 h-6 rounded-md text-sm font-medium leading-[18px] tracking-[0.14px] border whitespace-nowrap"
+          style={{ color: statusConfig[doc.status]?.color, borderColor: statusConfig[doc.status]?.color }}>{doc.status}</span>
+        <button
+          className={`border-none bg-transparent cursor-pointer p-1 rounded transition-opacity ${doc.starred ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          onClick={(e) => { e.stopPropagation(); toggleStarred(doc.id); }}
+          title={doc.starred ? 'Убрать из избранного' : 'Добавить в избранное'}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill={doc.starred ? '#676767' : 'none'} stroke={doc.starred ? 'none' : '#676767'} strokeWidth={doc.starred ? '0' : '1.2'} xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 1.12l2.12 4.3 4.74.69-3.43 3.34.81 4.72L8 11.77l-4.24 2.4.81-4.72L1.14 6.11l4.74-.69L8 1.12z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex-1 flex flex-col pt-8 px-8 pb-5 gap-6 overflow-hidden">
       {/* Title Row */}
@@ -326,22 +451,6 @@ export default function DocumentListPage() {
           Документация
         </h1>
         <div className="flex items-center gap-2">
-          {/* Icon buttons */}
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-connection-arrows.svg`} alt="" className="w-5 h-5" />
-          </button>
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-arrows-rotation.svg`} alt="" className="w-5 h-5" />
-          </button>
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-pencil-2.svg`} alt="" className="w-5 h-5" />
-          </button>
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-layer-copy.svg`} alt="" className="w-5 h-5" />
-          </button>
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
-            <img src={`${import.meta.env.BASE_URL}assets/icon-trash.svg`} alt="" className="w-5 h-5" />
-          </button>
           {/* New Document Button */}
           <button
             onClick={() => navigate('/new-document')}
@@ -550,9 +659,37 @@ export default function DocumentListPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Table Header */}
         <div className="flex items-center px-5 py-3 border-b border-[rgba(25,25,25,0.1)]">
-          <div className="w-[400px] pl-3">
-            {/* View toggle placeholder */}
+          <div className="w-[400px] pl-3 flex items-center gap-1">
+            {/* Переключатель вида: список / дерево */}
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-colors ${
+                viewMode === 'list'
+                  ? 'bg-[rgba(131,93,225,0.1)]'
+                  : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+              }`}
+              title="Список"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 4.5h12M3 9h12M3 13.5h12" stroke={viewMode === 'list' ? '#835de1' : '#676767'} strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+            <button
+              onClick={switchToTree}
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-colors ${
+                viewMode === 'tree'
+                  ? 'bg-[rgba(131,93,225,0.1)]'
+                  : 'bg-transparent hover:bg-[rgba(25,25,25,0.05)]'
+              }`}
+              title="Структура дерева"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 3h10M7 7.5h7M7 12h7M4 7.5h1M4 12h1" stroke={viewMode === 'tree' ? '#835de1' : '#676767'} strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M5.5 5.25v3M5.5 9.75v3" stroke={viewMode === 'tree' ? '#835de1' : '#676767'} strokeWidth="1" strokeLinecap="round" strokeDasharray="1.5 1.5" />
+              </svg>
+            </button>
           </div>
+          {viewMode === 'list' && (
           <div className="flex-1 flex items-center gap-0.5 pl-2.5">
             <div className="flex-1 px-2.5 relative" ref={authorDropdownRef}>
               <button
@@ -825,16 +962,19 @@ export default function DocumentListPage() {
               </button>
             </div>
           </div>
+          )}
         </div>
 
         {/* Table Body */}
         <div className="flex-1 overflow-y-auto">
-          {filteredDocuments.map((doc) => (
-            <div
-              key={doc.id}
-              className="group flex items-center px-5 py-1 hover:bg-[rgba(25,25,25,0.02)] cursor-pointer transition-colors"
-              onClick={() => navigate(`/document/${doc.id}`)}
-            >
+          {viewMode === 'list' ? (
+            /* === РЕЖИМ СПИСКА === */
+            filteredDocuments.map((doc) => (
+              <div
+                key={doc.id}
+                className="group flex items-center px-5 py-1 hover:bg-[rgba(25,25,25,0.02)] cursor-pointer transition-colors"
+                onClick={() => navigate(`/document/${doc.id}`)}
+              >
               <div className="w-[400px] flex items-center gap-3 py-3">
                 <div className="w-10 h-10 shrink-0 relative">
                   <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0">
@@ -850,10 +990,10 @@ export default function DocumentListPage() {
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0">
                   <span className="ts-500-m truncate" style={{ color: 'var(--primitive-primary)' }}>
-                    {doc.name}
+                    <HighlightText text={doc.name} highlight={searchQuery} />
                   </span>
                   <span className="ts-400-s truncate" style={{ color: 'var(--primitive-secondary)' }}>
-                    {doc.description}
+                    <HighlightText text={doc.description} highlight={searchQuery} />
                   </span>
                 </div>
               </div>
@@ -905,7 +1045,41 @@ export default function DocumentListPage() {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+          ) : (
+            /* === РЕЖИМ ДЕРЕВА === */
+            treeData.map((dbNode) => (
+              <div key={dbNode.key}>
+                <div className="flex items-center gap-2 px-5 py-2.5 cursor-pointer hover:bg-[rgba(25,25,25,0.02)] transition-colors select-none"
+                  onClick={() => toggleNode(dbNode.key)}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    className={`shrink-0 transition-transform duration-150 ${expandedNodes.has(dbNode.key) ? 'rotate-90' : ''}`}>
+                    <path d="M6 4l4 4-4 4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <DatabaseIcon />
+                  <span className="ts-600-m" style={{ color: 'var(--primitive-primary)' }}><HighlightText text={dbNode.label} highlight={searchQuery} /></span>
+                  <span className="ts-400-s ml-0.5" style={{ color: 'var(--primitive-tertiary)' }}>
+                    {dbNode.schemas.reduce((s, n) => s + n.docs.length, 0)}
+                  </span>
+                </div>
+                {expandedNodes.has(dbNode.key) && dbNode.schemas.map((sn) => (
+                  <div key={sn.key}>
+                    <div className="flex items-center gap-2 pl-11 pr-5 py-2 cursor-pointer hover:bg-[rgba(25,25,25,0.02)] transition-colors select-none"
+                      onClick={() => toggleNode(sn.key)}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                        className={`shrink-0 transition-transform duration-150 ${expandedNodes.has(sn.key) ? 'rotate-90' : ''}`}>
+                        <path d="M6 4l4 4-4 4" stroke="#676767" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <SchemaIcon />
+                      <span className="ts-500-m" style={{ color: 'var(--primitive-primary)' }}><HighlightText text={sn.label} highlight={searchQuery} /></span>
+                      <span className="ts-400-s ml-0.5" style={{ color: 'var(--primitive-tertiary)' }}>{sn.docs.length}</span>
+                    </div>
+                    {expandedNodes.has(sn.key) && sn.docs.map((doc) => renderTreeDoc(doc))}
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
         </div>
       </div>
 
