@@ -827,3 +827,10 @@ body {
   text-align: center;
   padding: 8px 0;
 }
+
+/* === Tags Input Placeholder (T-DS token) === */
+.tags-input-field::placeholder {
+  color: var(--primitive-neutral-4);
+  opacity: 1;
+}
+

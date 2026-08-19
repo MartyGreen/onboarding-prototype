@@ -745,28 +745,33 @@ export default function NewDocumentPage() {
             </div>
 
             {/* Tags Section */}
-            <div className="flex flex-col gap-0" ref={tagDropdownRef}>
-              <div className="flex items-center py-2">
-                <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Теги</span>
-              </div>
-
-              {/* Contextual Notification — подсказка */}
+            <div className="flex flex-col gap-3" ref={tagDropdownRef}>
+              {/* Contextual Notification — подсказка (T-DS) */}
               {tagHintVisible && (
-                <div className="flex items-start gap-3 p-4 bg-[rgba(25,25,25,0.05)] border border-[rgba(25,25,25,0.08)] rounded-xl mb-3">
-                  <div className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-[rgba(25,25,25,0.06)]">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M10 2L4 10.5H9L8 16L14 7.5H9L10 2Z" fill="#191919"/>
+                <div
+                  className="flex items-center w-full box-border"
+                  style={{ padding: '0 var(--spacing-5x)', border: '1px solid var(--translucent-primitives-neutral-2)', borderRadius: 'var(--rounding-3x)' }}
+                >
+                  <div className="flex items-center shrink-0" style={{ padding: 'var(--spacing-3x) var(--spacing-3x) var(--spacing-3x) 0', color: 'var(--primitive-brand)' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M13 2L4.09 12.63a1 1 0 00.78 1.62H11l-1 7.25a.5.5 0 00.86.41L19.91 11.37a1 1 0 00-.78-1.62H13l1-7.25a.5.5 0 00-.86-.41L13 2Z" fill="currentColor"/>
                     </svg>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-[#191919] leading-[18px] mb-0.5">Как использовать теги?</div>
-                    <div className="text-[13px] leading-[17px] tracking-[0.13px] text-[#676767]">
+                  <div className="flex flex-col flex-1 min-w-0" style={{ padding: 'var(--spacing-3x) 0', gap: 'var(--spacing-1-5x)' }}>
+                    <p className="m-0 w-full overflow-hidden text-ellipsis whitespace-nowrap" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 600, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)' }}>
+                      Как использовать теги?
+                    </p>
+                    <p className="m-0 w-full" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 400, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)', overflowWrap: 'anywhere' }}>
                       Это своего рода группировка, вы можете создать группы для всей команды или личные, по тегам так же есть поиск в общем списке или и самого документа.
-                    </div>
+                    </p>
                   </div>
-                  <button className="shrink-0 p-0.5 flex items-center justify-center bg-transparent border-none cursor-pointer opacity-50 hover:opacity-100 transition-opacity" onClick={() => setTagHintVisible(false)}>
-                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                      <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                  <button
+                    className="inline-flex items-center justify-center shrink-0 p-0 border-0 bg-transparent cursor-pointer"
+                    style={{ color: 'var(--primitive-neutral-4)' }}
+                    onClick={() => setTagHintVisible(false)}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   </button>
                 </div>
@@ -774,78 +779,147 @@ export default function NewDocumentPage() {
 
               <div className="relative">
                 <div
-                  className={`bg-[rgba(25,25,25,0.05)] rounded-xl px-5 py-3 transition-all cursor-text ${tagDropdownOpen ? 'ring-2 ring-[#835de1]' : ''}`}
+                  className="flex flex-col w-full cursor-text transition-all"
+                  style={{
+                    padding: '0 var(--spacing-5x)',
+                    borderRadius: 'var(--rounding-3x)',
+                    background: 'var(--container-transparent-1)',
+                    boxShadow: tagDropdownOpen ? 'inset 0 0 0 2px var(--primitive-brand)' : 'none',
+                  }}
                   onClick={() => { setTagDropdownOpen(true); tagInputRef.current?.focus(); }}
                 >
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1 h-7 px-2.5 rounded-lg bg-[rgba(131,93,225,0.1)] text-sm font-medium text-[#835de1] leading-[18px] tracking-[0.14px] whitespace-nowrap"
-                      >
-                        {tag}
-                        <svg
-                          width="12" height="12" viewBox="0 0 16 16" fill="none"
-                          className="cursor-pointer shrink-0"
-                          onClick={(e) => { e.stopPropagation(); removeTag(tag); }}
+                  <div className="flex flex-col w-full" style={{ padding: 'var(--spacing-3x) 0', gap: 'var(--spacing-2x)' }}>
+                    {/* Label (T-DS .input__title) */}
+                    <div className="flex items-center" style={{ gap: 'var(--spacing-3x)', minHeight: '18px' }}>
+                      <p className="m-0 whitespace-nowrap" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 500, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)' }}>
+                        Теги
+                      </p>
+                    </div>
+                    {/* Tags + Input row */}
+                    <div className="flex items-center flex-wrap" style={{ gap: 'var(--spacing-2x)' }}>
+                      {tags.map(tag => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center justify-center whitespace-nowrap"
+                          style={{
+                            minHeight: '32px',
+                            padding: 'var(--spacing-1-5x) var(--spacing-2-5x)',
+                            borderRadius: 'var(--rounding-2-5x)',
+                            background: 'var(--container-transparent-1)',
+                            color: 'var(--primitive-brand)',
+                            gap: 'var(--spacing-2x)',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-family-tt-norms-tochka-extended)',
+                            fontWeight: 500,
+                            fontSize: '14px',
+                            lineHeight: '18px',
+                            letterSpacing: '0.01em',
+                          }}
                         >
-                          <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      </span>
-                    ))}
-                    <input
-                      ref={tagInputRef}
-                      type="text"
-                      value={tagInput}
-                      onChange={(e) => { setTagInput(e.target.value); setTagDropdownOpen(true); }}
-                      onFocus={() => setTagDropdownOpen(true)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && tagInput.trim()) {
-                          e.preventDefault();
-                          addTag(tagInput);
-                        } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
-                          removeTag(tags[tags.length - 1]);
-                        }
-                      }}
-                      placeholder={tags.length === 0 ? 'Начните вводить тег...' : ''}
-                      className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-base text-[#191919] leading-5 tracking-[0.16px] p-0 m-0 placeholder:text-[#949494]"
-                    />
+                          {tag}
+                          <span
+                            className="relative inline-flex items-center justify-center shrink-0"
+                            style={{ width: '12px', height: '12px', color: 'inherit', cursor: 'pointer' }}
+                            onClick={(e) => { e.stopPropagation(); removeTag(tag); }}
+                          >
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                              <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            </svg>
+                          </span>
+                        </span>
+                      ))}
+                      <input
+                        ref={tagInputRef}
+                        type="text"
+                        value={tagInput}
+                        onChange={(e) => { setTagInput(e.target.value); setTagDropdownOpen(true); }}
+                        onFocus={() => setTagDropdownOpen(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && tagInput.trim()) {
+                            e.preventDefault();
+                            addTag(tagInput);
+                          } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+                            removeTag(tags[tags.length - 1]);
+                          }
+                        }}
+                        placeholder={tags.length === 0 ? 'Начните вводить тег...' : ''}
+                        className="tags-input-field flex-1 min-w-[120px] p-0 m-0 border-0 outline-0 bg-transparent"
+                        style={{
+                          fontFamily: 'var(--font-family-tt-norms-tochka-extended)',
+                          fontWeight: 400,
+                          fontSize: '16px',
+                          lineHeight: '20px',
+                          letterSpacing: '0.01em',
+                          color: 'var(--primitive-primary)',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Дропдаун популярных тегов */}
+                {/* Дропдаун популярных тегов (T-DS Popup) */}
                 {tagDropdownOpen && (filteredPopularTags.length > 0 || showCreateOption) && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden py-[5px]">
+                  <div
+                    className="absolute top-full left-0 right-0 z-50 overflow-hidden"
+                    style={{
+                      marginTop: '4px',
+                      background: 'var(--popup-primary)',
+                      borderRadius: 'var(--rounding-3x)',
+                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                      padding: 'var(--spacing-1-5x) 0',
+                    }}
+                  >
                     {/* Тоггл «Используемые в выбранном круге» */}
-                    <div className="flex items-center justify-between px-5 py-[10px] border-b border-[rgba(25,25,25,0.08)]" onMouseDown={(e) => e.preventDefault()}>
-                      <span className="text-[13px] font-medium leading-[17px] tracking-[0.13px] text-[#676767]">Используемые в выбранном круге</span>
+                    <div
+                      className="flex items-center justify-between"
+                      style={{ padding: 'var(--spacing-2-5x) var(--spacing-5x)', borderBottom: '1px solid var(--translucent-primitives-neutral-2)' }}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      <span style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 500, fontSize: '13px', lineHeight: '17px', letterSpacing: '0.01em', color: 'var(--primitive-secondary)' }}>
+                        Используемые в выбранном круге
+                      </span>
                       <button
-                        className={`relative w-9 h-5 rounded-[10px] border-none p-0 shrink-0 transition-colors duration-200 ${!owner ? 'bg-[rgba(25,25,25,0.1)] cursor-not-allowed opacity-50' : tagCircleOnly ? 'bg-[#835de1] cursor-pointer' : 'bg-[rgba(25,25,25,0.1)] cursor-pointer'}`}
+                        className="relative shrink-0 border-none p-0 transition-colors duration-200"
+                        style={{
+                          width: '36px',
+                          height: '20px',
+                          borderRadius: 'var(--rounding-pill)',
+                          background: !owner ? 'var(--container-transparent-1)' : tagCircleOnly ? 'var(--bg-brand)' : 'var(--container-transparent-1)',
+                          cursor: !owner ? 'not-allowed' : 'pointer',
+                          opacity: !owner ? 0.5 : 1,
+                        }}
                         onClick={() => owner && setTagCircleOnly(prev => !prev)}
                         disabled={!owner}
                       >
-                        <div className={`absolute top-[3px] w-3.5 h-3.5 rounded-full bg-white transition-[left] duration-200 ${tagCircleOnly && owner ? 'left-[19px]' : 'left-[3px]'}`} />
+                        <div
+                          className="absolute rounded-full bg-white transition-[left] duration-200"
+                          style={{ top: '3px', width: '14px', height: '14px', left: tagCircleOnly && owner ? '19px' : '3px' }}
+                        />
                       </button>
                     </div>
-                    <div className="max-h-[240px] overflow-y-auto">
+                    <div className="overflow-y-auto" style={{ maxHeight: '240px' }}>
                       {filteredPopularTags.map(tag => (
                         <button
                           key={tag}
                           onClick={() => addTag(tag)}
-                          className="flex items-center w-full px-5 py-[10px] border-none bg-transparent cursor-pointer hover:bg-[rgba(25,25,25,0.04)] transition-colors text-left"
+                          className="flex items-center w-full border-none bg-transparent cursor-pointer transition-colors text-left hover:bg-[#1919191a]"
+                          style={{ padding: 'var(--spacing-2-5x) var(--spacing-5x)' }}
                         >
-                          <span className="flex-1 text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">{tag}</span>
+                          <span style={{ flex: 1, fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 500, fontSize: '16px', lineHeight: '20px', letterSpacing: '0.01em', color: 'var(--primitive-primary)' }}>
+                            {tag}
+                          </span>
                         </button>
                       ))}
                       {showCreateOption && (
                         <button
                           onClick={() => addTag(tagInput)}
-                          className="flex items-center gap-2 w-full px-5 py-[10px] border-none bg-transparent cursor-pointer hover:bg-[rgba(131,93,225,0.04)] transition-colors text-left border-t border-[rgba(25,25,25,0.08)]"
+                          className="flex items-center w-full border-none bg-transparent cursor-pointer transition-colors text-left hover:bg-[rgba(131,93,225,0.04)]"
+                          style={{ gap: 'var(--spacing-2x)', padding: 'var(--spacing-2-5x) var(--spacing-5x)', borderTop: '1px solid var(--translucent-primitives-neutral-2)' }}
                         >
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8 3v10M3 8h10" stroke="#835de1" strokeWidth="1.5" strokeLinecap="round" />
+                            <path d="M8 3v10M3 8h10" stroke="var(--primitive-brand)" strokeWidth="1.5" strokeLinecap="round" />
                           </svg>
-                          <span className="text-base font-medium text-[#835de1] leading-5 tracking-[0.16px]">
+                          <span style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 500, fontSize: '16px', lineHeight: '20px', letterSpacing: '0.01em', color: 'var(--primitive-brand)' }}>
                             Создать «{tagInput.trim()}»
                           </span>
                         </button>
