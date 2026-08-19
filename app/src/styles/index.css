@@ -35,6 +35,128 @@
 .sidebar-top-bar-company span { color: #191919; }
 .sidebar-top-bar-release { color: #949494; }
 .sidebar-top-bar-release span { color: #191919; font-weight: 600; }
+.sidebar-top-bar-release-date {
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.15s;
+}
+.sidebar-top-bar-release-date:hover {
+  color: #835de1;
+}
+
+/* === Release Modal === */
+.release-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(25, 25, 25, 0.4);
+}
+.release-modal {
+  width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+  animation: releaseModalIn 0.2s ease-out;
+}
+@keyframes releaseModalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Header */
+.release-modal-header {
+  position: relative;
+  padding: 20px 20px 16px;
+}
+.release-modal-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  color: #191919;
+  margin: 0;
+  padding-right: 40px;
+}
+.release-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.release-modal-close img {
+  width: 16px;
+  height: 16px;
+}
+.release-modal-close:hover {
+  background: rgba(25, 25, 25, 0.06);
+}
+
+/* Content */
+.release-modal-content {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+.release-modal-item {
+  display: flex;
+  flex-direction: column;
+}
+.release-modal-item-title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  color: #191919;
+  padding: 8px 0;
+}
+.release-modal-item-desc {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.14px;
+  color: #191919;
+}
+
+/* Footer */
+.release-modal-footer {
+  padding: 20px;
+}
+.release-modal-btn {
+  width: 100%;
+  padding: 15px 20px;
+  background: #835de1;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.release-modal-btn:hover {
+  background: #7350c9;
+}
 
 /* === Main Area === */
 .main-area {
