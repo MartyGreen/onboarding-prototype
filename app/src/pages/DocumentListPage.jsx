@@ -444,7 +444,7 @@ export default function DocumentListPage() {
   );
 
   return (
-    <div className="flex-1 flex flex-col pt-8 px-8 pb-5 overflow-hidden">
+    <div className="flex-1 flex flex-col pt-6 px-8 pb-5 overflow-y-auto">
       {/* Title Row */}
       <div className="flex items-center gap-4">
         <h1 className="ts-600-3xl m-0 flex-1" style={{ color: 'var(--primitive-primary)' }}>
@@ -466,8 +466,8 @@ export default function DocumentListPage() {
         </div>
       </div>
 
-      {/* Toolbar */}
-      <div className="flex items-center justify-between mt-6">
+      {/* Toolbar — прибит к верху при скролле */}
+      <div className="flex items-center justify-between mt-6 sticky top-0 z-10 bg-white py-2 -mx-8 px-8">
         <div className="flex items-center gap-2">
           {/* Переключатель вида: список / дерево — один в один по макету Figma */}
           <div className="relative w-[80px] h-[40px] rounded-[8px] bg-[rgba(25,25,25,0.05)] overflow-hidden shrink-0">
@@ -687,7 +687,7 @@ export default function DocumentListPage() {
       </div>
 
       {/* Table */}
-      <div className="flex-1 flex flex-col overflow-hidden mt-2">
+      <div className="mt-2">
         {/* Table Header */}
         <div className="flex items-center px-5 py-3 border-b border-[rgba(25,25,25,0.1)]">
           <div className="w-[400px] pl-3">
@@ -970,7 +970,7 @@ export default function DocumentListPage() {
         </div>
 
         {/* Table Body */}
-        <div className="flex-1 overflow-y-auto">
+        <div>
           {viewMode === 'list' ? (
             /* === РЕЖИМ СПИСКА === */
             filteredDocuments.map((doc) => (
