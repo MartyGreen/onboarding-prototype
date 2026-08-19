@@ -5,11 +5,19 @@ import { AlertProvider } from './SuccessAlert';
 
 export default function Layout() {
   return (
-    <div className="flex w-full min-h-screen">
-      <Sidebar />
-      <AlertProvider>
-        <Outlet />
-      </AlertProvider>
-    </div>
+    <>
+      <div className="sidebar-top-bar">
+        <span className="sidebar-top-bar-company">ООО "Банк Точка"</span>
+        <span className="sidebar-top-bar-release">последний релиз: <span>02.11.2026</span></span>
+      </div>
+      <div className="layout">
+        <Sidebar />
+        <div className="main-area">
+          <AlertProvider>
+            <Outlet />
+          </AlertProvider>
+        </div>
+      </div>
+    </>
   );
 }

@@ -127,6 +127,23 @@ export const semanticConcepts = [
     matches: [
       { docId: '4', fields: ['settlement_id', 'status', 'amount'] },
       { docId: '13', fields: ['id'] }, // transaction_reconciliation
+      { docId: '32', fields: ['is_contains_yellow_payments', 'default_bank'] }, // screpka_orders_company
+    ],
+  },
+  // --- Налоги / Бухгалтерия ---
+  {
+    concept: 'налоги',
+    keywords: ['налог', 'налоговый', 'tax', 'ндс', 'усн', 'енвд', 'фнс', 'декларация', 'бухгалтерия', 'скрепка', 'screpka'],
+    matches: [
+      { docId: '32', fields: ['tax_regime_id', 'tax_calc_start_date', 'tax_calc_end_date', 'tax_agency_code', 'enp_tax_start_date', 'have_envd', 'default_tax_system_manual'] },
+    ],
+  },
+  // --- Компания / ИНН / Реквизиты ---
+  {
+    concept: 'компания',
+    keywords: ['компания', 'организация', 'инн', 'кпп', 'огрн', 'юрлицо', 'реквизиты', 'company', 'наименование'],
+    matches: [
+      { docId: '32', fields: ['inn', 'kpp', 'ogrn', 'legal_full_name', 'legal_short_name', 'customer_code', 'address'] },
     ],
   },
   // --- Справочник ---

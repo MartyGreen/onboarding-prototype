@@ -981,7 +981,8 @@ export default function DocumentPage() {
               {doc.tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center justify-center px-2.5 h-6 rounded-full bg-[#aeaeae] text-sm font-medium text-white leading-[18px] tracking-[0.14px]"
+                  onClick={() => navigate(`/?tag=${encodeURIComponent(tag)}`)}
+                  className="inline-flex items-center justify-center px-2.5 h-6 rounded-full bg-[#aeaeae] text-sm font-medium text-white leading-[18px] tracking-[0.14px] cursor-pointer hover:bg-[#835de1] transition-colors"
                 >
                   {tag}
                 </span>

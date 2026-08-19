@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDocuments } from '../data/DocumentsContext';
 
 // Иконки аватаров по статусам из Figma
@@ -40,6 +40,7 @@ const statusAvatars = {
 
 export default function DocumentListPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { documents, toggleStarred, statusConfig } = useDocuments();
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -70,6 +71,31 @@ export default function DocumentListPage() {
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const statusDropdownRef = useRef(null);
+
+  // Фильтр по тегу (инициализация из URL ?tag=)
+  const [selectedTag, setSelectedTag] = useState(() => searchParams.get('tag') || null);
+  const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
+  const [tagSearchQuery, setTagSearchQuery] = useState('');
+  const tagDropdownRef = useRef(null);
+
+  // Синхронизация selectedTag с URL
+  useEffect(() => {
+    const tagFromUrl = searchParams.get('tag');
+    if (tagFromUrl && tagFromUrl !== selectedTag) {
+      setSelectedTag(tagFromUrl);
+    }
+  }, [searchParams]);
+
+  // При смене selectedTag обновляем URL
+  useEffect(() => {
+    const currentTag = searchParams.get('tag');
+    if (selectedTag && selectedTag !== currentTag) {
+      setSearchParams({ tag: selectedTag }, { replace: true });
+    } else if (!selectedTag && currentTag) {
+      searchParams.delete('tag');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [selectedTag]);
 
   // Список уникальных владельцев (кругов)
   const allOwners = useMemo(() => {
@@ -171,6 +197,21 @@ export default function DocumentListPage() {
     return [...statusSet].sort((a, b) => a.localeCompare(b, 'ru'));
   }, [documents]);
 
+  // Список уникальных тегов
+  const allTags = useMemo(() => {
+    const tagSet = new Set(
+      documents.flatMap(d => d.tags || []).filter(Boolean)
+    );
+    return [...tagSet].sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [documents]);
+
+  // Теги, отфильтрованные по поиску внутри дропдауна
+  const filteredTags = useMemo(() => {
+    if (!tagSearchQuery.trim()) return allTags;
+    const q = tagSearchQuery.toLowerCase();
+    return allTags.filter(t => t.toLowerCase().includes(q));
+  }, [allTags, tagSearchQuery]);
+
   // Закрытие дропдауна БД при клике вне
   useEffect(() => {
     function handleClickOutside(e) {
@@ -210,6 +251,20 @@ export default function DocumentListPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [statusDropdownOpen]);
 
+  // Закрытие дропдауна Тегов при клике вне
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (tagDropdownRef.current && !tagDropdownRef.current.contains(e.target)) {
+        setTagDropdownOpen(false);
+        setTagSearchQuery('');
+      }
+    }
+    if (tagDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [tagDropdownOpen]);
+
   // Генерация инициалов из имени
   const getInitials = (name) => {
     const parts = name.split(' ').filter(Boolean);
@@ -240,6 +295,9 @@ export default function DocumentListPage() {
     if (selectedStatus) {
       result = result.filter(d => d.status === selectedStatus);
     }
+    if (selectedTag) {
+      result = result.filter(d => d.tags && d.tags.includes(selectedTag));
+    }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(d =>
@@ -250,6 +308,7 @@ export default function DocumentListPage() {
         (d.schema && d.schema.toLowerCase().includes(q)) ||
         (d.database && d.database.toLowerCase().includes(q)) ||
         (d.circles && d.circles.toLowerCase().includes(q)) ||
+        (d.tags && d.tags.some(t => t.toLowerCase().includes(q))) ||
         (d.fields && d.fields.some(f =>
           f.name.toLowerCase().includes(q) ||
           (f.description && f.description.toLowerCase().includes(q))
@@ -257,7 +316,7 @@ export default function DocumentListPage() {
       );
     }
     return result;
-  }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner, selectedDatabase, selectedSchema, selectedStatus]);
+  }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner, selectedDatabase, selectedSchema, selectedStatus, selectedTag]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
@@ -389,6 +448,91 @@ export default function DocumentListPage() {
             <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">База данных</span>
             <img src={`${import.meta.env.BASE_URL}assets/icon-chevron-down.svg`} alt="" className="w-3 h-3" />
           </button>
+          {/* Фильтр по тегу */}
+          <div className="relative" ref={tagDropdownRef}>
+            <button
+              onClick={() => {
+                setTagDropdownOpen(!tagDropdownOpen);
+                if (!tagDropdownOpen) setTagSearchQuery('');
+              }}
+              className={`flex items-center gap-2 h-10 px-3 rounded-xl border-none cursor-pointer transition-colors ${
+                selectedTag
+                  ? 'bg-[#efedf8] hover:bg-[#e5e1f5]'
+                  : 'bg-[rgba(25,25,25,0.05)] hover:bg-[rgba(25,25,25,0.1)]'
+              }`}
+            >
+              <span className={`text-sm font-medium leading-[18px] tracking-[0.14px] ${
+                selectedTag ? 'text-[#835de1]' : 'text-[#191919]'
+              }`}>
+                {selectedTag || 'Тег'}
+              </span>
+              {selectedTag ? (
+                <svg
+                  width="10" height="10" viewBox="0 0 16 16" fill="none"
+                  className="shrink-0 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedTag(null);
+                    setTagDropdownOpen(false);
+                    setTagSearchQuery('');
+                  }}
+                >
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="#835de1" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`shrink-0 transition-transform ${tagDropdownOpen ? 'rotate-180' : ''}`}>
+                  <path d="M4 6l4 4 4-4" stroke={selectedTag ? '#835de1' : '#191919'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+            {tagDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 w-[280px] bg-white rounded-[12px] shadow-[0px_20px_40px_rgba(0,0,0,0.1)] z-50 overflow-hidden">
+                <div className="flex flex-col items-stretch py-[5px]">
+                  {/* Поиск внутри дропдауна */}
+                  <div className="px-[10px] pb-[6px]">
+                    <div className="bg-[rgba(25,25,25,0.05)] rounded-[12px] px-[20px] overflow-hidden">
+                      <div className="flex items-center">
+                        <div className="flex-1 py-[12px]">
+                          <input
+                            type="text"
+                            value={tagSearchQuery}
+                            onChange={(e) => setTagSearchQuery(e.target.value)}
+                            placeholder="Поиск по тегу"
+                            className="w-full bg-transparent border-none outline-none text-[16px] text-[#191919] leading-[20px] tracking-[0.16px] placeholder:text-[#949494] p-0 m-0"
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Список тегов */}
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {filteredTags.length === 0 ? (
+                      <div className="px-[10px] py-[12px] text-[14px] text-[#949494] text-center leading-[18px]">Ничего не найдено</div>
+                    ) : (
+                      filteredTags.map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => {
+                            setSelectedTag(prev => prev === tag ? null : tag);
+                            setTagDropdownOpen(false);
+                            setTagSearchQuery('');
+                          }}
+                          className={`flex items-center w-full px-[20px] py-[10px] border-none cursor-pointer transition-colors text-left ${
+                            selectedTag === tag ? 'bg-[rgba(131,93,225,0.06)]' : 'bg-transparent hover:bg-[rgba(25,25,25,0.04)]'
+                          }`}
+                        >
+                          <span className={`text-[16px] leading-[20px] tracking-[0.16px] ${
+                            selectedTag === tag ? 'text-[#835de1] font-medium' : 'text-[#191919]'
+                          }`}>{tag}</span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="search-field flex items-center w-[280px] h-10 px-3 rounded-lg bg-[rgba(25,25,25,0.05)]">
           <img src={`${import.meta.env.BASE_URL}assets/icon-search-20.svg`} alt="" className="w-5 h-5 mr-2 shrink-0" />

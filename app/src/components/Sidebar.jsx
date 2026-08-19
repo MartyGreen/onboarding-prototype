@@ -1,90 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import LogoSvg from './LogoSvg';
 
-const menuItems = [
-  { icon: 'assets/icon-document-book.svg', label: 'Документация', to: '/', active: true },
-  { icon: 'assets/icon-person.svg', label: 'Команда', to: '/team' },
-  { icon: 'assets/icon-integration.svg', label: 'Сессия', to: '/session' },
-  { icon: 'assets/icon-file.svg', label: 'Загрузчик файлов', to: '/files' },
-  { icon: 'assets/icon-check-circle.svg', label: 'Bi-API методы', to: '/api' },
-  { icon: 'assets/icon-layout-grid.svg', label: 'Карта сервисов', to: '/services' },
-  { icon: 'assets/icon-pencil.svg', label: 'Редактор SQL', to: '/sql' },
-  { icon: 'assets/icon-upload-arrow.svg', label: 'Управление загрузками', to: '/uploads' },
+const base = import.meta.env.BASE_URL;
+
+const mainMenuItems = [
+  { icon: `${base}assets/icon-document-book.svg`, label: 'Документация', to: '/' },
+  { icon: `${base}assets/icon-person.svg`, label: 'Команда', to: '/team' },
+  { icon: `${base}assets/icon-integration.svg`, label: 'Сессия', to: '/session' },
+  { icon: `${base}assets/icon-file.svg`, label: 'Загрузчик файлов', to: '/files' },
+  { icon: `${base}assets/icon-check-circle.svg`, label: 'Bi-API методы', to: '/api' },
+  { icon: `${base}assets/icon-upload-arrow.svg`, label: 'Управление загрузками', to: '/uploads' },
+  { icon: `${base}assets/icon-pencil.svg`, label: 'Редактор SQL', to: '/sql' },
 ];
+
+const mapItem = { icon: `${base}assets/icon-layout-grid.svg`, label: 'Карта сервисов', to: '/services' };
 
 const bottomItems = [
-  { icon: 'assets/icon-document-book-2.svg', label: 'Есть идея', to: '/idea', disabled: true },
-  { icon: 'assets/icon-help-circle.svg', label: 'Нужна помощь', to: '/help' },
+  { icon: `${base}assets/icon-document-book-2.svg`, label: 'Есть идея', to: '/idea' },
+  { icon: `${base}assets/icon-help-circle.svg`, label: 'Нужна помощь', to: '/help' },
 ];
 
+const CollapseChevron = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <path d="M11 4.5L6.5 9L11 13.5" stroke="#949494" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [navHovered, setNavHovered] = useState(false);
+  const [badgeHovered, setBadgeHovered] = useState(false);
+
+  const isPulsing = navHovered || badgeHovered;
+
   return (
-    <aside className="bg-white flex flex-col h-screen w-[245px] shrink-0 pt-5 pb-6 px-3 sticky top-0 left-0 overflow-y-auto">
-      {/* Logo */}
-      <div className="px-3 mb-6">
-        <div className="py-3">
-          <h1 className="text-4xl font-semibold text-[#191919] tracking-tight leading-[42px] m-0">
-            DataGate
-          </h1>
-        </div>
+    <aside className={`sidebar ${collapsed ? 'sidebar-collapsed' : ''}`}>
+      {/* Logo + Collapse */}
+      <div className="sidebar-logo">
+        <LogoSvg isPulsing={isPulsing} />
+        <button
+          className={`sidebar-collapse-btn ${collapsed ? 'collapsed' : ''}`}
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? 'Развернуть' : 'Свернуть'}
+        >
+          <CollapseChevron />
+        </button>
       </div>
 
-      {/* Main menu */}
-      <nav className="flex flex-col flex-1">
-        {menuItems.map((item) => (
+      {/* Navigation */}
+      <nav
+        className="sidebar-nav"
+        onMouseEnter={() => setNavHovered(true)}
+        onMouseLeave={() => { setNavHovered(false); setBadgeHovered(false); }}
+      >
+        {/* Main menu */}
+        <div className="sidebar-menu-group">
+          {mainMenuItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? 'active' : ''}`
+              }
+            >
+              <img src={item.icon} alt="" className="sidebar-item-icon" />
+              <span>{item.label}</span>
+              {item.badge && (
+                <span
+                  className="sidebar-badge"
+                  onMouseEnter={() => setBadgeHovered(true)}
+                  onMouseLeave={() => setBadgeHovered(false)}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </NavLink>
+          ))}
+
           <NavLink
-            key={item.to}
-            to={item.to}
+            to={mapItem.to}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] no-underline rounded-lg transition-colors ${
-                isActive
-                  ? 'text-[#835de1]'
-                  : 'text-[#191919] hover:bg-[rgba(25,25,25,0.05)]'
-              }`
+              `sidebar-item ${isActive ? 'active' : ''}`
             }
           >
-            <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
-            <span>{item.label}</span>
+            <img src={mapItem.icon} alt="" className="sidebar-item-icon" />
+            <span>{mapItem.label}</span>
           </NavLink>
-        ))}
+        </div>
 
         {/* Spacer */}
-        <div className="flex-1" />
+        <div className="sidebar-spacer" />
 
-        {/* Bottom menu */}
-        <div className="mt-6">
-          {bottomItems.map((item) =>
-            item.disabled ? (
-              <div
-                key={item.to}
-                className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#949494] no-underline rounded-lg cursor-default select-none"
-              >
-                <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6 opacity-40" />
-                <span>{item.label}</span>
-              </div>
-            ) : (
+        {/* Bottom */}
+        <div className="sidebar-bottom">
+          <div className="sidebar-bottom-card">
+            {bottomItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className="flex items-center gap-3 px-3 py-2 text-sm font-medium leading-[18px] tracking-[0.14px] text-[#191919] no-underline rounded-lg hover:bg-[rgba(25,25,25,0.05)] transition-colors"
+                className={({ isActive }) =>
+                  `sidebar-item ${isActive ? 'active' : ''}`
+                }
               >
-                <img src={`${import.meta.env.BASE_URL}${item.icon}`} alt="" className="w-6 h-6" />
+                <img src={item.icon} alt="" className="sidebar-item-icon" />
                 <span>{item.label}</span>
               </NavLink>
-            )
-          )}
-        </div>
-
-        {/* User */}
-        <div className="mt-6">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-              <img src={`${import.meta.env.BASE_URL}assets/avatar-cat.jpg`} alt="Avatar" className="w-full h-full object-cover" />
-            </div>
-            <span className="text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px]">
-              Никита Сокол
-            </span>
+            ))}
           </div>
+
+          {/* User */}
+          <button className="sidebar-user">
+            <div className="sidebar-avatar">
+              <img src={`${base}assets/avatar-cat.jpg`} alt="Avatar" />
+            </div>
+            <span className="sidebar-user-name">Никита Сокол</span>
+          </button>
         </div>
       </nav>
     </aside>
