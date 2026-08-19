@@ -753,12 +753,12 @@ export default function NewDocumentPage() {
                   style={{ padding: '0 var(--spacing-5x)', border: '1px solid var(--translucent-primitives-neutral-2)', borderRadius: 'var(--rounding-3x)' }}
                 >
                   <div className="flex items-center shrink-0" style={{ padding: 'var(--spacing-3x) var(--spacing-3x) var(--spacing-3x) 0', color: 'var(--primitive-brand)' }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M13 2L4.09 12.63a1 1 0 00.78 1.62H11l-1 7.25a.5.5 0 00.86.41L19.91 11.37a1 1 0 00-.78-1.62H13l1-7.25a.5.5 0 00-.86-.41L13 2Z" fill="currentColor"/>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M9.75 1.5L3.07 9.47a.75.75 0 00.58 1.22H8.25l-.75 5.44a.375.375 0 00.65.31L14.93 8.53a.75.75 0 00-.58-1.22H9.75l.75-5.44a.375.375 0 00-.65-.31L9.75 1.5Z" fill="currentColor"/>
                     </svg>
                   </div>
-                  <div className="flex flex-col flex-1 min-w-0" style={{ padding: 'var(--spacing-3x) 0', gap: 'var(--spacing-1-5x)' }}>
-                    <p className="m-0 w-full overflow-hidden text-ellipsis whitespace-nowrap" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 600, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)' }}>
+                  <div className="flex flex-col flex-1 min-w-0" style={{ padding: 'var(--spacing-3x) 0', gap: '5px' }}>
+                    <p className="m-0 w-full overflow-hidden text-ellipsis whitespace-nowrap" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 500, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)' }}>
                       Как использовать теги?
                     </p>
                     <p className="m-0 w-full" style={{ fontFamily: 'var(--font-family-tt-norms-tochka-extended)', fontWeight: 400, fontSize: '14px', lineHeight: '18px', letterSpacing: '0.01em', color: 'var(--primitive-primary)', overflowWrap: 'anywhere' }}>
@@ -770,8 +770,8 @@ export default function NewDocumentPage() {
                     style={{ color: 'var(--primitive-neutral-4)' }}
                     onClick={() => setTagHintVisible(false)}
                   >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   </button>
                 </div>
