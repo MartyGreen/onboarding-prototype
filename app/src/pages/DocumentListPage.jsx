@@ -466,8 +466,8 @@ export default function DocumentListPage() {
         </div>
       </div>
 
-      {/* Toolbar — прибит к верху при скролле */}
-      <div className="flex items-center justify-between mt-6 sticky top-0 z-10 bg-white py-2 -mx-8 px-8">
+      {/* Toolbar — прибит к верху при скролле, подложка закрывает контент до верха */}
+      <div className="flex items-center justify-between mt-6 sticky top-0 z-10 bg-white py-2 -mx-8 px-8 before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-full before:h-8 before:bg-white">
         <div className="flex items-center gap-2">
           {/* Переключатель вида: список / дерево — один в один по макету Figma */}
           <div className="relative w-[80px] h-[40px] rounded-[8px] bg-[rgba(25,25,25,0.05)] overflow-hidden shrink-0">
