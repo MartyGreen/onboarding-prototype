@@ -332,7 +332,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           {activeTab === 'Запросы' && (
             <>
               {/* Параметры */}
-              <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-5">
+              <div className="px-10 py-5">
                 <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
                   Параметры
                 </h2>
@@ -368,7 +368,7 @@ resp, _ := http.DefaultClient.Do(req)`,
               </div>
 
               {/* Получение токена */}
-              <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+              <div className="px-10 pt-5 pb-10">
                 <div className="flex items-center justify-between py-3">
                   <h2 className="text-lg font-medium text-[#191919] leading-[22px] m-0">
                     Получение токена
@@ -404,7 +404,7 @@ resp, _ := http.DefaultClient.Do(req)`,
               </div>
 
               {/* Вызов метода */}
-              <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+              <div className="px-10 pt-5 pb-10">
                 <div className="flex items-center justify-between py-3">
                   <h2 className="text-lg font-medium text-[#191919] leading-[22px] m-0">
                     Вызов метода
@@ -444,7 +444,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           {/* ===== Таб «Описание» ===== */}
           {activeTab === 'Описание' && (<>
           {/* Описание документа */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-5">
+          <div className="px-10 py-5">
             <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
               Описание документа
             </h2>
@@ -477,7 +477,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           </div>
 
           {/* SQL */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+          <div className="px-10 pt-5 pb-10">
             <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
               SQL
             </h2>
@@ -506,7 +506,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           </div>
 
           {/* Поля */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] pt-5 pb-10 px-10">
+          <div className="pt-5 pb-10 px-10">
             <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
               Поля
             </h2>
@@ -526,7 +526,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           </div>
 
           {/* Фильтры */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] pt-5 pb-10 px-10">
+          <div className="pt-5 pb-10 px-10">
             <h2 className="text-lg font-medium text-[#191919] leading-[22px] py-3 m-0">
               Фильтры
             </h2>
@@ -563,7 +563,7 @@ resp, _ := http.DefaultClient.Do(req)`,
 
             return (
               <>
-                <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-8">
+                <div className="px-10 py-8">
                   <div className="flex items-center justify-between mb-2">
                     <h2 className="text-lg font-medium text-[#191919] leading-[22px] m-0">Матрица доступов</h2>
                     <span className="text-xs text-[#676767]">{rules.length} {rules.length === 1 ? 'правило' : rules.length < 5 ? 'правила' : 'правил'}</span>
@@ -642,7 +642,7 @@ resp, _ := http.DefaultClient.Do(req)`,
                 </div>
 
                 {/* Легенда */}
-                <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-6">
+                <div className="px-10 py-6">
                   <h3 className="text-sm font-medium text-[#676767] m-0 mb-3">Как читать правила</h3>
                   <div className="flex flex-col gap-2.5">
                     <div className="flex items-center gap-3">
@@ -679,7 +679,7 @@ resp, _ := http.DefaultClient.Do(req)`,
 
           {/* Таб «Статистика» — заглушка */}
           {activeTab === 'Статистика' && (
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-10 flex items-center justify-center">
+            <div className="px-10 py-10 flex items-center justify-center">
               <p className="text-base text-[#949494]">Статистика пока недоступна</p>
             </div>
           )}

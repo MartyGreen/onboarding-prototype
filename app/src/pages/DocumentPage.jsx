@@ -242,7 +242,7 @@ export default function DocumentPage() {
         {/* Left Column */}
         <div className="flex flex-col gap-[14px] flex-1 min-w-0">
           {/* Description Card */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-8">
+          <div className="px-10 py-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="ts-500-l m-0" style={{ color: 'var(--primitive-primary)' }}>
                 Описание документа
@@ -265,7 +265,7 @@ export default function DocumentPage() {
           </div>
 
           {/* Fields Table Card */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-8 pb-10">
+          <div className="px-10 pt-8 pb-10">
             <div className="flex items-center justify-between mb-5">
               <h3 className="ts-500-l m-0" style={{ color: 'var(--primitive-primary)' }}>
                 Описание полей
@@ -558,7 +558,7 @@ export default function DocumentPage() {
           </div>
 
           {/* Discussions Card */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-8">
+          <div className="px-10 pt-5 pb-8">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <h3 className="ts-500-l m-0" style={{ color: 'var(--primitive-primary)' }}>
@@ -858,7 +858,7 @@ export default function DocumentPage() {
           </div>
 
           {/* Experts Card */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+          <div className="px-10 pt-5 pb-10">
             <h3 className="ts-500-l m-0 mb-3" style={{ color: 'var(--primitive-primary)' }}>
               Эксперты по документу
             </h3>

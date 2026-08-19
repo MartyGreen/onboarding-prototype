@@ -68,7 +68,7 @@ export default function EditFieldsPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-8 pt-6 pb-6">
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-10">
+        <div className="px-10 py-10">
           {/* Search */}
           <div className="mb-5">
             <div className="search-field flex items-center bg-[rgba(25,25,25,0.05)] rounded-xl h-12 px-3 w-[300px]">

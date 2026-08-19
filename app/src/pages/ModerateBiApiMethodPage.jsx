@@ -92,7 +92,7 @@ export default function ModerateBiApiMethodPage() {
         <div style={{ width: 640 }} className="flex flex-col gap-3.5">
 
           {/* Card 1: Описание документа */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-5">
+          <div className="px-10 py-5">
             <div className="flex flex-col gap-1.5">
               {/* Заголовок секции */}
               <div className="flex items-center py-3">
@@ -192,7 +192,7 @@ export default function ModerateBiApiMethodPage() {
           </div>
 
           {/* Card 2: SQL */}
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 py-5">
+          <div className="px-10 py-5">
             <div className="flex flex-col gap-1.5">
               {/* Заголовок */}
               <div className="flex items-center py-3">
@@ -273,7 +273,7 @@ export default function ModerateBiApiMethodPage() {
 
           {/* Поля — read-only */}
           {data.fields && data.fields.length > 0 && (
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] pt-5 pb-10 px-10">
+            <div className="pt-5 pb-10 px-10">
               <div className="flex items-center py-3">
                 <span className="text-lg font-medium text-[#191919] leading-[22px]">
                   Поля
@@ -297,7 +297,7 @@ export default function ModerateBiApiMethodPage() {
 
           {/* Фильтры — read-only */}
           {data.filters && data.filters.length > 0 && (
-            <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] pt-5 pb-10 px-10">
+            <div className="pt-5 pb-10 px-10">
               <div className="flex items-center py-3">
                 <span className="text-lg font-medium text-[#191919] leading-[22px]">
                   Фильтры

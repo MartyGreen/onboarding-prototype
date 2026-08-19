@@ -547,7 +547,7 @@ export default function DocumentListPage() {
       </div>
 
       {/* Table */}
-      <div className="flex-1 bg-white rounded-xl shadow-[0px_4px_16px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Table Header */}
         <div className="flex items-center px-5 py-3 border-b border-[rgba(25,25,25,0.1)]">
           <div className="w-[400px] pl-3">

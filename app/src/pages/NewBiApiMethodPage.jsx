@@ -216,7 +216,7 @@ export default function NewBiApiMethodPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
             {/* === Card 1: Описание документа === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            <div style={{ padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
@@ -412,7 +412,7 @@ export default function NewBiApiMethodPage() {
             </div>
 
             {/* === Card 2: SQL === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+            <div style={{ padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0', flexShrink: 0 }}>
@@ -454,7 +454,7 @@ export default function NewBiApiMethodPage() {
             </div>
 
             {/* === Card 3: Поля === */}
-            {sql && fields.length > 0 && <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            {sql && fields.length > 0 && <div style={{ padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>
@@ -486,7 +486,7 @@ export default function NewBiApiMethodPage() {
             </div>}
 
             {/* === Card 4: Фильтры === */}
-            {sql && filters.length > 0 && <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            {sql && filters.length > 0 && <div style={{ padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
                   <span style={{ fontSize: 18, fontWeight: 500, color: '#191919', lineHeight: '22px' }}>

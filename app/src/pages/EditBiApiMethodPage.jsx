@@ -242,7 +242,7 @@ export default function EditBiApiMethodPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
             {/* === Card 1: Описание документа === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px' }}>
+            <div style={{ padding: '20px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* L: py=12 */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
@@ -440,7 +440,7 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 2: SQL === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
+            <div style={{ padding: '20px 40px 40px 40px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {/* Section title */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -484,7 +484,7 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 3: Поля === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            <div style={{ padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* Заголовок */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
@@ -518,7 +518,7 @@ export default function EditBiApiMethodPage() {
             </div>
 
             {/* === Card 4: Фильтры === */}
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0px 4px 16px rgba(0,0,0,0.05)', padding: '20px 40px 40px 40px' }}>
+            <div style={{ padding: '20px 40px 40px 40px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {/* Заголовок */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '12px 0' }}>
