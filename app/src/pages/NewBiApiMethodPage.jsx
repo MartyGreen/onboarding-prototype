@@ -195,7 +195,7 @@ export default function NewBiApiMethodPage() {
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f9f9f9', overflowY: 'auto' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
         {/* Title */}
@@ -521,7 +521,7 @@ export default function NewBiApiMethodPage() {
       </div>
 
       {/* Footer */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
         <button
           onClick={handleCreate}
           style={{ width: 335, height: 50, borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', position: 'relative' }}

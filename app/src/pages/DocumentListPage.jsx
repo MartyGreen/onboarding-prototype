@@ -319,7 +319,7 @@ export default function DocumentListPage() {
   }, [documents, showStarredOnly, searchQuery, selectedAuthor, selectedOwner, selectedDatabase, selectedSchema, selectedStatus, selectedTag]);
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-8 px-8 pb-5 gap-6 overflow-hidden">
+    <div className="flex-1 flex flex-col pt-8 px-8 pb-5 gap-6 overflow-hidden">
       {/* Title Row */}
       <div className="flex items-center gap-4">
         <h1 className="ts-600-3xl m-0 flex-1" style={{ color: 'var(--primitive-primary)' }}>

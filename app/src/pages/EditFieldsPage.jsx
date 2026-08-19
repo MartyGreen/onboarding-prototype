@@ -50,7 +50,7 @@ export default function EditFieldsPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f9f9f9] overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex flex-col gap-5 pt-6 px-8">
         <div className="flex gap-4 items-center">
@@ -209,7 +209,7 @@ export default function EditFieldsPage() {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-center py-5 bg-[#f9f9f9]">
+      <div className="flex items-center justify-center py-5">
         <button
           onClick={handleSave}
           className="w-[335px] h-[50px] rounded-[10px] bg-[#835de1] border-none cursor-pointer text-lg font-medium text-white leading-[22px] hover:bg-[#7249d1] transition-colors"

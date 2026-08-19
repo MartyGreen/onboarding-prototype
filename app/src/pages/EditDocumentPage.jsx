@@ -56,7 +56,7 @@ export default function EditDocumentPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f5f5f5] overflow-y-auto">
+    <div className="flex-1 flex flex-col overflow-y-auto">
       {/* Header */}
       <header className="flex items-center gap-4 px-8 py-6">
         <button
@@ -163,7 +163,7 @@ export default function EditDocumentPage() {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-center py-5 bg-[#f5f5f5]">
+      <div className="flex items-center justify-center py-5">
         <button
           onClick={handleSave}
           className="w-[335px] h-[50px] bg-[#835de1] text-white text-lg font-medium leading-[22px] rounded-[10px] border-none cursor-pointer hover:bg-[#7248d4] transition-colors"

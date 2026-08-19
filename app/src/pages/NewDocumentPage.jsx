@@ -492,7 +492,7 @@ export default function NewDocumentPage() {
   const showLLMPanel = canGenerate && !llmDismissed;
 
   return (
-    <div className="flex-1 flex bg-[#f9f9f9] overflow-hidden h-full min-h-0">
+    <div className="flex-1 flex overflow-hidden h-full min-h-0">
       {/* Main scrollable area */}
       <div className="flex-1 flex flex-col pt-8 px-8 overflow-y-auto min-h-0">
         <div className="flex flex-col gap-6 items-center w-full">

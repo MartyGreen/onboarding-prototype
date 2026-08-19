@@ -170,7 +170,7 @@ export default function DocumentPage() {
   }, [doc.fields, fieldSearch]);
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f5f5f5] overflow-y-auto">
+    <div className="flex-1 flex flex-col overflow-y-auto">
       {/* Header */}
       <header className="flex items-center gap-4 px-8 py-6">
         <button

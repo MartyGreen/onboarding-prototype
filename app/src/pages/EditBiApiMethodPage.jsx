@@ -31,7 +31,7 @@ export default function EditBiApiMethodPage() {
 
   if (!methodData) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f9f9f9' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <p style={{ fontSize: 18, color: '#949494' }}>Метод не найден</p>
       </div>
     );
@@ -217,7 +217,7 @@ export default function EditBiApiMethodPage() {
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f9f9f9', overflowY: 'auto' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
       {/* Right Panel: w=1190, pt=24, pb=24, px=32, gap=32, centered */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', paddingTop: 24, paddingBottom: 24, paddingLeft: 32, paddingRight: 32 }}>
 
@@ -555,7 +555,7 @@ export default function EditBiApiMethodPage() {
       </div>
 
       {/* Footer: прибит к низу экрана */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, background: '#f9f9f9', boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 90, alignItems: 'center', justifyContent: 'flex-end', padding: '20px 0', flexShrink: 0, boxSizing: 'border-box', position: 'sticky', bottom: 0, zIndex: 10 }}>
         <button
           onClick={handleSave}
           style={{ width: 335, height: 50, borderRadius: 10, background: '#835de1', border: 'none', cursor: 'pointer', position: 'relative' }}

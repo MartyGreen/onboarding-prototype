@@ -42,7 +42,7 @@ export default function BiApiMethodsPage() {
   }, [searchQuery, methods]);
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f5f5f5] pt-8 px-8 pb-5 overflow-hidden">
+    <div className="flex-1 flex flex-col pt-8 px-8 pb-5 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col gap-4">
         {/* Title Row */}

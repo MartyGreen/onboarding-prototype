@@ -18,7 +18,7 @@ export default function ModerateBiApiMethodPage() {
 
   if (!data) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f9f9f9]">
+      <div className="flex-1 flex items-center justify-center">
         <p className="text-lg text-[#949494]">Метод не найден</p>
       </div>
     );
@@ -71,7 +71,7 @@ export default function ModerateBiApiMethodPage() {
   const sqlLines = typeof data.sql === 'string' ? parseSqlToTokens(data.sql) : [];
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f9f9f9] overflow-y-auto">
+    <div className="flex-1 flex flex-col overflow-y-auto">
       {/* Main content area */}
       <div className="flex flex-col gap-8 items-center pt-6 pb-6 px-8 flex-1">
 
@@ -323,7 +323,7 @@ export default function ModerateBiApiMethodPage() {
       </div>
 
       {/* Footer: sticky, h=90, кнопки Одобрить / Отклонить */}
-      <div className="flex items-center justify-center gap-4 h-[90px] px-8 bg-[#f9f9f9] shrink-0 sticky bottom-0 z-10">
+      <div className="flex items-center justify-center gap-4 h-[90px] px-8 shrink-0 sticky bottom-0 z-10">
         <button
           onClick={handleReject}
           disabled={!rejectionReason.trim()}

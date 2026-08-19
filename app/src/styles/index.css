@@ -640,7 +640,7 @@
 body {
   margin: 0;
   font-family: 'TT Norms Tochka Extended', system-ui, sans-serif;
-  background: #f5f5f5;
+  background: #ffffff;
   color: var(--primitive\/primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

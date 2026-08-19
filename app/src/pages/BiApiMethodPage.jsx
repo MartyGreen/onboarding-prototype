@@ -52,7 +52,7 @@ export default function BiApiMethodPage() {
 
   if (!data) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f9f9f9]">
+      <div className="flex-1 flex items-center justify-center">
         <p className="text-lg text-[#949494]">Метод не найден</p>
       </div>
     );
@@ -269,7 +269,7 @@ resp, _ := http.DefaultClient.Do(req)`,
   })();
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f9f9f9] pt-6 px-8 pb-6 gap-8 overflow-y-auto">
+    <div className="flex-1 flex flex-col pt-6 px-8 pb-6 gap-8 overflow-y-auto">
       {/* Title Row */}
       <div className="flex items-center gap-4">
         <button
