@@ -691,7 +691,7 @@ export default function DocumentListPage() {
         {/* Table Header */}
         <div className="flex items-center px-5 py-3 border-b border-[rgba(25,25,25,0.1)]">
           <div className="w-[400px] pl-3">
-            {/* Колонка «Название» — заголовок скрыт как в макете Figma */}
+            <span className="text-sm leading-[18px] tracking-[0.14px] text-[#676767]">Название</span>
           </div>
           {viewMode === 'list' && (
           <div className="flex-1 flex items-center gap-0.5 pl-2.5">
