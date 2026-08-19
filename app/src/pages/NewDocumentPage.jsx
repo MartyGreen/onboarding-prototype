@@ -749,7 +749,7 @@ export default function NewDocumentPage() {
               {/* Contextual Notification — подсказка (T-DS) */}
               {tagHintVisible && (
                 <div
-                  className="flex items-center w-full box-border"
+                  className="flex items-start w-full box-border"
                   style={{ padding: '0 var(--spacing-5x)', border: '1px solid var(--translucent-primitives-neutral-2)', borderRadius: 'var(--rounding-3x)' }}
                 >
                   <div className="flex items-center shrink-0" style={{ padding: 'var(--spacing-3x) var(--spacing-3x) var(--spacing-3x) 0', color: 'var(--primitive-brand)' }}>
@@ -881,10 +881,10 @@ export default function NewDocumentPage() {
                       <button
                         className="relative shrink-0 border-none p-0 transition-colors duration-200"
                         style={{
-                          width: '36px',
-                          height: '20px',
-                          borderRadius: 'var(--rounding-pill)',
-                          background: !owner ? 'var(--container-transparent-1)' : tagCircleOnly ? 'var(--bg-brand)' : 'var(--container-transparent-1)',
+                          width: '56px',
+                          height: '32px',
+                          borderRadius: 'var(--rounding-4x)',
+                          background: !owner ? 'var(--container-transparent-2)' : tagCircleOnly ? 'var(--bg-brand)' : 'var(--container-transparent-2)',
                           cursor: !owner ? 'not-allowed' : 'pointer',
                           opacity: !owner ? 0.5 : 1,
                         }}
@@ -893,7 +893,7 @@ export default function NewDocumentPage() {
                       >
                         <div
                           className="absolute rounded-full bg-white transition-[left] duration-200"
-                          style={{ top: '3px', width: '14px', height: '14px', left: tagCircleOnly && owner ? '19px' : '3px' }}
+                          style={{ top: '50%', transform: 'translateY(-50%)', width: '24px', height: '24px', left: tagCircleOnly && owner ? 'auto' : '4px', right: tagCircleOnly && owner ? '4px' : 'auto' }}
                         />
                       </button>
                     </div>
