@@ -506,7 +506,7 @@ export const documents = [
     starred: false,
     createdAt: '1 год назад',
     updatedAt: '2 дня назад',
-    circles: 'Чат-платформа (Продукт)',
+    circles: 'Данные в общении с клиентом (Среда изменений)',
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
