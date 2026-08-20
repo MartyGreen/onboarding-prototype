@@ -8,6 +8,146 @@ import { useCollection } from '../data/CollectionContext';
 import SmartSearch from '../components/SmartSearch';
 import DropdownSelect from '../components/DropdownSelect';
 
+/* Dependencies Tab Content Component */
+function DependenciesTabContent({ doc }) {
+  const deps = doc.dependencies || [];
+  return (
+    <div className="bg-white rounded-[20px] shadow-[0px_4px_16px_rgba(0,0,0,0.05)] px-10 pt-5 pb-10">
+      <h3 className="text-lg font-medium leading-[22px] text-[#191919] py-2 mb-3">
+        Зависимости
+      </h3>
+      {deps.length > 0 ? (
+        <div className="flex flex-col gap-5">
+          {deps.map((dep, depIdx) => (
+            <DependencyTable key={depIdx} dep={dep} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center py-8 text-center">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="mb-3 opacity-30">
+            <path d="M8 8H28L40 20V40H8V8Z" stroke="#191919" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M28 8V20H40" stroke="#191919" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span className="text-sm text-[#949494] leading-[18px]">Зависимостей пока нет</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Single Dependency Table */
+function DependencyTable({ dep }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      {/* Table Header */}
+      <div className="flex gap-0.5 items-center overflow-hidden rounded-t-xl">
+        <div className="bg-[rgba(25,25,25,0.05)] w-[39%] min-w-0 px-5 py-2">
+          <span className="text-xs font-medium leading-[15px] tracking-[0.12px] text-[#676767]">
+            Название
+          </span>
+        </div>
+        <div className="bg-[rgba(25,25,25,0.05)] flex-1 min-w-0 px-5 py-2">
+          <span className="text-xs font-medium leading-[15px] tracking-[0.12px] text-[#676767]">
+            Последний запуск ЕКБ
+          </span>
+        </div>
+        <div className="bg-[rgba(25,25,25,0.05)] flex-1 min-w-0 px-5 py-2">
+          <span className="text-xs font-medium leading-[15px] tracking-[0.12px] text-[#676767]">
+            Следующий запуск ЕКБ
+          </span>
+        </div>
+        <div className="bg-[rgba(25,25,25,0.05)] flex-1 min-w-0 px-5 py-2">
+          <span className="text-xs font-medium leading-[15px] tracking-[0.12px] text-[#676767]">
+            Статус
+          </span>
+        </div>
+      </div>
+      {/* Table Rows */}
+      {dep.rows.map((row, rowIdx) => (
+        <DependencyRow key={rowIdx} row={row} />
+      ))}
+    </div>
+  );
+}
+
+/* Single Dependency Row */
+function DependencyRow({ row }) {
+  return (
+    <div className="flex gap-0.5 items-stretch">
+      {/* Name + Type */}
+      <div className="bg-[rgba(25,25,25,0.05)] w-[39%] min-w-0 px-5 py-2.5 flex items-center">
+        <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+          <span className="text-sm font-medium leading-[18px] tracking-[0.14px] text-[#191919] break-words">
+            {row.name}
+          </span>
+          <span className="text-sm leading-[18px] tracking-[0.14px] text-[#676767]">
+            Тип: {row.type}
+          </span>
+        </div>
+      </div>
+      {/* Last run */}
+      <div className="bg-[rgba(25,25,25,0.05)] flex-1 min-w-0 px-5 py-2.5 flex items-center">
+        <span className="text-sm leading-[18px] tracking-[0.14px]">
+          <span className="font-medium text-[#191919]">{row.lastRunDate}</span>
+          {' '}
+          <span className="text-[#676767]">{row.lastRunTime}</span>
+        </span>
+      </div>
+      {/* Next run */}
+      <div className="bg-[rgba(25,25,25,0.05)] flex-1 min-w-0 px-5 py-2.5 flex items-center">
+        <span className="text-sm leading-[18px] tracking-[0.14px]">
+          <span className="font-medium text-[#191919]">{row.nextRunDate}</span>
+          {' '}
+          <span className="text-[#676767]">{row.nextRunTime}</span>
+        </span>
+      </div>
+      {/* Status icons */}
+      <div className="flex gap-0.5">
+        <DependencyStatusIcon status={row.status} />
+        <DependencyDocIcon />
+      </div>
+    </div>
+  );
+}
+
+/* Status Icon (checkmark/cross/neutral) */
+function DependencyStatusIcon({ status }) {
+  return (
+    <div className="bg-[rgba(25,25,25,0.05)] w-11 flex items-center justify-center">
+      {status === 'success' ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#5cad9a"/>
+          <path d="M7.5 12L10.5 15L16.5 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ) : status === 'error' ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#e05252"/>
+          <path d="M8 8L16 16M16 8L8 16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#aeaeae"/>
+          <path d="M8 12H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      )}
+    </div>
+  );
+}
+
+/* Document Icon */
+function DependencyDocIcon() {
+  return (
+    <div className="bg-[rgba(25,25,25,0.05)] w-11 flex items-center justify-center cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M4 4H14L20 10V20H4V4Z" stroke="#676767" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M14 4V10H20" stroke="#676767" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M8 14H16" stroke="#676767" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M8 17H13" stroke="#676767" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    </div>
+  );
+}
+
 export default function DocumentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -31,6 +171,7 @@ export default function DocumentPage() {
   const [openMenuIndex, setOpenMenuIndex] = useState(null); // индекс поля с открытым меню
   const [openMissingMenuIndex, setOpenMissingMenuIndex] = useState(null); // для missing fields
   const [editFieldIndex, setEditFieldIndex] = useState(null); // индекс поля для редактирования
+  const [activeTab, setActiveTab] = useState('description'); // 'description' | 'dependencies'
 
   // Подсветка полей из SmartSearch — одноразовый скролл
   const location = useLocation();
@@ -229,11 +370,28 @@ export default function DocumentPage() {
 
       {/* Toolbar chips */}
       <div className="flex items-center gap-2 px-8 pb-4">
-        <button className="px-3 h-10 rounded-xl border-[1.4px] border-[#191919] bg-transparent text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px] cursor-pointer transition-colors">
+        <button
+          className={`px-3 h-10 rounded-xl text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px] cursor-pointer transition-colors ${
+            activeTab === 'description'
+              ? 'border-[1.4px] border-[#191919] bg-transparent'
+              : 'border-none bg-[rgba(25,25,25,0.05)] hover:bg-[rgba(25,25,25,0.1)]'
+          }`}
+          onClick={() => setActiveTab('description')}
+        >
           Описание
         </button>
-        <button className="px-3 h-10 rounded-xl border-none bg-[rgba(25,25,25,0.05)] text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px] cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors">
+        <button
+          className={`flex items-center gap-2 px-3 h-10 rounded-xl text-sm font-medium text-[#191919] leading-[18px] tracking-[0.14px] cursor-pointer transition-colors ${
+            activeTab === 'dependencies'
+              ? 'border-[1.4px] border-[#191919] bg-transparent'
+              : 'border-none bg-[rgba(25,25,25,0.05)] hover:bg-[rgba(25,25,25,0.1)]'
+          }`}
+          onClick={() => setActiveTab('dependencies')}
+        >
           Зависимость
+          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-[#aeaeae] text-xs font-semibold text-white leading-[15px] tracking-[0.12px]">
+            {doc.dependencies ? doc.dependencies.reduce((sum, d) => sum + (d.rows ? d.rows.length : 0), 0) : 0}
+          </span>
         </button>
       </div>
 
@@ -241,6 +399,7 @@ export default function DocumentPage() {
       <div className="flex gap-8 px-8 pb-8 flex-1 items-start">
         {/* Left Column */}
         <div className="flex flex-col gap-[14px] flex-1 min-w-0">
+          {activeTab === 'description' && (<>
           {/* Description Card */}
           <div className="px-10 py-8">
             <div className="flex items-center justify-between mb-4">
@@ -911,6 +1070,12 @@ export default function DocumentPage() {
               </div>
             )}
           </div>
+          </>)}
+
+          {/* Dependencies Tab Content */}
+          {activeTab === 'dependencies' && (
+            <DependenciesTabContent doc={doc} />
+          )}
         </div>
 
         {/* Right Column */}

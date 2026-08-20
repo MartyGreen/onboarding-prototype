@@ -104,6 +104,15 @@ export const documents = [
         ],
       },
     ],
+    dependencies: [
+      {
+        rows: [
+          { name: 'STORIES_STORY', type: 'Загрузка', lastRunDate: '2026-03-12', lastRunTime: '12:51:59', nextRunDate: '2026-03-12', nextRunTime: '12:49:10', status: 'success' },
+          { name: 'AP_SCENARIO_ORCH_AI_ASSISTANTS', type: 'Загрузка', lastRunDate: '2026-03-12', lastRunTime: '08:30:00', nextRunDate: '2026-03-13', nextRunTime: '08:30:00', status: 'success' },
+          { name: 'DWH_CUSTOMER_SEGMENTS', type: 'Витрина', lastRunDate: '2026-03-11', lastRunTime: '23:00:12', nextRunDate: '2026-03-12', nextRunTime: '23:00:00', status: 'error' },
+        ],
+      },
+    ],
   },
   {
     id: '2',
@@ -179,6 +188,14 @@ export const documents = [
         messages: [
           { author: 'Мария Петрова', avatar: 'assets/avatar-girl-2.jpg', text: 'Коллеги, правильно ли я понимаю что valid_from/valid_to обновляются автоматически при изменении записи в Huntflow?', time: '3 часа назад' },
           { author: 'Никита Сокол', avatar: 'assets/avatar-boy-3.jpg', text: 'Да, ETL-процесс при обнаружении изменения закрывает текущую версию (valid_to = now, is_current = false) и создаёт новую.', time: '2 часа назад' },
+        ],
+      },
+    ],
+    dependencies: [
+      {
+        rows: [
+          { name: 'HUNTFLOW_V2_SYNC', type: 'Загрузка', lastRunDate: '2026-03-12', lastRunTime: '06:00:00', nextRunDate: '2026-03-13', nextRunTime: '06:00:00', status: 'success' },
+          { name: 'DICTIONARY_REFRESH', type: 'Обновление', lastRunDate: '2026-03-12', lastRunTime: '07:15:30', nextRunDate: '2026-03-13', nextRunTime: '07:15:00', status: 'success' },
         ],
       },
     ],
