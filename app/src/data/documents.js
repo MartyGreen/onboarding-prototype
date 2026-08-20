@@ -577,6 +577,40 @@ export const documents = [
     ],
     discussions: [],
   },
+  {
+    id: '36',
+    name: 'bennu_emails_attachment',
+    fullPath: 'GREENPLUM > STAGE > bennu_emails_attachment',
+    description: 'Таблица для создания связи между таблицами emails и files. НЕАКТУАЛЬНА! Информацию можно брать из STAGE.BENNU_FILES.',
+    descriptionFull: 'Таблица для создания связи между таблицами emails и files (показывает какие файлы к каким сообщениям относятся).\n\nТаблица неактуальна. Информацию можно брать из STAGE.BENNU_FILES.\n\nНЕАКТУАЛЬНА!',
+    author: 'Антон Вараксин',
+    authorAvatar: 'assets/avatar-boy.jpg',
+    database: 'GreenPlum',
+    dbColor: '#4caf50',
+    schema: 'STAGE',
+    status: 'Нужны правки',
+    starred: false,
+    createdAt: '1 год назад',
+    updatedAt: '3 месяца назад',
+    circles: 'Данные в общении с клиентом (Среда изменений)',
+    roles: [
+      { name: 'PUBLIC', label: 'PUBLIC' },
+    ],
+    tags: ['Чат', 'Вложения', 'Bennu', 'Неактуальна'],
+    fields: [
+      { name: 'id', type: 'varchar2', description: '' },
+      { name: 'email_id', type: 'varchar2', description: 'Foreign key в таблицу emails' },
+      { name: 'file_id', type: 'varchar2', description: 'Foreign key в таблицу files' },
+      { name: 'created_at', type: 'timestamp(6)', description: 'Дата+время создания записи' },
+      { name: 'updated_at', type: 'timestamp(6)', description: 'Дата+время последней модификации записи' },
+      { name: 'mt_change_date', type: 'date', description: 'Дата создания или обновления строки в DWH' },
+    ],
+    missingFields: [],
+    experts: [
+      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+    ],
+    discussions: [],
+  },
 ];
 
 export const statusConfig = {
