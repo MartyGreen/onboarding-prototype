@@ -710,7 +710,7 @@ export default function DocumentListPage() {
                 <span className={`text-sm leading-[18px] tracking-[0.14px] ${
                   selectedAuthor ? 'text-[#835de1] font-medium' : 'text-[#676767]'
                 }`}>
-                  {selectedAuthor || 'Автор'}
+                  {selectedAuthor || 'Последний раз изменил'}
                 </span>
                 {selectedAuthor ? (
                   <svg

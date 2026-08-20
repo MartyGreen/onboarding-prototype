@@ -423,7 +423,7 @@ export const documents = [
     ],
     missingFields: [],
     experts: [
-      { role: 'Автор', name: 'Ямковой Дмитрий', avatar: 'assets/avatar-boy-4.jpg' },
+      { role: 'Последний раз изменил', name: 'Ямковой Дмитрий', avatar: 'assets/avatar-boy-4.jpg' },
     ],
     discussions: [],
   },
@@ -487,7 +487,7 @@ export const documents = [
     ],
     missingFields: [],
     experts: [
-      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+      { role: 'Последний раз изменил', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
     ],
     discussions: [],
   },
@@ -538,7 +538,7 @@ export const documents = [
     ],
     missingFields: [],
     experts: [
-      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+      { role: 'Последний раз изменил', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
     ],
     discussions: [],
   },
@@ -573,7 +573,7 @@ export const documents = [
     ],
     missingFields: [],
     experts: [
-      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+      { role: 'Последний раз изменил', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
     ],
     discussions: [],
   },
@@ -607,7 +607,7 @@ export const documents = [
     ],
     missingFields: [],
     experts: [
-      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+      { role: 'Последний раз изменил', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
     ],
     discussions: [],
   },

@@ -125,9 +125,9 @@ export default function ModerateBiApiMethodPage() {
                   </div>
                 )}
 
-                {/* Автор */}
+                {/* Последний раз изменил */}
                 <div className="py-2">
-                  <p className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] m-0">Автор</p>
+                  <p className="text-sm text-[#676767] leading-[18px] tracking-[0.14px] m-0">Последний раз изменил</p>
                   <p className="text-base text-[#191919] leading-5 tracking-[0.16px] mt-0.5 m-0 font-medium">{data.author}</p>
                 </div>
 

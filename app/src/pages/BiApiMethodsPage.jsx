@@ -93,7 +93,7 @@ export default function BiApiMethodsPage() {
             <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Название</span>
           </div>
           <div className="flex-1">
-            <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Автор</span>
+            <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Последний раз изменил</span>
           </div>
           <div className="flex-1 min-w-[160px]">
             <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Статус</span>

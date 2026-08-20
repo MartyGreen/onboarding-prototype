@@ -921,7 +921,7 @@ export default function DocumentPage() {
               <img src={`${import.meta.env.BASE_URL}${doc.authorAvatar}`} alt="" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Автор</span>
+              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Последний раз изменил</span>
               <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">{doc.author}</span>
             </div>
           </div>

@@ -691,7 +691,7 @@ resp, _ := http.DefaultClient.Do(req)`,
           <div className="flex items-center gap-3 py-2">
             <div className="w-10 h-10 shrink-0 rounded-full bg-[#e1e1e1] overflow-hidden" />
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Автор</span>
+              <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">Последний раз изменил</span>
               <span className="text-base font-medium text-[#191919] leading-5 tracking-[0.16px]">{data.author}</span>
             </div>
           </div>
