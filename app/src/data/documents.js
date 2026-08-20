@@ -542,6 +542,41 @@ export const documents = [
     ],
     discussions: [],
   },
+  {
+    id: '35',
+    name: 'bennu_customers',
+    fullPath: 'GREENPLUM > STAGE > bennu_customers',
+    description: 'STAGE.BENNU_CUSTOMERS — таблица клиентов. Используется для связи со STAGE.BENNU_SESSIONS, STAGE.BENNU_MESSAGES...',
+    descriptionFull: 'STAGE.BENNU_CUSTOMERS — таблица клиентов. Используется для связи со STAGE.BENNU_SESSIONS, STAGE.BENNU_MESSAGES. Можно связать также с crypto.',
+    author: 'Антон Вараксин',
+    authorAvatar: 'assets/avatar-boy.jpg',
+    database: 'GreenPlum',
+    dbColor: '#4caf50',
+    schema: 'STAGE',
+    status: 'Активен',
+    starred: false,
+    createdAt: '1 год назад',
+    updatedAt: '2 дня назад',
+    circles: 'Данные в общении с клиентом (Среда изменений)',
+    roles: [
+      { name: 'PUBLIC', label: 'PUBLIC' },
+    ],
+    tags: ['Чат', 'Клиенты', 'Bennu', 'Коммуникации'],
+    fields: [
+      { name: 'id', type: 'varchar2', description: 'ID для связи по полю Customer в STAGE.BENNU_SESSIONS и STAGE.BENNU_MESSAGES' },
+      { name: 'individual_customer_code', type: 'varchar2', description: 'Colvir-код физа' },
+      { name: 'company_customer_code', type: 'varchar2', description: 'Colvir-код компании' },
+      { name: 'crypto_user_id', type: 'varchar2', description: 'CRYPTO_USER_ID клиента' },
+      { name: 'created_at', type: 'date', description: 'Время создания записи в базе' },
+      { name: 'updated_at', type: 'date', description: 'Время обновления записи в базе чата' },
+      { name: 'mt_change_date', type: 'date', description: 'Время создания/обновления записи в DWH' },
+    ],
+    missingFields: [],
+    experts: [
+      { role: 'Автор', name: 'Антон Вараксин', avatar: 'assets/avatar-boy.jpg' },
+    ],
+    discussions: [],
+  },
 ];
 
 export const statusConfig = {
