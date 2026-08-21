@@ -313,7 +313,7 @@ export default function DocumentPage() {
   return (
     <div className="flex-1 flex flex-col overflow-y-auto">
       {/* Header */}
-      <header className="flex items-center gap-4 px-8 py-6">
+      <header className="flex items-center gap-4 px-8 pb-6" style={{ paddingTop: 19 }}>
         <button
           onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
           className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(25,25,25,0.05)] border-none cursor-pointer hover:bg-[rgba(25,25,25,0.1)] transition-colors shrink-0"

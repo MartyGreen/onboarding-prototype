@@ -444,7 +444,7 @@ export default function DocumentListPage() {
   );
 
   return (
-    <div className="flex-1 flex flex-col pt-6 px-8 pb-5 overflow-y-auto">
+    <div className="flex-1 flex flex-col px-8 pb-5 overflow-y-auto" style={{ paddingTop: 19 }}>
       {/* Title Row */}
       <div className="flex items-center gap-4">
         <h1 className="ts-600-3xl m-0 flex-1" style={{ color: 'var(--primitive-primary)' }}>
@@ -467,7 +467,7 @@ export default function DocumentListPage() {
       </div>
 
       {/* Toolbar — прибит к верху при скролле */}
-      <div className="flex items-center justify-between mt-3 sticky top-[-24px] z-10 bg-white pt-6 pb-2 -mx-8 px-8">
+      <div className="flex items-center justify-between mt-3 sticky z-10 bg-white pb-2 -mx-8 px-8" style={{ top: -19, paddingTop: 19 }}>
         <div className="flex items-center gap-2">
           {/* Переключатель вида: список / дерево — один в один по макету Figma */}
           <div className="relative w-[80px] h-[40px] rounded-[8px] bg-[rgba(25,25,25,0.05)] overflow-hidden shrink-0">

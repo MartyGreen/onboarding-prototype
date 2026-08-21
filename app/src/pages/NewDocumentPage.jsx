@@ -741,7 +741,7 @@ export default function NewDocumentPage() {
   return (
     <div className="flex-1 flex overflow-hidden h-full min-h-0">
       {/* Main scrollable area */}
-      <div className="flex-1 flex flex-col pt-8 px-8 overflow-y-auto min-h-0 hide-scrollbar">
+      <div className="flex-1 flex flex-col px-8 overflow-y-auto min-h-0 hide-scrollbar" style={{ paddingTop: 27 }}>
         <div className="flex flex-col gap-6 items-center w-full">
           {/* Title */}
           <div className="w-[720px]">
