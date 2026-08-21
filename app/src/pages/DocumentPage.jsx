@@ -496,8 +496,9 @@ export default function DocumentPage() {
                     <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
-                          {/* Collection checkbox */}
+                          {/* Collection checkbox — temporarily hidden */}
                           <button
+                            style={{ display: 'none' }}
                             className={`w-[18px] h-[18px] rounded border-[1.5px] flex items-center justify-center shrink-0 cursor-pointer transition-all ${
                               isInCollection(doc.id, row.name)
                                 ? 'bg-[#835de1] border-[#835de1]'
