@@ -26,7 +26,7 @@ const schemaOptions = {
 };
 
 const tableOptions = {
-  'STAGE': ['ecom_team.prelead_seller_sign', 'ecom_team.orders', 'ecom_team.customers'],
+  'STAGE': ['ecom_team.prelead_seller_sign', 'ecom_team.orders', 'ecom_team.customers', 'screpka_orders_company', 'girbo_financial_result_simple'],
   'DWH': ['dim_client', 'fact_orders', 'dim_product'],
   'ODS': ['ods_transactions', 'ods_accounts', 'ods_contracts'],
   'MART': ['mart_sales', 'mart_retention', 'mart_funnel'],
@@ -89,6 +89,72 @@ const extTableOptions = {
   'integration': ['api_logs', 'sync_status'],
   'partner': ['partner_orders', 'partner_products'],
   'dev_schema': ['dev_test_table'],
+};
+
+// Предустановленные поля для конкретных таблиц (подгружаются при выборе таблицы)
+const tableFieldsPreset = {
+  'screpka_orders_company': [
+    { name: 'id', type: 'NUMBER', description: '', inTable: true },
+    { name: 'inn', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'kpp', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'customer_code', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'incorporation_date', type: 'DATE', description: '', inTable: true },
+    { name: 'tax_regime_id', type: 'NUMBER', description: '', inTable: true },
+    { name: 'updated', type: 'DATE', description: '', inTable: true },
+    { name: 'legal_full_name', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'legal_short_name', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'request_id', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'tax_agency_code_old', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'updated_by_event', type: 'DATE', description: '', inTable: true },
+    { name: 'representative_id', type: 'NUMBER', description: '', inTable: true },
+    { name: 'oktmo_old', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'is_contains_yellow_payments', type: 'CHAR', description: '', inTable: true },
+    { name: 'count_tries_get_tax_return', type: 'NUMBER', description: '', inTable: true },
+    { name: 'is_draft', type: 'CHAR', description: '', inTable: true },
+    { name: 'address', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'address_ext', type: 'NUMBER', description: '', inTable: true },
+    { name: 'to_take_p2p_as_income', type: 'CHAR', description: '', inTable: true },
+    { name: 'activity_code_manual', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'is_active', type: 'CHAR', description: '', inTable: true },
+    { name: 'elba_integration', type: 'CHAR', description: '', inTable: true },
+    { name: 'elba_login', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'elba_token', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'ogrn', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'tax_calc_start_date', type: 'DATE', description: '', inTable: true },
+    { name: 'fns_payment_requisites_id', type: 'NUMBER', description: '', inTable: true },
+    { name: 'oktmo', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'oktmo_auto', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'tax_agency_code', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'tax_agency_code_manual', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'is_yellow', type: 'CHAR', description: '', inTable: true },
+    { name: 'have_envd', type: 'CHAR', description: '', inTable: true },
+    { name: 'default_bank', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'is_promo', type: 'CHAR', description: '', inTable: true },
+    { name: 'allow_patent', type: 'CHAR', description: '', inTable: true },
+    { name: 'allow_toward_tax', type: 'CHAR', description: '', inTable: true },
+    { name: 'is_accountant', type: 'CHAR', description: '', inTable: true },
+    { name: 'closing_date', type: 'DATE', description: '', inTable: true },
+    { name: 'declaration_gen_start_date', type: 'DATE', description: '', inTable: true },
+    { name: 'mt_change_date', type: 'DATE', description: '', inTable: true },
+    { name: 'is_apibank_payments', type: 'NUMBER', description: '', inTable: true },
+    { name: 'is_always_sync_accounts', type: 'CHAR', description: '', inTable: true },
+    { name: 'tax_calc_start_date_auto', type: 'DATE', description: '', inTable: true },
+    { name: 'self_employed_start_date', type: 'DATE', description: '', inTable: true },
+    { name: 'self_employed', type: 'NUMBER', description: '', inTable: true },
+    { name: 'moneybox_accumulation', type: 'CHAR', description: '', inTable: true },
+    { name: 'have_tax_postponement', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'have_fee_postponement', type: 'VARCHAR2', description: '', inTable: true },
+    { name: 'enp_tax_start_date', type: 'DATE', description: '', inTable: true },
+    { name: 'tax_calc_end_date', type: 'DATE', description: '', inTable: true },
+    { name: 'tariff_disable_date', type: 'DATE', description: '', inTable: true },
+    { name: 'last_msp_check', type: 'TIMESTAMP(6) WITH TIME ZONE', description: '', inTable: true },
+    { name: 'msp_status', type: 'NUMBER', description: '', inTable: true },
+    { name: 'default_tax_system_manual', type: 'NUMBER', description: '', inTable: true },
+    { name: 'tar_org_id', type: 'CLOB', description: '', inTable: true },
+    { name: 'usn_start_date', type: 'DATE', description: '', inTable: true },
+    { name: 'factoring_marketplace_without_tax_date', type: 'DATE', description: '', inTable: true },
+    { name: 'tax_precalc_start_year', type: 'NUMBER', description: '', inTable: true },
+  ],
 };
 
 const loadFrequencyOptions = [
@@ -378,6 +444,14 @@ export default function NewDocumentPage() {
     setExtTable('');
   };
 
+  const handleTableChange = (val) => {
+    setTable(val);
+    // Если для таблицы есть предустановленные поля — подгружаем их
+    if (tableFieldsPreset[val]) {
+      setFields(tableFieldsPreset[val].map(f => ({ ...f })));
+    }
+  };
+
   const handleFieldChange = (index, key, value) => {
     setFields(prev => prev.map((f, i) => i === index ? { ...f, [key]: value } : f));
   };
@@ -596,7 +670,7 @@ export default function NewDocumentPage() {
                         placeholder="Выберите таблицу"
                         options={schema ? (tableOptions[schema] || []) : []}
                         value={table}
-                        onChange={setTable}
+                        onChange={handleTableChange}
                         disabled={!schema}
                       />
                     </div>
