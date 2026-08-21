@@ -457,7 +457,7 @@ export default function DocumentPage() {
             <div className="rounded-xl">
               {/* Header */}
               <div className="flex gap-[2px] rounded-t-xl overflow-hidden">
-                <div className="w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-3">
+                <div className="w-[330px] bg-[rgba(25,25,25,0.05)] px-5 py-3">
                   <span className="text-xs font-medium text-[#191919] leading-[15px] tracking-[0.12px]">
                     Название
                   </span>
@@ -493,7 +493,7 @@ export default function DocumentPage() {
                       animation: 'highlightPulse 2.5s ease-out',
                     } : {}}
                   >
-                    <div className={`w-[280px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
+                    <div className={`w-[330px] px-5 py-3.5 relative ${isLast ? 'rounded-bl-xl' : ''}`} style={isHighlighted ? { backgroundColor: 'rgba(131, 93, 225, 0.1)' } : { backgroundColor: 'rgba(25, 25, 25, 0.05)' }}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           {/* Collection checkbox — temporarily hidden */}
@@ -661,7 +661,7 @@ export default function DocumentPage() {
                     const isLastMissing = i === doc.missingFields.length - 1;
                     return (
                     <div key={i} className="flex gap-[2px]">
-                      <div className={`w-[280px] bg-[rgba(25,25,25,0.05)] px-5 py-2.5 ${isFirstMissing ? 'rounded-tl-xl' : ''} ${isLastMissing ? 'rounded-bl-xl' : ''}`}>
+                      <div className={`w-[330px] bg-[rgba(25,25,25,0.05)] px-5 py-2.5 ${isFirstMissing ? 'rounded-tl-xl' : ''} ${isLastMissing ? 'rounded-bl-xl' : ''}`}>
                         <div className="flex flex-col gap-0.5">
                           <span className="text-base text-[#191919] leading-5 tracking-[0.16px]">{field.name}</span>
                           <span className="text-sm text-[#676767] leading-[18px] tracking-[0.14px]">{field.type}</span>
