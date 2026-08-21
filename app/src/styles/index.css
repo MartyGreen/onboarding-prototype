@@ -354,6 +354,20 @@
 .sidebar-item.active {
   color: #835de1;
 }
+/* Неактивные пункты становятся серыми, когда есть активный */
+.sidebar-nav:has(.sidebar-item.active) .sidebar-item:not(.active) {
+  color: #949494;
+}
+.sidebar-nav:has(.sidebar-item.active) .sidebar-item:not(.active) .sidebar-item-icon {
+  opacity: 0.45;
+}
+/* Ховер на неактивном — возвращаем чёрный цвет */
+.sidebar-nav:has(.sidebar-item.active) .sidebar-item:not(.active):hover {
+  color: #191919;
+}
+.sidebar-nav:has(.sidebar-item.active) .sidebar-item:not(.active):hover .sidebar-item-icon {
+  opacity: 1;
+}
 .sidebar-item-icon {
   width: 24px;
   height: 24px;
