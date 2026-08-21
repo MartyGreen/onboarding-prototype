@@ -157,6 +157,108 @@ const tableFieldsPreset = {
   ],
 };
 
+// Словарь описаний полей для ИИ-автозаполнения (регистронезависимый поиск по имени)
+const aiFieldDescriptions = {
+  'id': 'Уникальный идентификатор записи',
+  'inn': 'ИНН организации',
+  'kpp': 'КПП организации',
+  'ogrn': 'ОГРН организации',
+  'customer_code': 'Код клиента в системе',
+  'incorporation_date': 'Дата регистрации организации',
+  'tax_regime_id': 'Идентификатор налогового режима',
+  'updated': 'Дата последнего обновления записи',
+  'legal_full_name': 'Полное юридическое наименование',
+  'legal_short_name': 'Сокращённое наименование',
+  'request_id': 'Идентификатор запроса',
+  'tax_agency_code_old': 'Код налогового органа (устаревший)',
+  'tax_agency_code': 'Код налогового органа',
+  'tax_agency_code_manual': 'Код налогового органа (указан вручную)',
+  'updated_by_event': 'Дата обновления событием или запросом',
+  'representative_id': 'Идентификатор представителя',
+  'oktmo_old': 'ОКТМО (устаревший)',
+  'oktmo': 'ОКТМО (указан вручную)',
+  'oktmo_auto': 'ОКТМО (определён автоматически)',
+  'is_contains_yellow_payments': 'Признак наличия жёлтых платежей',
+  'count_tries_get_tax_return': 'Количество неуспешных запросов налоговых деклараций',
+  'is_draft': 'Признак черновика',
+  'address': 'Адрес организации',
+  'address_ext': 'Дополнение к адресу',
+  'to_take_p2p_as_income': 'Признак учёта P2P-платежей как дохода',
+  'activity_code_manual': 'ОКВЭД (указан вручную)',
+  'is_active': 'Признак активности записи',
+  'elba_integration': 'Признак интеграции с Эльбой',
+  'elba_login': 'Логин в системе Эльба',
+  'elba_token': 'Токен авторизации в Эльбе',
+  'tax_calc_start_date': 'Дата начала налоговых расчётов',
+  'tax_calc_start_date_auto': 'Дата начала расчётов (определена автоматически)',
+  'tax_calc_end_date': 'Дата окончания налоговых расчётов',
+  'fns_payment_requisites_id': 'Идентификатор платёжных реквизитов ФНС',
+  'is_yellow': 'Признак жёлтой компании',
+  'have_envd': 'Признак наличия ЕНВД',
+  'default_bank': 'Основной банк обслуживания',
+  'is_promo': 'Признак промо-клиента',
+  'allow_patent': 'Разрешение на патентную систему',
+  'allow_toward_tax': 'Разрешение на предрасчёт налогов',
+  'is_accountant': 'Признак клиента бухгалтера',
+  'closing_date': 'Дата ликвидации организации',
+  'declaration_gen_start_date': 'Дата начала генерации деклараций',
+  'mt_change_date': 'Дата последнего изменения (техническое поле)',
+  'is_apibank_payments': 'Признак API-банковских платежей',
+  'is_always_sync_accounts': 'Признак постоянной синхронизации счетов',
+  'self_employed_start_date': 'Дата начала статуса самозанятого',
+  'self_employed': 'Признак самозанятого',
+  'moneybox_accumulation': 'Признак накопления с пополнений собственными средствами',
+  'have_tax_postponement': 'Признак наличия отсрочки по налогам',
+  'have_fee_postponement': 'Признак наличия отсрочки по взносам',
+  'enp_tax_start_date': 'Дата начала сдачи уведомлений ЕНП по налогам',
+  'tariff_disable_date': 'Дата отключения тарифа',
+  'last_msp_check': 'Время последней проверки статуса МСП',
+  'msp_status': 'Статус в реестре МСП',
+  'default_tax_system_manual': 'Налоговая система по умолчанию (указана вручную)',
+  'tar_org_id': 'Идентификатор организации в экосистеме ЦБ',
+  'usn_start_date': 'Дата перехода на УСН',
+  'factoring_marketplace_without_tax_date': 'Дата начала факторинга без учёта налогов',
+  'tax_precalc_start_year': 'Год начала предварительного расчёта налогов',
+  '__deleted': 'Признак удалённой записи (soft delete)',
+  'ens_service_enabled': 'Дата подключения сервиса ЕНС',
+  'tech_updated_at': 'Дата обновления (техническое поле DWH)',
+  'created_at': 'Дата и время создания записи',
+  'updated_at': 'Дата и время последнего обновления',
+  'status': 'Текущий статус записи',
+  'name': 'Наименование',
+  'description': 'Текстовое описание',
+  'email': 'Адрес электронной почты',
+  'phone': 'Номер телефона',
+  'region_code': 'Код региона',
+  'region_id': 'Идентификатор региона',
+  'manager_id': 'Идентификатор ответственного менеджера',
+  'amount': 'Сумма',
+  'currency': 'Валюта',
+  'type': 'Тип записи',
+  'category': 'Категория',
+  'source_system': 'Система-источник данных',
+  'is_current': 'Признак текущей актуальной версии',
+  'valid_from': 'Дата начала действия записи',
+  'valid_to': 'Дата окончания действия записи',
+  'version': 'Номер версии записи',
+  'created_by': 'Автор создания записи',
+  'deleted_at': 'Дата удаления записи',
+  'sign_date': 'Дата подписания',
+  'seller_code': 'Код продавца',
+  'segment': 'Сегмент клиента',
+};
+
+// Фолбэк-генерация описания по типу поля
+function descByFieldType(type) {
+  const t = (type || '').toLowerCase();
+  if (t.includes('timestamp') || t === 'date') return 'Дата и время';
+  if (t.includes('int') || t === 'number' || t === 'numeric') return 'Числовое значение';
+  if (t.includes('char') || t.includes('varchar') || t === 'text' || t === 'clob') return 'Текстовое значение';
+  if (t.includes('bool')) return 'Логический признак (да/нет)';
+  if (t.includes('json')) return 'Данные в формате JSON';
+  return '';
+}
+
 const loadFrequencyOptions = [
   { value: 'Ежедневный', description: 'Запуск расчёта раз в день в указанное время.' },
   { value: 'По расписанию', description: 'Запуск расчёта с определенной частотой и в рамках указанного интервала (≥ 1 раз в день)' },
@@ -499,18 +601,14 @@ export default function NewDocumentPage() {
   const generateFieldDescriptions = () => {
     if (isGeneratingFields || !canGenerate) return;
     setIsGeneratingFields(true);
-    const fieldDescs = [
-      'Уникальный идентификатор записи в таблице, автоинкрементный первичный ключ',
-      'Дата и время создания записи в формате UTC, заполняется автоматически при INSERT',
-      'Код статуса обработки записи в рамках ETL-пайплайна',
-      'Ссылка на внешний идентификатор в системе-источнике',
-    ];
+
     // Все предложения появляются одновременно после задержки
     setTimeout(() => {
       const suggestions = {};
       fields.forEach((field, idx) => {
         if (!field.description || field.description === 'PK') {
-          suggestions[idx] = fieldDescs[idx] || `Описание поля ${field.name}`;
+          const key = (field.name || '').toLowerCase();
+          suggestions[idx] = aiFieldDescriptions[key] || descByFieldType(field.type);
         }
       });
       setLlmFieldSuggestions(suggestions);
