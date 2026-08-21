@@ -701,6 +701,21 @@ export default function NewDocumentPage() {
     });
   };
 
+  // Принять все предложения описаний полей разом
+  const acceptAllFieldSuggestions = () => {
+    setFields(prev => {
+      const updated = [...prev];
+      Object.entries(llmFieldSuggestions).forEach(([idx, desc]) => {
+        const i = Number(idx);
+        if (updated[i]) {
+          updated[i] = { ...updated[i], description: desc };
+        }
+      });
+      return updated;
+    });
+    setLlmFieldSuggestions({});
+  };
+
   // Когда generateAll запущен и обе генерации завершились — показываем галочку
   useEffect(() => {
     if (isGeneratingAll && !isGenerating && !isGeneratingFields) {
@@ -1244,6 +1259,17 @@ export default function NewDocumentPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Кнопка «Принять всё» — появляется когда есть хотя бы одно LLM-предложение */}
+              {Object.keys(llmFieldSuggestions).length > 0 && (
+                <div className="llm-suggestion" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', marginTop: 8 }}>
+                  <span className="llm-suggestion-text" style={{ margin: 0 }}>
+                    <span className="llm-suggestion-prefix">LLM: </span>
+                    {Object.keys(llmFieldSuggestions).length} {Object.keys(llmFieldSuggestions).length === 1 ? 'предложение' : Object.keys(llmFieldSuggestions).length < 5 ? 'предложения' : 'предложений'} для полей
+                  </span>
+                  <button className="llm-accept-btn" onClick={acceptAllFieldSuggestions}>Принять всё</button>
+                </div>
+              )}
 
               {/* Поля которых нет в таблице */}
               {missingFields.length > 0 && (
