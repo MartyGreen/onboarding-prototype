@@ -374,7 +374,7 @@ export const documents = [
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
-    tags: ['Чат', 'Сообщения', 'Общение с клиентами', 'Коммуникации'],
+    tags: ['Чат', 'Сообщения', 'Bennu', 'Общение с клиентами', 'Коммуникации'],
     fields: [
       { name: 'id', type: 'text', description: 'ID сообщения' },
       { name: 'message_gid', type: 'numeric', description: 'GID сообщения' },
@@ -438,7 +438,7 @@ export const documents = [
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
-    tags: ['Чат', 'Сессии', 'Общение с клиентами', 'Коммуникации'],
+    tags: ['Чат', 'Сессии', 'Bennu', 'Общение с клиентами', 'Коммуникации'],
     fields: [
       { name: 'id', type: 'varchar2', description: 'ID сессии' },
       { name: 'session_gid', type: 'number', description: '' },
@@ -489,7 +489,7 @@ export const documents = [
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
-    tags: ['Чат', 'Клиенты', 'Общение с клиентами', 'Коммуникации'],
+    tags: ['Чат', 'Клиенты', 'Bennu', 'Общение с клиентами', 'Коммуникации'],
     fields: [
       { name: 'id', type: 'varchar2', description: 'ID для связи по полю Customer в STAGE.BENNU_SESSIONS и STAGE.BENNU_MESSAGES' },
       { name: 'individual_customer_code', type: 'varchar2', description: 'Colvir-код физа' },
@@ -524,7 +524,7 @@ export const documents = [
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
-    tags: ['Чат', 'Вложения', 'Общение с клиентами', 'Коммуникации', 'Неактуальна'],
+    tags: ['Чат', 'Вложения', 'Bennu', 'Общение с клиентами', 'Коммуникации', 'Неактуальна'],
     fields: [
       { name: 'id', type: 'varchar2', description: '' },
       { name: 'email_id', type: 'varchar2', description: 'Foreign key в таблицу emails' },
