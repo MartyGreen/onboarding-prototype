@@ -700,6 +700,15 @@ body {
   pointer-events: none;
 }
 
+/* Скрытие скроллбара у основного контента (скролл работает, ползунок скрыт) */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* === LLM Suggestion styles === */
 @keyframes llmFadeIn {
   from { opacity: 0; transform: translateY(-4px); }
