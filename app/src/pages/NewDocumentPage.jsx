@@ -729,7 +729,7 @@ export default function NewDocumentPage() {
       <div className="flex-1 flex flex-col pt-8 px-8 overflow-y-auto min-h-0 hide-scrollbar">
         <div className="flex flex-col gap-6 items-center w-full">
           {/* Title */}
-          <div className="w-[600px]">
+          <div className="w-[720px]">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(-1)}
