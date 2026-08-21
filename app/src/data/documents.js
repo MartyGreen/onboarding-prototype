@@ -524,7 +524,7 @@ export const documents = [
     roles: [
       { name: 'PUBLIC', label: 'PUBLIC' },
     ],
-    tags: ['Чат', 'Вложения', 'Bennu', 'Неактуальна'],
+    tags: ['Чат', 'Вложения', 'Bennu', 'Коммуникации', 'Неактуальна'],
     fields: [
       { name: 'id', type: 'varchar2', description: '' },
       { name: 'email_id', type: 'varchar2', description: 'Foreign key в таблицу emails' },

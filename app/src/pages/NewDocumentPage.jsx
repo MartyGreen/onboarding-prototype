@@ -183,6 +183,12 @@ const tableFieldsPreset = {
   ],
 };
 
+// Предлагаемые теги для конкретных таблиц (подставляются в дропдаун при выборе таблицы)
+const tableTagsPreset = {
+  'screpka_orders_company': ['Скрепка', 'Заказы', 'Компании', 'E-Commerce', 'DWH'],
+  'girbo_financial_result_simple': ['ГИРБО', 'Финансы', 'Отчётность', 'Бухгалтерия', 'DWH'],
+};
+
 // Словарь описаний полей для ИИ-автозаполнения (регистронезависимый поиск по имени)
 const aiFieldDescriptions = {
   'id': 'Уникальный идентификатор записи',
@@ -527,8 +533,13 @@ export default function NewDocumentPage() {
   const ownerTags = owner ? (popularTagsByOwner[owner] || defaultPopularTags) : defaultPopularTags;
   const allTagsPool = [...new Set([...defaultPopularTags, ...Object.values(popularTagsByOwner).flat()])];
 
-  // Пул тегов: тоггл ON → теги выбранного круга, OFF → все теги
-  const poolTags = (tagCircleOnly && owner) ? ownerTags : allTagsPool;
+  // Теги-пресет для выбранной таблицы (если есть — показываются первыми)
+  const currentTable = storageType === 'external' ? extTable : table;
+  const tablePresetTags = tableTagsPreset[currentTable] || [];
+
+  // Пул тегов: пресет таблицы (приоритет) + тоггл ON → теги круга, OFF → все теги
+  const baseTags = (tagCircleOnly && owner) ? ownerTags : allTagsPool;
+  const poolTags = [...new Set([...tablePresetTags, ...baseTags])];
 
   // Фильтрация тегов в дропдауне
   const filteredPopularTags = tagInput.trim()
