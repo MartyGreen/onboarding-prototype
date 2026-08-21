@@ -118,7 +118,7 @@ export default function Sidebar() {
             <div className="sidebar-avatar">
               <img src={`${base}assets/avatar-cat.jpg`} alt="Avatar" />
             </div>
-            <span className="sidebar-user-name">Никита Сокол</span>
+            <span className="sidebar-user-name">Кот Ревьюн</span>
           </button>
         </div>
       </nav>
