@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Админка — Задания и участники</title>
+<title>Админка — Исследования</title>
 <style>
 @font-face{font-family:"TT Norms Pro Tochka";src:url("/onboarding-prototype/fonts/TT_Norms_Pro_Tochka_Regular.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"TT Norms Pro Tochka";src:url("/onboarding-prototype/fonts/TT_Norms_Pro_Tochka_Medium.woff2") format("woff2");font-weight:500;font-display:swap}
@@ -34,127 +34,175 @@ body{font-family:"TT Norms Pro Tochka",-apple-system,BlinkMacSystemFont,sans-ser
 .page-subtitle{font-size:14px;color:var(--c-secondary)}
 .page-actions{display:flex;gap:8px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--r-m);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;white-space:nowrap}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-primary{background:var(--c-brand);color:var(--c-white)}.btn-primary:hover:not(:disabled){background:var(--c-brand-hover)}
-.btn-secondary{background:var(--c-field);color:var(--c-primary)}.btn-secondary:hover:not(:disabled){background:var(--c-field-hover)}
-.btn-danger{background:rgba(249,142,136,.1);color:#e74c3c}.btn-danger:hover:not(:disabled){background:rgba(249,142,136,.2)}
-.btn-icon{width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;border-radius:var(--r-s);color:var(--c-secondary);transition:background .15s,color .15s}
-.btn-icon:hover{background:var(--c-field)}.btn-icon svg{width:16px;height:16px}
-.btn-icon.danger{color:#e74c3c}.btn-icon.danger:hover{background:rgba(231,76,60,.08)}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;border-radius:var(--r-l);overflow:hidden;margin-bottom:24px}
-.stat-card{background:var(--c-white);padding:20px;display:flex;flex-direction:column;gap:6px}
-.stat-label{font-size:13px;font-weight:500;color:var(--c-secondary)}
-.stat-value{font-size:30px;font-weight:600;color:var(--c-primary)}
-.stat-value.brand{color:var(--c-brand)}.stat-value.green{color:#3F9180}.stat-value.orange{color:#E5952D}
-.card{background:var(--c-white);border-radius:var(--r-l);padding:24px;margin-bottom:16px}
-.card-title{font-size:18px;font-weight:500;color:var(--c-primary);margin-bottom:16px}
-.data-table{display:flex;flex-direction:column;gap:2px;border-radius:var(--r-m);overflow:hidden}
-.data-row{display:flex;gap:2px;min-height:52px}
-.data-row.header{font-size:13px;font-weight:500;color:var(--c-secondary)}
-.data-row.header .data-cell{background:rgba(25,25,25,.07);padding:10px 16px;display:flex;align-items:center}
-.data-cell{background:var(--c-field);padding:12px 16px;display:flex;align-items:center;font-size:14px;color:var(--c-primary);min-width:0}
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r-s);font-size:12px;font-weight:500}
-.badge.grade{background:rgba(131,93,225,.1);color:var(--c-brand)}
-.toggle{position:relative;width:40px;height:22px;display:inline-block;flex-shrink:0}
-.toggle input{opacity:0;width:0;height:0}
-.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:11px;cursor:pointer;transition:background .2s}
-.toggle-slider::before{content:"";position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s}
-.toggle input:checked+.toggle-slider{background:var(--c-brand)}
-.toggle input:checked+.toggle-slider::before{transform:translateX(18px)}
-.order-arrows{display:flex;flex-direction:column;gap:2px}
-.order-arrow{width:22px;height:16px;display:flex;align-items:center;justify-content:center;border:none;background:var(--c-field);border-radius:4px;cursor:pointer;color:var(--c-secondary);font-size:9px;transition:background .15s,color .15s;padding:0}
-.order-arrow:hover:not(:disabled){background:var(--c-brand);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.btn-primary{background:var(--c-brand);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--c-brand-hover)}
+.btn-secondary{background:var(--c-field);color:var(--c-primary)}
+.btn-secondary:hover:not(:disabled){background:var(--c-field-hover)}
+.btn-danger{background:#e74c3c;color:#fff}
+.btn-danger:hover:not(:disabled){background:#c0392b}
+.btn-sm{padding:6px 14px;font-size:13px;border-radius:var(--r-s)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r-l);padding:20px 24px;display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:13px;color:var(--c-secondary);font-weight:500}
+.stat-value{font-size:28px;font-weight:700;color:var(--c-primary)}
+.stat-value.brand{color:var(--c-brand)}
+.stat-value.green{color:#27ae60}
+.stat-value.orange{color:#e67e22}
+.card{background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r-l);padding:24px;margin-bottom:20px}
+.card-title{font-size:16px;font-weight:600;margin-bottom:16px}
+.data-table{width:100%}
+.data-row{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--r-s);transition:background .1s}
+.data-row:not(.header):hover{background:var(--c-field)}
+.data-row.header{font-size:12px;font-weight:600;color:var(--c-placeholder);text-transform:uppercase;letter-spacing:.3px;padding:6px 12px;border-bottom:1px solid var(--c-divider)}
+.data-cell{display:flex;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge.grade{background:rgba(131,93,225,0.1);color:var(--c-brand)}
+.badge.active-badge{background:rgba(39,174,96,0.1);color:#27ae60}
+.actions-cell{display:flex;gap:4px}
+.btn-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:none;background:none;border-radius:var(--r-s);cursor:pointer;color:var(--c-secondary);transition:background .15s,color .15s}
+.btn-icon:hover{background:var(--c-field);color:var(--c-primary)}
+.btn-icon.danger:hover{background:rgba(231,76,60,.1);color:#e74c3c}
+.btn-icon svg{width:16px;height:16px}
+.order-arrows{display:flex;flex-direction:column;gap:1px}
+.order-arrow{background:none;border:none;cursor:pointer;font-size:10px;color:var(--c-placeholder);padding:0 2px;line-height:1;transition:color .15s}
+.order-arrow:hover:not(:disabled){color:var(--c-brand)}
 .order-arrow:disabled{opacity:.25;cursor:default}
-.desc-preview{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--c-secondary);font-size:13px}
-.actions-cell{display:flex;gap:4px;justify-content:flex-end}
-.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.form-label{font-size:13px;font-weight:600;color:var(--c-secondary)}
-.form-input,.form-textarea{padding:12px 14px;border:1px solid var(--c-border);border-radius:var(--r-s);font-family:inherit;font-size:15px;color:var(--c-primary);background:var(--c-white);outline:none;transition:border-color .15s;width:100%}
-.form-input:focus,.form-textarea:focus{border-color:var(--c-brand)}
-.form-textarea{min-height:100px;resize:vertical}
-.form-input::placeholder,.form-textarea::placeholder{color:var(--c-placeholder)}
-.form-actions{display:flex;gap:10px;justify-content:flex-end;padding-top:8px}
-.form-row-inline{display:flex;align-items:center;gap:12px}
-.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 20px;gap:16px;color:var(--c-placeholder)}
-.loading-spinner{width:40px;height:40px;border:3px solid var(--c-border);border-top-color:var(--c-brand);border-radius:50%;animation:spin .8s linear infinite}
+.toggle{position:relative;display:inline-flex;width:38px;height:22px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:22px;transition:background .2s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle input:checked+.toggle-slider{background:var(--c-brand)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(16px)}
+.desc-preview{font-size:13px;color:var(--c-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;display:block}
+.click-count{font-weight:600;font-variant-numeric:tabular-nums}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal{background:var(--c-white);border-radius:var(--r-xl);width:100%;max-width:520px;box-shadow:var(--shadow-drop);overflow:hidden}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--c-divider)}
+.modal-title{font-size:18px;font-weight:600}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--c-secondary);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-s);transition:background .15s}
+.modal-close:hover{background:var(--c-field)}
+.form-group{padding:12px 24px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--c-secondary);margin-bottom:6px}
+.form-input,.form-textarea,.form-select{width:100%;padding:10px 14px;border:1.5px solid var(--c-border);border-radius:var(--r-m);font-family:inherit;font-size:14px;color:var(--c-primary);background:var(--c-white);outline:none;transition:border-color .15s}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--c-brand)}
+.form-textarea{min-height:80px;resize:vertical}
+.form-row-inline{display:flex;align-items:center;gap:10px}
+.form-actions{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--c-divider)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 24px 24px}
+.summary-item{display:flex;flex-direction:column;gap:2px}
+.summary-label{font-size:12px;font-weight:600;color:var(--c-placeholder);text-transform:uppercase;letter-spacing:.3px}
+.summary-value{font-size:15px;font-weight:500}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
+.confirm-box{background:var(--c-white);border-radius:var(--r-xl);padding:32px;max-width:380px;width:100%;text-align:center;box-shadow:var(--shadow-drop)}
+.confirm-icon{font-size:36px;margin-bottom:12px}
+.confirm-title{font-size:20px;font-weight:600;margin-bottom:8px}
+.confirm-text{font-size:14px;color:var(--c-secondary);margin-bottom:20px;line-height:1.5}
+.confirm-actions{display:flex;gap:8px;justify-content:center}
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:80px 20px;color:var(--c-secondary);font-size:15px}
+.loading-spinner{width:28px;height:28px;border:3px solid var(--c-border);border-top-color:var(--c-brand);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.empty-state{text-align:center;padding:60px 20px;color:var(--c-placeholder);background:var(--c-field);border-radius:var(--r-m)}
-.empty-icon{font-size:40px;margin-bottom:12px}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;animation:fadeIn .15s ease}
-.modal{background:var(--c-white);border-radius:var(--r-xl);max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:32px;box-shadow:var(--shadow-drop);animation:scaleIn .2s ease}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.modal-title{font-size:22px;font-weight:600;color:var(--c-primary)}
-.modal-close{width:32px;height:32px;border-radius:var(--r-s);border:none;background:var(--c-field);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.modal-close:hover{background:var(--c-divider)}
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;animation:fadeIn .15s ease}
-.confirm-box{background:var(--c-white);border-radius:var(--r-xl);padding:32px;max-width:400px;width:100%;text-align:center;box-shadow:var(--shadow-drop);animation:scaleIn .15s ease}
-.confirm-icon{font-size:40px;margin-bottom:16px}
-.confirm-title{font-size:18px;font-weight:600;margin-bottom:8px}
-.confirm-text{font-size:14px;color:var(--c-secondary);margin-bottom:24px;line-height:20px}
-.confirm-actions{display:flex;gap:12px;justify-content:center}
-.confirm-actions .btn{min-width:120px}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:var(--r-m);overflow:hidden}
-.summary-item{background:var(--c-field);padding:16px 20px;display:flex;flex-direction:column;gap:4px}
-.summary-label{font-size:12px;font-weight:500;color:var(--c-secondary);text-transform:uppercase;letter-spacing:.3px}
-.summary-value{font-size:16px;font-weight:500;color:var(--c-primary)}
-.click-count{font-weight:600;color:var(--c-brand)}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes scaleIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-@media(max-width:900px){.sidebar{display:none}.main{padding:20px}.summary-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:60px 20px;color:var(--c-secondary);font-size:15px}
+.empty-icon{font-size:40px;opacity:.6}
+/* study selector in sidebar */
+.study-selector{padding:12px 12px 4px;position:relative}
+.study-select-btn{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--r-m);border:1.5px solid var(--c-border);background:var(--c-white);font-family:inherit;font-size:13px;font-weight:500;color:var(--c-primary);cursor:pointer;transition:border-color .15s;text-align:left}
+.study-select-btn:hover{border-color:var(--c-brand)}
+.study-select-btn .study-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.study-select-btn .study-arrow{flex-shrink:0;color:var(--c-placeholder);transition:transform .2s}
+.study-select-btn.open .study-arrow{transform:rotate(180deg)}
+.study-active-dot{width:6px;height:6px;border-radius:50%;background:#27ae60;flex-shrink:0}
+.study-dropdown{position:absolute;left:12px;right:12px;top:100%;margin-top:4px;background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r-m);box-shadow:var(--shadow-drop);z-index:50;max-height:260px;overflow-y:auto;display:none}
+.study-dropdown.show{display:block}
+.study-dd-item{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:13px;font-weight:500;cursor:pointer;transition:background .1s;color:var(--c-primary)}
+.study-dd-item:hover{background:var(--c-field)}
+.study-dd-item.selected{background:rgba(131,93,225,.06);color:var(--c-brand)}
+.study-dd-item .dd-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.study-dd-divider{height:1px;background:var(--c-divider);margin:4px 0}
+.study-dd-add{color:var(--c-brand);font-weight:600}
+/* study cards on Studies tab */
+.studies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.study-card{background:var(--c-white);border:1.5px solid var(--c-border);border-radius:var(--r-l);padding:20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative}
+.study-card:hover{border-color:var(--c-brand);box-shadow:0 4px 16px rgba(131,93,225,.1)}
+.study-card.is-active{border-color:#27ae60}
+.study-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.study-card-name{font-size:16px;font-weight:600;flex:1}
+.study-card-desc{font-size:13px;color:var(--c-secondary);margin-bottom:12px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.study-card-meta{display:flex;gap:12px;font-size:12px;color:var(--c-placeholder);font-weight:500}
+.study-card-meta span{display:flex;align-items:center;gap:4px}
 </style>
 </head>
 <body>
 <div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-logo">DataGate <span class="dot"></span> Admin</div>
-    <div class="sidebar-section-label">Управление</div>
-    <div class="sidebar-menu">
-      <button class="sidebar-item active" onclick="switchTab('tasks')" id="nav-tasks">
-        <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="sidebar-logo"><span class="dot"></span> Админка</div>
+    <div class="study-selector" id="study-selector-wrap"></div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Навигация</div>
+    <nav class="sidebar-menu">
+      <button class="sidebar-item" id="nav-studies" onclick="switchTab('studies')">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 7h8M6 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Исследования
+      </button>
+      <button class="sidebar-item active" id="nav-tasks" onclick="switchTab('tasks')">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M4 5h12M4 10h12M4 15h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Задания
       </button>
-      <button class="sidebar-item" onclick="switchTab('participants')" id="nav-participants">
-        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 17.5c0-3.59 2.91-6.5 6.5-6.5s6.5 2.91 6.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <button class="sidebar-item" id="nav-participants" onclick="switchTab('participants')">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Участники
       </button>
-    </div>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Данные</div>
-    <div class="sidebar-menu">
+    </nav>
+    <div class="sidebar-divider" style="margin-top:8px"></div>
+    <nav class="sidebar-menu" style="padding-top:4px">
       <button class="sidebar-item" onclick="exportCSV()">
-        <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10m0 0l-3-3m3 3l3-3M4 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 20 20" fill="none"><path d="M6 13l4 4 4-4M10 17V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10V5a2 2 0 012-2h10a2 2 0 012 2v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Экспорт CSV
       </button>
       <button class="sidebar-item" onclick="refreshData()">
-        <svg viewBox="0 0 20 20" fill="none"><path d="M3 10a7 7 0 0112.9-3.8M17 10a7 7 0 01-12.9 3.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 3v4h-4M5 17v-4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 20 20" fill="none"><path d="M17 10a7 7 0 01-13.16 3.36M3 10a7 7 0 0113.16-3.36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 14v-4h4M17 6v4h-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Обновить
       </button>
-    </div>
+    </nav>
     <div class="sidebar-spacer"></div>
     <div class="sidebar-bottom">
-      <a href="/onboarding-prototype/" class="sidebar-back">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Вернуться к прототипу
+      <a class="sidebar-back" href="/onboarding-prototype/">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 15l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        К прототипу
       </a>
     </div>
   </aside>
-  <div class="main" id="app">
-    <div class="loading-state"><div class="loading-spinner"></div><div>Загрузка данных…</div></div>
-  </div>
+  <main class="main" id="app">
+    <div class="loading-state"><div class="loading-spinner"></div><div>Загрузка…</div></div>
+  </main>
 </div>
 <script>
 const FB='https://datagatetest-4f190-default-rtdb.firebaseio.com';
-let participants=[],tasks=[],currentTab='tasks';
+let studies=[],participants=[],tasks=[],currentTab='tasks',currentStudyKey=null;
 
 async function fbFetch(p){try{const r=await fetch(FB+'/'+p+'.json');const d=await r.json();if(!d)return[];return Object.entries(d).map(([k,v])=>({...v,_key:k}))}catch(e){console.warn(e);return[]}}
 async function fbPush(p,d){try{const r=await fetch(FB+'/'+p+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const j=await r.json();return j?.name}catch(e){return null}}
 async function fbUpdate(p,d){try{await fetch(FB+'/'+p+'.json',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})}catch(e){}}
 async function fbDelete(p){try{const r=await fetch(FB+'/'+p+'.json',{method:'DELETE'});return r.ok}catch(e){return false}}
 
-async function fetchAll(){
-  const[p,t]=await Promise.all([fbFetch('onboarding_participants'),fbFetch('onboarding_tasks')]);
-  participants=p;tasks=t.sort((a,b)=>(a.order||0)-(b.order||0));
+async function fetchStudies(){
+  studies=await fbFetch('onboarding_studies');
+  studies.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  if(!currentStudyKey && studies.length){
+    const active=studies.find(s=>s.active);
+    currentStudyKey=active?active._key:studies[0]._key;
+  }
 }
+async function fetchStudyData(){
+  if(!currentStudyKey){tasks=[];participants=[];return}
+  const[t,p]=await Promise.all([
+    fbFetch('onboarding_tasks/'+currentStudyKey),
+    fbFetch('onboarding_participants/'+currentStudyKey)
+  ]);
+  tasks=t.sort((a,b)=>(a.order||0)-(b.order||0));
+  participants=p;
+}
+async function fetchAll(){await fetchStudies();await fetchStudyData()}
 
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function escA(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -165,22 +213,146 @@ function switchTab(t){
   const n=document.getElementById('nav-'+t);if(n)n.classList.add('active');
   render();
 }
-function render(){const a=document.getElementById('app');if(currentTab==='tasks')renderTasks(a);else renderParticipants(a)}
+function render(){
+  renderStudySelector();
+  const a=document.getElementById('app');
+  if(currentTab==='studies')renderStudies(a);
+  else if(currentTab==='tasks')renderTasks(a);
+  else renderParticipants(a);
+}
+
+/* === STUDY SELECTOR IN SIDEBAR === */
+function renderStudySelector(){
+  const wrap=document.getElementById('study-selector-wrap');if(!wrap)return;
+  if(!studies.length){
+    wrap.innerHTML='<button class="study-select-btn" onclick="openStudyModal(-1)" style="justify-content:center;color:var(--c-brand);font-weight:600">+ Создать исследование</button>';
+    return;
+  }
+  const cur=studies.find(s=>s._key===currentStudyKey);
+  const isActive=cur&&cur.active;
+  wrap.innerHTML='<button class="study-select-btn" id="study-toggle" onclick="toggleStudyDropdown()">'+(isActive?'<span class="study-active-dot"></span>':'')+'<span class="study-name">'+esc(cur?cur.name:'\u2014')+'</span><span class="study-arrow">\u25BE</span></button><div class="study-dropdown" id="study-dd"></div>';
+  buildStudyDropdown();
+}
+function toggleStudyDropdown(){
+  const dd=document.getElementById('study-dd');
+  const btn=document.getElementById('study-toggle');
+  if(!dd||!btn)return;
+  const open=dd.classList.toggle('show');
+  btn.classList.toggle('open',open);
+  if(open){
+    const close=e=>{if(!dd.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){dd.classList.remove('show');btn.classList.remove('open');document.removeEventListener('click',close)}};
+    setTimeout(()=>document.addEventListener('click',close),0);
+  }
+}
+function buildStudyDropdown(){
+  const dd=document.getElementById('study-dd');if(!dd)return;
+  let h='';
+  studies.forEach(s=>{
+    const sel=s._key===currentStudyKey?' selected':'';
+    const dot=s.active?'<span class="study-active-dot"></span>':'';
+    h+='<div class="study-dd-item'+sel+'" onclick="selectStudy(\''+s._key+'\')">'+dot+'<span class="dd-name">'+esc(s.name)+'</span></div>';
+  });
+  h+='<div class="study-dd-divider"></div><div class="study-dd-item study-dd-add" onclick="openStudyModal(-1)">+ Новое исследование</div>';
+  dd.innerHTML=h;
+}
+async function selectStudy(key){
+  if(key===currentStudyKey)return;
+  currentStudyKey=key;
+  document.getElementById('study-dd')?.classList.remove('show');
+  document.getElementById('study-toggle')?.classList.remove('open');
+  document.getElementById('app').innerHTML='<div class="loading-state"><div class="loading-spinner"></div><div>\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430\u2026</div></div>';
+  await fetchStudyData();render();
+}
+
+/* === STUDIES TAB === */
+function renderStudies(app){
+  const total=studies.length;
+  const activeS=studies.find(s=>s.active);
+  let cards='';
+  if(!total){
+    cards='<div class="empty-state"><div class="empty-icon">\ud83d\udcda</div><div>\u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0439 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442. \u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u0435\u0440\u0432\u043e\u0435.</div></div>';
+  } else {
+    cards='<div class="studies-grid">';
+    studies.forEach((s,i)=>{
+      const date=s.createdAt?new Date(s.createdAt).toLocaleDateString('ru-RU'):'\u2014';
+      cards+='<div class="study-card'+(s.active?' is-active':'')+'" onclick="selectStudyAndSwitch(\''+s._key+'\')"><div class="study-card-header"><div class="study-card-name">'+esc(s.name)+'</div><div class="actions-cell" onclick="event.stopPropagation()">'+(s.active?'<span class="badge active-badge">\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0435</span>':'<button class="btn btn-sm btn-secondary" onclick="setActiveStudy(\''+s._key+'\')">\u0410\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>')+'</div></div><div class="study-card-desc">'+esc(s.description||'\u041d\u0435\u0442 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044f')+'</div><div class="study-card-meta"><span>\ud83d\udcc5 '+date+'</span></div><div class="actions-cell" style="margin-top:12px" onclick="event.stopPropagation()"><button class="btn btn-sm btn-secondary" onclick="openStudyModal('+i+')">\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button><button class="btn btn-sm btn-danger" onclick="confirmDeleteStudy('+i+')">\u0423\u0434\u0430\u043b\u0438\u0442\u044c</button></div></div>';
+    });
+    cards+='</div>';
+  }
+  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udcda \u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f</h1><div class="page-subtitle">\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f\u043c\u0438 \u0438 \u0438\u0445 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u043c\u0438</div></div><div class="page-actions"><button class="btn btn-primary" onclick="openStudyModal(-1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg> \u0421\u043e\u0437\u0434\u0430\u0442\u044c</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">\u0412\u0441\u0435\u0433\u043e</div><div class="stat-value brand">'+total+'</div></div><div class="stat-card"><div class="stat-label">\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0435</div><div class="stat-value green">'+(activeS?esc(activeS.name):'\u2014')+'</div></div></div>'+cards;
+}
+
+/* === STUDY CRUD === */
+function openStudyModal(idx){
+  const isNew=idx===-1;
+  const s=isNew?{name:'',description:''}:studies[idx];
+  const o=document.createElement('div');o.className='modal-overlay';
+  o.onclick=e=>{if(e.target===o)o.remove()};
+  const titleText=isNew?'Новое исследование':'Редактировать';
+  const btnText=isNew?'Создать':'Сохранить';
+  o.innerHTML='<div class="modal"><div class="modal-header"><div class="modal-title">'+titleText+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="form-group"><label class="form-label">Название *</label><input class="form-input" id="study-name" placeholder="Напр.: Онбординг таблиц" value="'+escA(s.name)+'"></div><div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="study-desc" placeholder="Цель, контекст, сроки…">'+esc(s.description||'')+'</textarea></div><div class="form-actions"><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Отмена</button><button class="btn btn-primary" id="study-save" onclick="saveStudy('+idx+')">'+btnText+'</button></div></div>';
+  document.body.appendChild(o);
+  setTimeout(()=>document.getElementById('study-name')?.focus(),100);
+}
+async function saveStudy(idx){
+  const name=document.getElementById('study-name').value.trim();
+  const desc=document.getElementById('study-desc').value.trim();
+  if(!name){document.getElementById('study-name').style.borderColor='#e74c3c';return}
+  const btn=document.getElementById('study-save');btn.textContent='Сохранение\u2026';btn.disabled=true;
+  const now=new Date().toISOString();
+  if(idx===-1){
+    const isFirst=studies.length===0;
+    const d={name,description:desc,active:isFirst,createdAt:now,updatedAt:now};
+    const k=await fbPush('onboarding_studies',d);
+    if(k){studies.unshift({...d,_key:k});if(isFirst)currentStudyKey=k;}
+  } else {
+    const s=studies[idx];
+    await fbUpdate('onboarding_studies/'+s._key,{name,description:desc,updatedAt:now});
+    s.name=name;s.description=desc;s.updatedAt=now;
+  }
+  document.querySelector('.modal-overlay')?.remove();render();
+}
+async function setActiveStudy(key){
+  for(const s of studies){
+    if(s.active&&s._key!==key){s.active=false;await fbUpdate('onboarding_studies/'+s._key,{active:false})}
+  }
+  const target=studies.find(s=>s._key===key);
+  if(target){target.active=true;await fbUpdate('onboarding_studies/'+key,{active:true})}
+  render();
+}
+function selectStudyAndSwitch(key){
+  currentStudyKey=key;
+  switchTab('tasks');
+  fetchStudyData().then(()=>render());
+}
+function confirmDeleteStudy(i){
+  const s=studies[i];if(!s)return;
+  showConfirm('исследование \u00ab'+esc(s.name)+'\u00bb со всеми заданиями и участниками',async()=>{
+    await Promise.all([fbDelete('onboarding_studies/'+s._key),fbDelete('onboarding_tasks/'+s._key),fbDelete('onboarding_participants/'+s._key)]);
+    studies.splice(i,1);
+    if(currentStudyKey===s._key){currentStudyKey=studies.length?studies[0]._key:null;await fetchStudyData()}
+    render();
+  });
+}
+
 /* === TASKS TAB === */
 function renderTasks(app){
+  if(!currentStudyKey){app.innerHTML='<div class="empty-state"><div class="empty-icon">\ud83d\udcda</div><div>Сначала создайте исследование</div></div>';return}
+  const curStudy=studies.find(s=>s._key===currentStudyKey);
   const ac=tasks.filter(t=>t.active!==false).length;
   let rows='';
   if(tasks.length===0){
-    rows='<div class="empty-state"><div class="empty-icon">\u{1F4CB}</div><div>Заданий пока нет. Создайте первое.</div></div>';
+    rows='<div class="empty-state"><div class="empty-icon">\ud83d\udccb</div><div>Заданий пока нет. Создайте первое.</div></div>';
   } else {
-    rows='<div class="data-table"><div class="data-row header"><div class="data-cell" style="width:50px"></div><div class="data-cell" style="width:50px">№</div><div class="data-cell" style="flex:2">Название</div><div class="data-cell" style="flex:3">Описание</div><div class="data-cell" style="width:80px">Активно</div><div class="data-cell" style="width:90px"></div></div>';
+    rows='<div class="data-table"><div class="data-row header"><div class="data-cell" style="width:50px"></div><div class="data-cell" style="width:50px">\u2116</div><div class="data-cell" style="flex:2">Название</div><div class="data-cell" style="flex:3">Описание</div><div class="data-cell" style="width:80px">Активно</div><div class="data-cell" style="width:90px"></div></div>';
     tasks.forEach((t,i)=>{
       rows+='<div class="data-row"><div class="data-cell" style="width:50px;justify-content:center"><div class="order-arrows"><button class="order-arrow" onclick="moveTask('+i+',-1)"'+(i===0?' disabled':'')+'>&#9650;</button><button class="order-arrow" onclick="moveTask('+i+',1)"'+(i===tasks.length-1?' disabled':'')+'>&#9660;</button></div></div><div class="data-cell" style="width:50px"><span class="badge grade">'+(i+1)+'</span></div><div class="data-cell" style="flex:2"><strong>'+esc(t.title||'Без названия')+'</strong></div><div class="data-cell" style="flex:3"><span class="desc-preview">'+esc(t.description||'\u2014')+'</span></div><div class="data-cell" style="width:80px"><label class="toggle"><input type="checkbox"'+(t.active!==false?' checked':'')+' onchange="toggleActive('+i+',this.checked)"><span class="toggle-slider"></span></label></div><div class="data-cell" style="width:90px"><div class="actions-cell"><button class="btn-icon" onclick="openTaskModal('+i+')" title="Ред."><svg viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5l2 2L5 13H3v-2l8.5-8.5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-icon danger" onclick="confirmDeleteTask('+i+')" title="Уд."><svg viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6 4.5V3a1 1 0 011-1h2a1 1 0 011 1v1.5m1.5 0v8a1.5 1.5 0 01-1.5 1.5H6a1.5 1.5 0 01-1.5-1.5v-8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div></div>';
     });
     rows+='</div>';
   }
-  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\u{1F4CB} Задания</h1><div class="page-subtitle">Управление заданиями для участников исследования</div></div><div class="page-actions"><button class="btn btn-primary" onclick="openTaskModal(-1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg> Создать</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">Всего</div><div class="stat-value brand">'+tasks.length+'</div></div><div class="stat-card"><div class="stat-label">Активных</div><div class="stat-value green">'+ac+'</div></div><div class="stat-card"><div class="stat-label">Неактивных</div><div class="stat-value orange">'+(tasks.length-ac)+'</div></div><div class="stat-card"><div class="stat-label">Участников</div><div class="stat-value">'+participants.length+'</div></div></div><div class="card"><div class="card-title">Список заданий</div>'+rows+'</div>';
+  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udccb Задания</h1><div class="page-subtitle">'+esc(curStudy?curStudy.name:'')+' \u00b7 '+tasks.length+' заданий</div></div><div class="page-actions"><button class="btn btn-primary" onclick="openTaskModal(-1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg> Создать</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">Всего</div><div class="stat-value brand">'+tasks.length+'</div></div><div class="stat-card"><div class="stat-label">Активных</div><div class="stat-value green">'+ac+'</div></div><div class="stat-card"><div class="stat-label">Неактивных</div><div class="stat-value orange">'+(tasks.length-ac)+'</div></div><div class="stat-card"><div class="stat-label">Участников</div><div class="stat-value">'+participants.length+'</div></div></div><div class="card"><div class="card-title">Список заданий</div>'+rows+'</div>';
 }
+
 /* === TASK CRUD === */
 function openTaskModal(idx){
   const isNew=idx===-1;
@@ -189,11 +361,10 @@ function openTaskModal(idx){
   o.onclick=e=>{if(e.target===o)o.remove()};
   const titleText=isNew?'Новое задание':'Редактировать';
   const btnText=isNew?'Создать':'Сохранить';
-  o.innerHTML='<div class="modal"><div class="modal-header"><div class="modal-title">'+titleText+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="form-group"><label class="form-label">Название *</label><input class="form-input" id="task-title" placeholder="Напр.: Заполнить описание таблицы" value="'+escA(t.title)+'"></div><div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="task-desc" placeholder="Что должен сделать участник...">'+esc(t.description||'')+'</textarea></div><div class="form-group" style="margin-bottom:0"><div class="form-row-inline"><label class="toggle"><input type="checkbox" id="task-active"'+(t.active!==false?' checked':'')+'><span class="toggle-slider"></span></label><span class="form-label" style="margin:0">Активно</span></div></div><div class="form-actions"><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Отмена</button><button class="btn btn-primary" id="task-save" onclick="saveTask('+idx+')">'+btnText+'</button></div></div>';
+  o.innerHTML='<div class="modal"><div class="modal-header"><div class="modal-title">'+titleText+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="form-group"><label class="form-label">Название *</label><input class="form-input" id="task-title" placeholder="Напр.: Заполнить описание таблицы" value="'+escA(t.title)+'"></div><div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="task-desc" placeholder="Что должен сделать участник\u2026">'+esc(t.description||'')+'</textarea></div><div class="form-group" style="margin-bottom:0"><div class="form-row-inline"><label class="toggle"><input type="checkbox" id="task-active"'+(t.active!==false?' checked':'')+'><span class="toggle-slider"></span></label><span class="form-label" style="margin:0">Активно</span></div></div><div class="form-actions"><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Отмена</button><button class="btn btn-primary" id="task-save" onclick="saveTask('+idx+')">'+btnText+'</button></div></div>';
   document.body.appendChild(o);
   setTimeout(()=>document.getElementById('task-title')?.focus(),100);
 }
-
 async function saveTask(idx){
   const title=document.getElementById('task-title').value.trim();
   const desc=document.getElementById('task-desc').value.trim();
@@ -203,46 +374,46 @@ async function saveTask(idx){
   const now=new Date().toISOString();
   if(idx===-1){
     const d={title,description:desc,active,order:tasks.length,createdAt:now,updatedAt:now};
-    const k=await fbPush('onboarding_tasks',d);if(k)tasks.push({...d,_key:k});
+    const k=await fbPush('onboarding_tasks/'+currentStudyKey,d);if(k)tasks.push({...d,_key:k});
   } else {
     const t=tasks[idx];const u={title,description:desc,active,updatedAt:now};
-    await fbUpdate('onboarding_tasks/'+t._key,u);Object.assign(t,u);
+    await fbUpdate('onboarding_tasks/'+currentStudyKey+'/'+t._key,u);Object.assign(t,u);
   }
   document.querySelector('.modal-overlay')?.remove();render();
 }
-
 async function moveTask(i,dir){
   const ni=i+dir;if(ni<0||ni>=tasks.length)return;
   [tasks[i],tasks[ni]]=[tasks[ni],tasks[i]];
-  await Promise.all(tasks.map((t,j)=>{t.order=j;return t._key?fbUpdate('onboarding_tasks/'+t._key,{order:j}):null}).filter(Boolean));
+  await Promise.all(tasks.map((t,j)=>{t.order=j;return t._key?fbUpdate('onboarding_tasks/'+currentStudyKey+'/'+t._key,{order:j}):null}).filter(Boolean));
   render();
 }
-
 async function toggleActive(i,v){
   const t=tasks[i];if(!t?._key)return;t.active=v;
-  await fbUpdate('onboarding_tasks/'+t._key,{active:v,updatedAt:new Date().toISOString()});
+  await fbUpdate('onboarding_tasks/'+currentStudyKey+'/'+t._key,{active:v,updatedAt:new Date().toISOString()});
 }
-
 function confirmDeleteTask(i){
   const t=tasks[i];if(!t)return;
   showConfirm('задание \u00ab'+esc(t.title)+'\u00bb',async()=>{
-    if(await fbDelete('onboarding_tasks/'+t._key)){
+    if(await fbDelete('onboarding_tasks/'+currentStudyKey+'/'+t._key)){
       tasks.splice(i,1);
-      await Promise.all(tasks.map((t,j)=>{t.order=j;return t._key?fbUpdate('onboarding_tasks/'+t._key,{order:j}):null}).filter(Boolean));
+      await Promise.all(tasks.map((t,j)=>{t.order=j;return t._key?fbUpdate('onboarding_tasks/'+currentStudyKey+'/'+t._key,{order:j}):null}).filter(Boolean));
       render();
     } else alert('Ошибка удаления');
   });
 }
+
 /* === PARTICIPANTS TAB === */
 function renderParticipants(app){
+  if(!currentStudyKey){app.innerHTML='<div class="empty-state"><div class="empty-icon">\ud83d\udcda</div><div>Сначала создайте исследование</div></div>';return}
+  const curStudy=studies.find(s=>s._key===currentStudyKey);
   const n=participants.length;
   const avgC=n?Math.round(participants.reduce((s,p)=>s+(p.totalClicks||0),0)/n):0;
   const avgS=n?Math.round(participants.reduce((s,p)=>s+(p.sessionDuration||0),0)/n/1000):0;
   let rows='';
   if(n===0){
-    rows='<div class="empty-state"><div class="empty-icon">\u{1F465}</div><div>Участников пока нет</div></div>';
+    rows='<div class="empty-state"><div class="empty-icon">\ud83d\udc65</div><div>Участников пока нет</div></div>';
   } else {
-    rows='<div class="data-table"><div class="data-row header"><div class="data-cell" style="width:50px">&#8470;</div><div class="data-cell" style="width:100px">Грейд</div><div class="data-cell" style="flex:2">Должность</div><div class="data-cell" style="width:80px">Клики</div><div class="data-cell" style="width:100px">Сессия</div><div class="data-cell" style="width:130px">Дата</div><div class="data-cell" style="width:80px"></div></div>';
+    rows='<div class="data-table"><div class="data-row header"><div class="data-cell" style="width:50px">\u2116</div><div class="data-cell" style="width:100px">Грейд</div><div class="data-cell" style="flex:2">Должность</div><div class="data-cell" style="width:80px">Клики</div><div class="data-cell" style="width:100px">Сессия</div><div class="data-cell" style="width:130px">Дата</div><div class="data-cell" style="width:80px"></div></div>';
     participants.forEach((p,i)=>{
       const d=p.registeredAt?new Date(p.registeredAt).toLocaleDateString('ru-RU'):'\u2014';
       const dur=p.sessionDuration?Math.round(p.sessionDuration/1000)+'с':'\u2014';
@@ -250,23 +421,24 @@ function renderParticipants(app){
     });
     rows+='</div>';
   }
-  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\u{1F465} Участники</h1><div class="page-subtitle">'+n+' участников \u00b7 '+new Date().toLocaleString('ru-RU')+'</div></div><div class="page-actions"><button class="btn btn-secondary" onclick="exportCSV()">Экспорт CSV</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">Участников</div><div class="stat-value brand">'+n+'</div></div><div class="stat-card"><div class="stat-label">Ср. кликов</div><div class="stat-value orange">'+avgC+'</div></div><div class="stat-card"><div class="stat-label">Ср. сессия</div><div class="stat-value">'+avgS+' сек</div></div><div class="stat-card"><div class="stat-label">Акт. заданий</div><div class="stat-value green">'+tasks.filter(t=>t.active!==false).length+'</div></div></div><div class="card"><div class="card-title">Список участников</div>'+rows+'</div>';
+  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udc65 Участники</h1><div class="page-subtitle">'+esc(curStudy?curStudy.name:'')+' \u00b7 '+n+' участников</div></div><div class="page-actions"><button class="btn btn-secondary" onclick="exportCSV()">Экспорт CSV</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">Участников</div><div class="stat-value brand">'+n+'</div></div><div class="stat-card"><div class="stat-label">Ср. кликов</div><div class="stat-value orange">'+avgC+'</div></div><div class="stat-card"><div class="stat-label">Ср. сессия</div><div class="stat-value">'+avgS+' сек</div></div><div class="stat-card"><div class="stat-label">Акт. заданий</div><div class="stat-value green">'+tasks.filter(t=>t.active!==false).length+'</div></div></div><div class="card"><div class="card-title">Список участников</div>'+rows+'</div>';
 }
-/* === DETAIL + DELETE + CSV + SHARED === */
+
+/* === DETAIL + DELETE + CSV + CONFIRM + INIT === */
 function showDetail(i){
   const p=participants[i];if(!p)return;
   const dur=p.sessionDuration?Math.round(p.sessionDuration/1000):0;
   const date=p.registeredAt?new Date(p.registeredAt).toLocaleString('ru-RU'):'\u2014';
   const o=document.createElement('div');o.className='modal-overlay';
   o.onclick=e=>{if(e.target===o)o.remove()};
-  o.innerHTML='<div class="modal" style="max-width:600px"><div class="modal-header"><div class="modal-title">Участник &#8470;'+(i+1)+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="summary-grid"><div class="summary-item"><div class="summary-label">Грейд</div><div class="summary-value"><span class="badge grade">'+esc(p.grade||'\u2014')+'</span></div></div><div class="summary-item"><div class="summary-label">Должность</div><div class="summary-value">'+esc(p.position||'\u2014')+'</div></div><div class="summary-item"><div class="summary-label">Кликов</div><div class="summary-value">'+(p.totalClicks||0)+'</div></div><div class="summary-item"><div class="summary-label">Сессия</div><div class="summary-value">'+dur+' сек</div></div><div class="summary-item"><div class="summary-label">Дата</div><div class="summary-value">'+date+'</div></div></div></div>';
+  o.innerHTML='<div class="modal" style="max-width:600px"><div class="modal-header"><div class="modal-title">Участник \u2116'+(i+1)+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="summary-grid"><div class="summary-item"><div class="summary-label">Грейд</div><div class="summary-value"><span class="badge grade">'+esc(p.grade||'\u2014')+'</span></div></div><div class="summary-item"><div class="summary-label">Должность</div><div class="summary-value">'+esc(p.position||'\u2014')+'</div></div><div class="summary-item"><div class="summary-label">Кликов</div><div class="summary-value">'+(p.totalClicks||0)+'</div></div><div class="summary-item"><div class="summary-label">Сессия</div><div class="summary-value">'+dur+' сек</div></div><div class="summary-item"><div class="summary-label">Дата</div><div class="summary-value">'+date+'</div></div></div></div>';
   document.body.appendChild(o);
 }
 
 function deleteParticipant(i){
   const p=participants[i];if(!p||!p._key)return;
-  showConfirm('Участник &#8470;'+(i+1),async()=>{
-    if(await fbDelete('onboarding_participants/'+p._key)){
+  showConfirm('участника \u2116'+(i+1),async()=>{
+    if(await fbDelete('onboarding_participants/'+currentStudyKey+'/'+p._key)){
       participants.splice(i,1);document.querySelectorAll('.modal-overlay').forEach(e=>e.remove());render();
     } else alert('Ошибка');
   });
@@ -274,11 +446,13 @@ function deleteParticipant(i){
 
 function exportCSV(){
   if(!participants.length)return alert('Нет данных');
-  const h=['№','Грейд','Должность','Дата','Кликов','Сессия (сек)'];
+  const curStudy=studies.find(s=>s._key===currentStudyKey);
+  const h=['\u2116','Грейд','Должность','Дата','Кликов','Сессия (сек)'];
   const rows=participants.map((p,i)=>[i+1,'"'+(p.grade||'').replace(/"/g,'""')+'"','"'+(p.position||'').replace(/"/g,'""')+'"','"'+(p.registeredAt||'')+'"',p.totalClicks||0,p.sessionDuration?Math.round(p.sessionDuration/1000):0].join(','));
   const csv='\uFEFF'+h.join(',')+"\n"+rows.join("\n");
   const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);
-  const a=document.createElement('a');a.href=u;a.download='onboarding_'+new Date().toISOString().slice(0,10)+'.csv';
+  const sname=(curStudy?curStudy.name:'export').replace(/[^a-zA-Z0-9\u0400-\u04FF_-]/g,'_');
+  const a=document.createElement('a');a.href=u;a.download=sname+'_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();URL.revokeObjectURL(u);
 }
 
@@ -296,7 +470,7 @@ async function refreshData(){
   await fetchAll();render();
 }
 
-(async()=>{await fetchAll();render()})()
+(async()=>{await fetchAll();render()})();
 
 </script>
 </body>
