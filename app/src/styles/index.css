@@ -982,3 +982,236 @@ body {
   opacity: 1;
 }
 
+/* === Registration Page === */
+.registration-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.registration-card {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.registration-logo {
+  margin-bottom: 8px;
+}
+
+.registration-logo .logo-svg {
+  height: 36px;
+  width: auto;
+}
+
+.registration-title {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 32px;
+  color: #191919;
+  text-align: center;
+}
+
+.registration-subtitle {
+  font-size: 15px;
+  line-height: 20px;
+  color: #676767;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.registration-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.registration-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.registration-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #191919;
+  line-height: 18px;
+  letter-spacing: 0.14px;
+}
+
+.registration-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  background: rgba(25, 25, 25, 0.05);
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 20px;
+  color: #191919;
+  outline: none;
+  transition: outline 0.15s;
+}
+
+.registration-input:focus {
+  outline: 2px solid #835de1;
+}
+
+.registration-input::placeholder {
+  color: #949494;
+}
+
+.registration-submit {
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+  background: #835de1;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  transition: background 0.15s;
+}
+
+.registration-submit:hover:not(.disabled) {
+  background: #7249d1;
+}
+
+.registration-submit.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === Registration Dropdown === */
+.reg-dropdown {
+  position: relative;
+}
+
+.reg-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(25, 25, 25, 0.05);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.reg-dropdown-trigger:hover {
+  background: rgba(25, 25, 25, 0.08);
+}
+
+.reg-dropdown-trigger.open {
+  outline: 2px solid #835de1;
+}
+
+.reg-dropdown-trigger-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reg-dropdown-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #191919;
+  line-height: 18px;
+  letter-spacing: 0.14px;
+}
+
+.reg-dropdown-value {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  color: #191919;
+}
+
+.reg-dropdown-placeholder {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  color: #949494;
+}
+
+.reg-dropdown-chevron {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.reg-dropdown-chevron.open {
+  transform: rotate(180deg);
+}
+
+.reg-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.reg-dropdown-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  color: #191919;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.reg-dropdown-option:hover {
+  background: rgba(25, 25, 25, 0.04);
+}
+
+.reg-dropdown-option.selected {
+  background: rgba(131, 93, 225, 0.08);
+  color: #835de1;
+  font-weight: 500;
+}

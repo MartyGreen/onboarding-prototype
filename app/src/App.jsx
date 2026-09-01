@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DocumentsProvider } from './data/DocumentsContext';
 import { BiApiMethodsProvider } from './data/BiApiMethodsContext';
@@ -14,6 +14,7 @@ import BiApiMethodPage from './pages/BiApiMethodPage';
 import EditBiApiMethodPage from './pages/EditBiApiMethodPage';
 import NewBiApiMethodPage from './pages/NewBiApiMethodPage';
 import ModerateBiApiMethodPage from './pages/ModerateBiApiMethodPage';
+import RegistrationPage from './pages/RegistrationPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -26,7 +27,25 @@ function PlaceholderPage({ title }) {
   );
 }
 
+function getStoredUser() {
+  try {
+    const raw = localStorage.getItem('onboarding_current_user');
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return null;
+}
+
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(getStoredUser);
+
+  const handleRegistrationComplete = (participant) => {
+    setCurrentUser(participant);
+  };
+
+  if (!currentUser) {
+    return <RegistrationPage onComplete={handleRegistrationComplete} />;
+  }
+
   return (
     <DocumentsProvider>
     <BiApiMethodsProvider>

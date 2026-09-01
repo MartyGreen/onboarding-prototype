@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import LogoSvg from './LogoSvg';
 
@@ -31,6 +31,20 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [badgeHovered, setBadgeHovered] = useState(false);
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef(null);
+
+  const handleAvatarClick = () => {
+    clickCountRef.current += 1;
+    if (clickCountRef.current === 3) {
+      clickCountRef.current = 0;
+      clearTimeout(clickTimerRef.current);
+      window.open(`${base}dashboard.html`, '_blank');
+      return;
+    }
+    clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0; }, 500);
+  };
 
   const isPulsing = navHovered || badgeHovered;
 
@@ -113,8 +127,8 @@ export default function Sidebar() {
             ))}
           </div>
 
-          {/* User */}
-          <button className="sidebar-user">
+          {/* User — triple-click opens admin dashboard */}
+          <button className="sidebar-user" onClick={handleAvatarClick}>
             <div className="sidebar-avatar">
               <img src={`${base}assets/avatar-cat.jpg`} alt="Avatar" />
             </div>
