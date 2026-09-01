@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DocumentsProvider } from './data/DocumentsContext';
 import { BiApiMethodsProvider } from './data/BiApiMethodsContext';
 import { CollectionProvider } from './data/CollectionContext';
+import { TaskProvider } from './data/TaskContext';
 import Layout from './components/Layout';
 import DocumentListPage from './pages/DocumentListPage';
 import DocumentPage from './pages/DocumentPage';
@@ -47,6 +48,7 @@ export default function App() {
   }
 
   return (
+    <TaskProvider currentUser={currentUser}>
     <DocumentsProvider>
     <BiApiMethodsProvider>
     <CollectionProvider>
@@ -77,5 +79,6 @@ export default function App() {
     </CollectionProvider>
     </BiApiMethodsProvider>
     </DocumentsProvider>
+    </TaskProvider>
   );
 }

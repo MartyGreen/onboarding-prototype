@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Seed — создание исследования</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+  .log { background: #f5f5f5; border-radius: 8px; padding: 16px; margin-top: 20px; white-space: pre-wrap; font-size: 13px; font-family: monospace; }
+  .ok { color: #22c55e; }
+  .err { color: #ef4444; }
+  h1 { font-size: 22px; }
+  button { background: #835de1; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; cursor: pointer; margin-top: 16px; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<h1>🌱 Seed: создание исследования и заданий</h1>
+<p>Нажмите кнопку, чтобы создать исследование «Тегирование таблиц в каталоге» с 6 заданиями в Firebase.</p>
+<button id="btn" onclick="runSeed()">Создать исследование</button>
+<div class="log" id="log">Ожидание…</div>
+
+<script>
+const FB = 'https://datagatetest-4f190-default-rtdb.firebaseio.com';
+const logEl = document.getElementById('log');
+const btn = document.getElementById('btn');
+
+function log(msg, ok = true) {
+  logEl.innerHTML += `<span class="${ok ? 'ok' : 'err'}">${ok ? '✓' : '✗'} ${msg}</span>\n`;
+}
+
+async function fbPush(path, data) {
+  const res = await fetch(`${FB}/${path}.json`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const j = await res.json();
+  if (j.error) throw new Error(j.error);
+  return j.name;
+}
+
+async function runSeed() {
+  btn.disabled = true;
+  logEl.innerHTML = '';
+
+  try {
+    // 1. Create study
+    const now = new Date().toISOString();
+    const studyKey = await fbPush('onboarding_studies', {
+      name: 'Тегирование таблиц в каталоге',
+      description: 'Исследование работы с тегами: создание документации, поиск по тегам, редактирование тегов у таблиц в каталоге данных.',
+      active: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+    log(`Исследование создано: ${studyKey}`);
+
+    // 2. Create 6 tasks
+    const tasks = [
+      {
+        title: 'Создайте описание новой таблицы с тегами',
+        description: 'Вы создаёте описание новой таблицы в каталоге. Таблица относится к онлайн-бухгалтерии. Покажите, как вы сделаете так, чтобы другие пользователи могли это понять и потом найти таблицу.\n\nПример: stage.screpka_orders_company',
+        order: 0,
+      },
+      {
+        title: 'Создайте таблицу с несколькими тегами',
+        description: 'Создайте таблицу, которая относится и к выручке компании, и к данным из внешних источников. Покажите, как вы это отразите в документации.\n\nПример: stage.girbo_financial_result_simple',
+        order: 1,
+      },
+      {
+        title: 'Найдите таблицы, связанные с клиентом',
+        description: 'Вам нужно найти все таблицы, связанные с клиентом, но вы не знаете их названий. Найдите подходящие таблицы в каталоге.\n\nТег: клиент\nТаблицы: stage.client_%, datamart.client_%',
+        order: 2,
+      },
+      {
+        title: 'Найдите таблицы по теме общения с клиентом',
+        description: 'Вам нужно найти таблицы по теме «всевозможное общение с клиентом в чате Единого Клиентского Интерфейса», но вы не уверены, какой тег для этого использовался. Попробуйте найти нужные данные.\n\nТег: общение с клиентом\nВыводим все таблицы сервиса bennu на стейдже и в датамарте.',
+        order: 3,
+      },
+      {
+        title: 'Определите, почему показаны именно эти таблицы',
+        description: 'Вы получили результаты поиска. Определите, почему система показала именно эти таблицы, и выберите наиболее подходящую для того, чтобы прочитать текст сообщения.\n\nЦелевая таблица: stage.bennu_messages',
+        order: 4,
+      },
+      {
+        title: 'Исправьте неудачный тег у таблицы',
+        description: 'Вы заметили, что у таблицы указан неудачный или слишком общий тег. Измените его так, чтобы таблицу было легче находить другим пользователям.\n\nТаблица: datamart.jira_issue\nТекущий тег: «задачи» (слишком общий)',
+        order: 5,
+      },
+    ];
+
+    for (let i = 0; i < tasks.length; i++) {
+      const t = tasks[i];
+      const key = await fbPush(`onboarding_tasks/${studyKey}`, {
+        ...t,
+        active: true,
+        createdAt: now,
+        updatedAt: now,
+      });
+      log(`Задание ${i + 1}/6: «${t.title}» → ${key}`);
+    }
+
+    log('\n🎉 Готово! Исследование и все 6 заданий созданы.');
+    log(`Study key: ${studyKey}`);
+    log('\nМожно закрыть эту страницу и перейти в админку или прототип.');
+
+  } catch (e) {
+    log(`Ошибка: ${e.message}`, false);
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

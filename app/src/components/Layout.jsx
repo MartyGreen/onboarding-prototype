@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { AlertProvider } from './SuccessAlert';
 import ReleaseModal from './ReleaseModal';
+import TaskModal from './TaskModal';
 
 export default function Layout() {
   const [releaseOpen, setReleaseOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function Layout() {
         </div>
       </div>
       {releaseOpen && <ReleaseModal onClose={() => setReleaseOpen(false)} />}
+      <TaskModal />
     </>
   );
 }

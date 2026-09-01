@@ -5,6 +5,18 @@ import RegistrationDropdown from '../components/RegistrationDropdown';
 /* ===== Firebase Realtime Database (REST API) ===== */
 const FIREBASE_DB_URL = 'https://datagatetest-4f190-default-rtdb.firebaseio.com';
 
+async function fbFetch(path) {
+  try {
+    const res = await fetch(`${FIREBASE_DB_URL}/${path}.json`);
+    const data = await res.json();
+    if (!data) return [];
+    return Object.entries(data).map(([key, val]) => ({ ...val, _key: key }));
+  } catch (err) {
+    console.warn('Firebase fetch failed:', err);
+    return [];
+  }
+}
+
 async function firebasePush(path, data) {
   try {
     const res = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
@@ -43,30 +55,44 @@ const POSITION_OPTIONS = [
 export default function RegistrationPage({ onComplete }) {
   const [grade, setGrade] = useState('');
   const [position, setPosition] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const canSubmit = grade && position;
+  const canSubmit = grade && position && !submitting;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!canSubmit) return;
+    setSubmitting(true);
+
+    // 1. Find active study
+    const studies = await fbFetch('onboarding_studies');
+    const activeStudy = studies.find((s) => s.active);
+    const studyKey = activeStudy ? activeStudy._key : null;
 
     const participant = {
       id: Date.now(),
       grade,
       position,
       registeredAt: new Date().toISOString(),
+      studyKey: studyKey || null,
+      currentTaskIndex: 0,
+      taskProgress: [],
+      allTasksCompleted: false,
     };
 
-    // Сохраняем текущего пользователя
+    // 2. Save to Firebase — into study-specific collection if study exists, else global
+    const fbPath = studyKey
+      ? `onboarding_participants/${studyKey}`
+      : 'onboarding_participants_global';
+
+    const fbKey = await firebasePush(fbPath, participant);
+    if (fbKey) {
+      participant._firebaseKey = fbKey;
+    }
+
+    // 3. Save to localStorage
     localStorage.setItem('onboarding_current_user', JSON.stringify(participant));
 
-    // Отправляем в Firebase
-    firebasePush('onboarding_participants_global', participant).then((fbKey) => {
-      if (fbKey) {
-        participant._firebaseKey = fbKey;
-        localStorage.setItem('onboarding_current_user', JSON.stringify(participant));
-      }
-    });
-
+    setSubmitting(false);
     onComplete(participant);
   };
 
@@ -104,7 +130,7 @@ export default function RegistrationPage({ onComplete }) {
           onClick={handleSubmit}
           disabled={!canSubmit}
         >
-          Начать исследование
+          {submitting ? 'Загрузка…' : 'Начать исследование'}
         </button>
       </div>
     </div>
