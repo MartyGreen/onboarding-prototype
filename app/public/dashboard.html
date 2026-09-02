@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Админка — Исследования</title>
 <style>
 @font-face{font-family:"TT Norms Pro Tochka";src:url("/onboarding-prototype/fonts/TT_Norms_Pro_Tochka_Regular.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -201,6 +202,7 @@ async function fetchStudyData(){
   ]);
   tasks=t.sort((a,b)=>(a.order||0)-(b.order||0));
   participants=p;
+  console.log('[dashboard] studyKey=',currentStudyKey,'tasks=',tasks.length,'participants=',participants.length,participants);
 }
 async function fetchAll(){await fetchStudies();await fetchStudyData()}
 
