@@ -202,8 +202,10 @@ async function fetchStudyData(){
   ]);
   tasks=t.sort((a,b)=>(a.order||0)-(b.order||0));
   participants=p;
-  console.log('[dashboard] studyKey=',currentStudyKey,'tasks=',tasks.length,'participants=',participants.length,participants);
+  console.log('[dashboard v2] studyKey=',currentStudyKey,'tasks=',tasks.length,'participants=',participants.length,participants);
 }
+/* version marker — if you see this in page source, cache is fresh */
+const _DASHBOARD_VERSION='2026-09-02-v2';
 async function fetchAll(){await fetchStudies();await fetchStudyData()}
 
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
