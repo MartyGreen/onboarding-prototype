@@ -88,8 +88,8 @@ export function TaskProvider({ currentUser, children }) {
     init();
   }, [currentUser]);
 
-  // Complete current task
-  const completeCurrentTask = useCallback(() => {
+  // Advance to next task (shared logic for complete & skip)
+  const advanceTask = useCallback((status) => {
     if (allCompleted || !tasks.length) return;
 
     const task = tasks[currentTaskIndex];
@@ -103,6 +103,7 @@ export function TaskProvider({ currentUser, children }) {
       title: task.title,
       completedAt: new Date().toISOString(),
       durationMs: duration,
+      status, // 'completed' | 'skipped'
     };
 
     const newProgress = [...taskProgress, progressEntry];
@@ -135,6 +136,12 @@ export function TaskProvider({ currentUser, children }) {
     }
   }, [allCompleted, tasks, currentTaskIndex, taskStartTime, taskProgress, currentUser, studyKey]);
 
+  // Complete current task
+  const completeCurrentTask = useCallback(() => advanceTask('completed'), [advanceTask]);
+
+  // Skip current task (couldn't complete)
+  const skipCurrentTask = useCallback(() => advanceTask('skipped'), [advanceTask]);
+
   const currentTask = !allCompleted && tasks.length > 0 ? tasks[currentTaskIndex] : null;
 
   return (
@@ -148,6 +155,7 @@ export function TaskProvider({ currentUser, children }) {
         taskProgress,
         allCompleted,
         completeCurrentTask,
+        skipCurrentTask,
         loading,
       }}
     >

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Seed — тестовые участники</title>
+<style>
+  body{font-family:-apple-system,sans-serif;max-width:700px;margin:40px auto;padding:0 20px}
+  .log{background:#f5f5f5;border-radius:8px;padding:16px;margin-top:20px;white-space:pre-wrap;font-size:13px;font-family:monospace;max-height:500px;overflow-y:auto}
+  .ok{color:#22c55e}.err{color:#ef4444}.info{color:#835de1}
+  h1{font-size:22px}p{color:#555;line-height:1.5}
+  button{background:#835de1;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer;margin-top:16px;margin-right:8px}
+  button:disabled{opacity:.4;cursor:not-allowed}button.sec{background:#676767}
+</style>
+</head>
+<body>
+<h1>👤 Seed: тестовые участники с прогрессом</h1>
+<p>Создаёт 3 участника:<br>
+<b>1</b> — завершил все (4✅ 2⏭)<br>
+<b>2</b> — в процессе (3 из 6)<br>
+<b>3</b> — только зарегистрировался</p>
+<button id="btn" onclick="runSeed()">Создать</button>
+<button class="sec" onclick="clearTest()">Удалить тестовых</button>
+<div class="log" id="log">Ожидание…</div>
+<script>
+const FB='https://datagatetest-4f190-default-rtdb.firebaseio.com';
+const L=document.getElementById('log');
+function log(m,c='ok'){L.innerHTML+=`<span class="${c}">${c==='ok'?'✓':c==='err'?'✗':'ℹ'} ${m}</span>\n`;L.scrollTop=L.scrollHeight}
+async function fbGet(p){const r=await fetch(`${FB}/${p}.json`);const d=await r.json();if(!d)return[];return Object.entries(d).map(([k,v])=>({...v,_key:k}))}
+async function fbPush(p,d){const r=await fetch(`${FB}/${p}.json`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const j=await r.json();if(j.error)throw new Error(j.error);return j.name}
+async function fbDel(p){await fetch(`${FB}/${p}.json`,{method:'DELETE'})}
+
+async function runSeed(){
+  document.getElementById('btn').disabled=true;L.innerHTML='';
+  try{
+    log('Ищу исследование…','info');
+    const studies=await fbGet('onboarding_studies');
+    const s=studies.find(x=>x.active);
+    if(!s){log('Нет активного исследования — запустите seed.html','err');document.getElementById('btn').disabled=false;return}
+    const sk=s._key;log(`«${s.name}» → ${sk}`);
+    const tasks=(await fbGet(`onboarding_tasks/${sk}`)).filter(t=>t.active!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    log(`Заданий: ${tasks.length}`);
+    if(!tasks.length){log('Нет заданий!','err');return}
+    const now=Date.now();const keys=[];
+
+    // P1: завершил все
+    log('\n── Участник 1: завершил все ──','info');
+    const pr1=tasks.map((t,i)=>({taskKey:t._key,title:t.title,status:(i===2||i===4)?'skipped':'completed',durationMs:20000+Math.round(Math.random()*180000),completedAt:new Date(now-(tasks.length-i)*300000).toISOString()}));
+    const k1=await fbPush(`onboarding_participants/${sk}`,{id:now,grade:'Senior',position:'Data Engineer',registeredAt:new Date(now-3600000).toISOString(),studyKey:sk,currentTaskIndex:tasks.length,taskProgress:pr1,allTasksCompleted:true,allTasksCompletedAt:new Date(now-300000).toISOString()});
+    keys.push(k1);log(`Senior / Data Engineer — ✅4 ⏭2 → ${k1}`);
+
+    // P2: в процессе
+    log('\n── Участник 2: в процессе ──','info');
+    const pr2=tasks.slice(0,3).map((t,i)=>({taskKey:t._key,title:t.title,status:i===1?'skipped':'completed',durationMs:15000+Math.round(Math.random()*120000),completedAt:new Date(now-(3-i)*240000).toISOString()}));
+    const k2=await fbPush(`onboarding_participants/${sk}`,{id:now+1,grade:'Middle',position:'Data Analyst',registeredAt:new Date(now-1800000).toISOString(),studyKey:sk,currentTaskIndex:3,taskProgress:pr2,allTasksCompleted:false});
+    keys.push(k2);log(`Middle / Data Analyst — ✅2 ⏭1 (3/${tasks.length}) → ${k2}`);
+
+    // P3: не начинал
+    log('\n── Участник 3: не начинал ──','info');
+    const k3=await fbPush(`onboarding_participants/${sk}`,{id:now+2,grade:'Junior',position:'Frontend Developer',registeredAt:new Date(now-600000).toISOString(),studyKey:sk,currentTaskIndex:0,taskProgress:[],allTasksCompleted:false});
+    keys.push(k3);log(`Junior / Frontend Developer — не начинал → ${k3}`);
+
+    localStorage.setItem('seed_pkeys',JSON.stringify({sk,keys}));
+    log(`\n🎉 Готово! Откройте dashboard.html → Участники`,'info');
+  }catch(e){log(`Ошибка: ${e.message}`,'err');document.getElementById('btn').disabled=false}
+}
+
+async function clearTest(){
+  L.innerHTML='';
+  const d=JSON.parse(localStorage.getItem('seed_pkeys')||'null');
+  if(!d||!d.keys.length){log('Нет сохранённых ключей','err');return}
+  log(`Удаляю ${d.keys.length} участников…`,'info');
+  for(const k of d.keys){try{await fbDel(`onboarding_participants/${d.sk}/${k}`);log(`Удалён: ${k}`)}catch(e){log(e.message,'err')}}
+  localStorage.removeItem('seed_pkeys');
+  log('Все тестовые удалены','info');
+  document.getElementById('btn').disabled=false;
+}
+</script>
+</body>
+</html>
