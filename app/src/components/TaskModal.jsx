@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTaskContext } from '../data/TaskContext';
 
 export default function TaskModal() {
@@ -6,6 +6,9 @@ export default function TaskModal() {
   const [showIntro, setShowIntro] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [completedDismissed, setCompletedDismissed] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [commentSent, setCommentSent] = useState(false);
+  const commentTimerRef = useRef(null);
 
   // Show intro modal whenever a new task appears
   useEffect(() => {
@@ -63,25 +66,8 @@ export default function TaskModal() {
             </div>
           )}
 
-          {/* Progress dots */}
-          <div className="task-modal-progress">
-            {ctx.tasks.map((_, i) => (
-              <div
-                key={i}
-                className={`task-dot ${
-                  i < ctx.currentTaskIndex
-                    ? 'done'
-                    : i === ctx.currentTaskIndex
-                    ? 'current'
-                    : ''
-                }`}
-              />
-            ))}
-          </div>
-
           <button
             className="task-modal-done-btn"
-            style={{ marginTop: '4px' }}
             onClick={() => setShowIntro(false)}
           >
             Начать задание
@@ -136,15 +122,55 @@ export default function TaskModal() {
         )}
 
         <div className="task-panel-actions">
-          <button className="task-panel-done-btn" onClick={ctx.completeCurrentTask}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Считаю задание выполненным
-          </button>
-          <button className="task-panel-skip-btn" onClick={ctx.skipCurrentTask}>
+          <a className="task-panel-skip-link" onClick={ctx.skipCurrentTask}>
             Не смог выполнить
-          </button>
+          </a>
+          <a className="task-panel-done-link" onClick={ctx.completeCurrentTask}>
+            Задание выполнил
+          </a>
+        </div>
+
+        {/* Inline comment area */}
+        <div className="task-panel-comment">
+          <div className="task-panel-comment-label">Что-то непонятно?</div>
+          <div className="task-panel-comment-input">
+            <textarea
+              className="task-panel-comment-textarea"
+              placeholder="Напишите комментарий…"
+              value={commentText}
+              onChange={(e) => {
+                setCommentText(e.target.value);
+                setCommentSent(false);
+              }}
+              rows={2}
+            />
+            {commentSent ? (
+              <div className="task-panel-comment-sent">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                  <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Отправлено
+              </div>
+            ) : (
+              <button
+                className="task-panel-comment-btn"
+                disabled={!commentText.trim()}
+                onClick={() => {
+                  if (!commentText.trim()) return;
+                  ctx.addComment(commentText);
+                  setCommentText('');
+                  setCommentSent(true);
+                  if (commentTimerRef.current) clearTimeout(commentTimerRef.current);
+                  commentTimerRef.current = setTimeout(() => setCommentSent(false), 3000);
+                }}
+                title="Отправить"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M2.5 8h11M9.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>

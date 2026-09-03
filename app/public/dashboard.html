@@ -213,6 +213,7 @@ function escA(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;
 
 function switchTab(t){
   currentTab=t;
+  history.replaceState(null,'','#'+t);
   document.querySelectorAll('.sidebar-item').forEach(e=>e.classList.remove('active'));
   const n=document.getElementById('nav-'+t);if(n)n.classList.add('active');
   render();
@@ -271,7 +272,6 @@ async function selectStudy(key){
 /* === STUDIES TAB === */
 function renderStudies(app){
   const total=studies.length;
-  const activeS=studies.find(s=>s.active);
   let cards='';
   if(!total){
     cards='<div class="empty-state"><div class="empty-icon">\ud83d\udcda</div><div>\u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0439 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442. \u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u0435\u0440\u0432\u043e\u0435.</div></div>';
@@ -279,11 +279,11 @@ function renderStudies(app){
     cards='<div class="studies-grid">';
     studies.forEach((s,i)=>{
       const date=s.createdAt?new Date(s.createdAt).toLocaleDateString('ru-RU'):'\u2014';
-      cards+='<div class="study-card'+(s.active?' is-active':'')+'" onclick="selectStudyAndSwitch(\''+s._key+'\')"><div class="study-card-header"><div class="study-card-name">'+esc(s.name)+'</div><div class="actions-cell" onclick="event.stopPropagation()">'+(s.active?'<span class="badge active-badge">\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0435</span>':'<button class="btn btn-sm btn-secondary" onclick="setActiveStudy(\''+s._key+'\')">\u0410\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>')+'</div></div><div class="study-card-desc">'+esc(s.description||'\u041d\u0435\u0442 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044f')+'</div><div class="study-card-meta"><span>\ud83d\udcc5 '+date+'</span></div><div class="actions-cell" style="margin-top:12px" onclick="event.stopPropagation()"><button class="btn btn-sm btn-secondary" onclick="openStudyModal('+i+')">\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button><button class="btn btn-sm btn-danger" onclick="confirmDeleteStudy('+i+')">\u0423\u0434\u0430\u043b\u0438\u0442\u044c</button></div></div>';
+      cards+='<div class="study-card'+(s.active?' is-active':'')+'" onclick="selectStudyAndSwitch(\''+s._key+'\')"><div class="study-card-header"><div class="study-card-name">'+esc(s.name)+'</div><div class="actions-cell" onclick="event.stopPropagation()">'+(s.active?'<button class="btn btn-sm btn-danger" onclick="deactivateStudy(\''+s._key+'\')">\u0414\u0435\u0430\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>':'<button class="btn btn-sm btn-secondary" onclick="setActiveStudy(\''+s._key+'\')">\u0410\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>')+'</div></div><div class="study-card-desc">'+esc(s.description||'\u041d\u0435\u0442 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044f')+'</div><div class="study-card-meta"><span>\ud83d\udcc5 '+date+'</span></div><div class="actions-cell" style="margin-top:12px" onclick="event.stopPropagation()"><button class="btn btn-sm btn-secondary" onclick="openStudyModal('+i+')">\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button><button class="btn btn-sm btn-danger" onclick="confirmDeleteStudy('+i+')">\u0423\u0434\u0430\u043b\u0438\u0442\u044c</button></div></div>';
     });
     cards+='</div>';
   }
-  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udcda \u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f</h1><div class="page-subtitle">\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f\u043c\u0438 \u0438 \u0438\u0445 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u043c\u0438</div></div><div class="page-actions"><button class="btn btn-primary" onclick="openStudyModal(-1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg> \u0421\u043e\u0437\u0434\u0430\u0442\u044c</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">\u0412\u0441\u0435\u0433\u043e</div><div class="stat-value brand">'+total+'</div></div><div class="stat-card"><div class="stat-label">\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0435</div><div class="stat-value green">'+(activeS?esc(activeS.name):'\u2014')+'</div></div></div>'+cards;
+  app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udcda \u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f</h1><div class="page-subtitle">\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f\u043c\u0438 \u0438 \u0438\u0445 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u043c\u0438</div></div><div class="page-actions"><button class="btn btn-primary" onclick="openStudyModal(-1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg> \u0421\u043e\u0437\u0434\u0430\u0442\u044c</button></div></div>'+cards;
 }
 
 /* === STUDY CRUD === */
@@ -322,6 +322,11 @@ async function setActiveStudy(key){
   }
   const target=studies.find(s=>s._key===key);
   if(target){target.active=true;await fbUpdate('onboarding_studies/'+key,{active:true})}
+  render();
+}
+async function deactivateStudy(key){
+  const target=studies.find(s=>s._key===key);
+  if(target){target.active=false;await fbUpdate('onboarding_studies/'+key,{active:false})}
   render();
 }
 function selectStudyAndSwitch(key){
@@ -448,31 +453,10 @@ function renderParticipants(app){
   app.innerHTML='<div class="page-header"><div class="page-header-left"><h1 class="page-title">\ud83d\udc65 Участники</h1><div class="page-subtitle">'+esc(curStudy?curStudy.name:'')+' \u00b7 '+n+' участников</div></div><div class="page-actions"><button class="btn btn-secondary" onclick="exportCSV()">Экспорт CSV</button></div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">Участников</div><div class="stat-value brand">'+n+'</div></div><div class="stat-card"><div class="stat-label">Завершили все</div><div class="stat-value green">'+doneCount+'</div></div><div class="stat-card"><div class="stat-label">В процессе</div><div class="stat-value orange">'+inProgress+'</div></div><div class="stat-card"><div class="stat-label">Не начали</div><div class="stat-value">'+notStarted+'</div></div></div><div class="card"><div class="card-title">Список участников</div>'+rows+'</div>';
 }
 
-/* === DETAIL + DELETE + CSV + CONFIRM + INIT === */
+/* === DETAIL (opens separate page) + DELETE + CSV + CONFIRM + INIT === */
 function showDetail(i){
-  const p=participants[i];if(!p)return;
-  const date=p.registeredAt?new Date(p.registeredAt).toLocaleString('ru-RU'):'\u2014';
-  const st=getTaskStats(p);
-  const statusText=st.done?'Завершил все задания':(st.completed+st.skipped>0?'В процессе ('+(st.completed+st.skipped)+' из '+st.total+')':'Не начал задания');
-  const totalSec=Math.round(st.totalMs/1000);
-  let taskRows='';
-  if(st.progress.length>0){
-    taskRows='<div style="margin-top:16px"><div style="font-size:14px;font-weight:600;margin-bottom:8px">Прогресс по заданиям</div><div style="display:flex;flex-direction:column;gap:6px">';
-    st.progress.forEach((tp,j)=>{
-      const icon=tp.status==='completed'?'\u2705':'\u23ed\ufe0f';
-      const label=tp.status==='completed'?'Выполнено':'Пропущено';
-      const durSec=tp.durationMs?Math.round(tp.durationMs/1000):0;
-      const time=tp.completedAt?new Date(tp.completedAt).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'';
-      taskRows+='<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--c-field);border-radius:var(--r-s);font-size:13px"><span style="min-width:22px">'+icon+'</span><span style="flex:1;font-weight:500">'+esc(tp.title||'Задание '+(j+1))+'</span><span style="color:var(--c-secondary)">'+label+'</span><span style="color:var(--c-placeholder);min-width:50px;text-align:right">'+durSec+'с</span><span style="color:var(--c-placeholder);min-width:50px;text-align:right">'+time+'</span></div>';
-    });
-    taskRows+='</div></div>';
-  } else {
-    taskRows='<div style="margin-top:16px;padding:16px;background:var(--c-field);border-radius:var(--r-s);text-align:center;color:var(--c-placeholder);font-size:13px">Участник ещё не приступал к заданиям</div>';
-  }
-  const o=document.createElement('div');o.className='modal-overlay';
-  o.onclick=e=>{if(e.target===o)o.remove()};
-  o.innerHTML='<div class="modal" style="max-width:640px"><div class="modal-header"><div class="modal-title">Участник \u2116'+(i+1)+'</div><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&#10005;</button></div><div class="summary-grid"><div class="summary-item"><div class="summary-label">Грейд</div><div class="summary-value"><span class="badge grade">'+esc(p.grade||'\u2014')+'</span></div></div><div class="summary-item"><div class="summary-label">Должность</div><div class="summary-value">'+esc(p.position||'\u2014')+'</div></div><div class="summary-item"><div class="summary-label">Статус</div><div class="summary-value">'+statusText+'</div></div><div class="summary-item"><div class="summary-label">Выполнено</div><div class="summary-value" style="color:#2e7d32;font-weight:600">'+st.completed+' из '+st.total+'</div></div><div class="summary-item"><div class="summary-label">Пропущено</div><div class="summary-value" style="color:#e65100;font-weight:600">'+st.skipped+'</div></div><div class="summary-item"><div class="summary-label">Общее время</div><div class="summary-value">'+totalSec+' сек</div></div><div class="summary-item"><div class="summary-label">Дата регистрации</div><div class="summary-value">'+date+'</div></div></div>'+taskRows+'</div>';
-  document.body.appendChild(o);
+  const p=participants[i];if(!p||!p._key)return;
+  window.open('/onboarding-prototype/participant.html?study='+encodeURIComponent(currentStudyKey)+'&key='+encodeURIComponent(p._key)+'&i='+(i+1),'_blank');
 }
 
 function deleteParticipant(i){
@@ -522,7 +506,14 @@ async function refreshData(){
   await fetchAll();render();
 }
 
-(async()=>{await fetchAll();render()})();
+// Open tab from URL hash (e.g. #participants)
+function applyHash(){
+  const h=location.hash.replace('#','');
+  if(h==='studies'||h==='tasks'||h==='participants'){switchTab(h)}
+}
+
+(async()=>{await fetchAll();const h=location.hash.replace('#','');if(h==='studies'||h==='tasks'||h==='participants'){currentTab=h;document.querySelectorAll('.sidebar-item').forEach(e=>e.classList.remove('active'));const n=document.getElementById('nav-'+h);if(n)n.classList.add('active')};render()})();
+window.addEventListener('hashchange',applyHash);
 
 </script>
 </body>

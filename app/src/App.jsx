@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DocumentsProvider } from './data/DocumentsContext';
 import { BiApiMethodsProvider } from './data/BiApiMethodsContext';
@@ -15,7 +15,6 @@ import BiApiMethodPage from './pages/BiApiMethodPage';
 import EditBiApiMethodPage from './pages/EditBiApiMethodPage';
 import NewBiApiMethodPage from './pages/NewBiApiMethodPage';
 import ModerateBiApiMethodPage from './pages/ModerateBiApiMethodPage';
-import RegistrationPage from './pages/RegistrationPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -39,13 +38,9 @@ function getStoredUser() {
 export default function App() {
   const [currentUser, setCurrentUser] = useState(getStoredUser);
 
-  const handleRegistrationComplete = (participant) => {
+  const handleRegistrationComplete = useCallback((participant) => {
     setCurrentUser(participant);
-  };
-
-  if (!currentUser) {
-    return <RegistrationPage onComplete={handleRegistrationComplete} />;
-  }
+  }, []);
 
   return (
     <TaskProvider currentUser={currentUser}>
@@ -54,7 +49,7 @@ export default function App() {
     <CollectionProvider>
     <BrowserRouter basename="/onboarding-prototype">
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout currentUser={currentUser} onRegistrationComplete={handleRegistrationComplete} />}>
           <Route index element={<DocumentListPage />} />
           <Route path="document/:id" element={<DocumentPage />} />
           <Route path="document/:id/edit-fields" element={<EditFieldsPage />} />

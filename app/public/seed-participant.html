@@ -42,15 +42,24 @@ async function runSeed(){
     if(!tasks.length){log('Нет заданий!','err');return}
     const now=Date.now();const keys=[];
 
+    function fakeClicks(n){
+      const arr=[];for(let i=0;i<n;i++){
+        const px=Math.random(),py=Math.random();
+        const tags=['div','button','span','a','input','svg','path'];
+        const urls=['/onboarding-prototype/','/onboarding-prototype/document/1','/onboarding-prototype/api'];
+        arr.push({x:Math.round(px*1440),y:Math.round(py*900),px:+px.toFixed(4),py:+py.toFixed(4),tag:tags[Math.floor(Math.random()*tags.length)],text:'Элемент '+(i+1),selector:'div.main > div > '+tags[Math.floor(Math.random()*tags.length)],url:urls[Math.floor(Math.random()*urls.length)],t:now-Math.round(Math.random()*300000)});
+      }return arr.sort((a,b)=>a.t-b.t);
+    }
+
     // P1: завершил все
     log('\n── Участник 1: завершил все ──','info');
-    const pr1=tasks.map((t,i)=>({taskKey:t._key,title:t.title,status:(i===2||i===4)?'skipped':'completed',durationMs:20000+Math.round(Math.random()*180000),completedAt:new Date(now-(tasks.length-i)*300000).toISOString()}));
+    const pr1=tasks.map((t,i)=>({taskKey:t._key,title:t.title,status:(i===2||i===4)?'skipped':'completed',durationMs:20000+Math.round(Math.random()*180000),completedAt:new Date(now-(tasks.length-i)*300000).toISOString(),clicks:fakeClicks(5+Math.floor(Math.random()*15))}));
     const k1=await fbPush(`onboarding_participants/${sk}`,{id:now,grade:'Senior',position:'Data Engineer',registeredAt:new Date(now-3600000).toISOString(),studyKey:sk,currentTaskIndex:tasks.length,taskProgress:pr1,allTasksCompleted:true,allTasksCompletedAt:new Date(now-300000).toISOString()});
     keys.push(k1);log(`Senior / Data Engineer — ✅4 ⏭2 → ${k1}`);
 
     // P2: в процессе
     log('\n── Участник 2: в процессе ──','info');
-    const pr2=tasks.slice(0,3).map((t,i)=>({taskKey:t._key,title:t.title,status:i===1?'skipped':'completed',durationMs:15000+Math.round(Math.random()*120000),completedAt:new Date(now-(3-i)*240000).toISOString()}));
+    const pr2=tasks.slice(0,3).map((t,i)=>({taskKey:t._key,title:t.title,status:i===1?'skipped':'completed',durationMs:15000+Math.round(Math.random()*120000),completedAt:new Date(now-(3-i)*240000).toISOString(),clicks:fakeClicks(3+Math.floor(Math.random()*10))}));
     const k2=await fbPush(`onboarding_participants/${sk}`,{id:now+1,grade:'Middle',position:'Data Analyst',registeredAt:new Date(now-1800000).toISOString(),studyKey:sk,currentTaskIndex:3,taskProgress:pr2,allTasksCompleted:false});
     keys.push(k2);log(`Middle / Data Analyst — ✅2 ⏭1 (3/${tasks.length}) → ${k2}`);
 

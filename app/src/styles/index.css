@@ -374,6 +374,14 @@
   flex-shrink: 0;
 }
 
+/* «Новое исследование» — always primary, never fades */
+.sidebar-item-research {
+  color: #191919 !important;
+}
+.sidebar-item-research .sidebar-item-icon {
+  opacity: 1 !important;
+}
+
 /* Badge */
 .sidebar-badge {
   background: #f98e88;
@@ -989,14 +997,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9f9f9;
+  background: rgba(25, 25, 25, 0.40);
   padding: 20px;
   box-sizing: border-box;
   overflow: auto;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1100;
 }
 
 .registration-card {
@@ -1387,10 +1395,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 340px;
+  width: 300px;
   padding: 16px;
-  background: #ffffff;
-  border: 1px solid #e8e8e8;
+  background: #eaeaea;
+  border: 1px solid #dedede;
   border-radius: 14px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.04);
   animation: taskPanelIn 0.25s ease-out;
@@ -1417,7 +1425,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #835de1;
+  color: #6b6b6b;
 }
 
 .task-panel-title {
@@ -1448,46 +1456,278 @@ body {
 
 .task-panel-actions {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.task-panel-done-btn {
-  width: 100%;
-  height: 40px;
-  border: none;
-  background: #835de1;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  color: #ffffff;
-  cursor: pointer;
-  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background 0.15s;
-}
-.task-panel-done-btn:hover {
-  background: #7047d4;
 }
 
-.task-panel-skip-btn {
-  width: 100%;
-  height: 36px;
-  border: none;
-  background: transparent;
-  border-radius: 8px;
+.task-panel-done-link {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #835de1;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.task-panel-done-link:hover {
+  color: #7047d4;
+  text-decoration: underline;
+}
+
+.task-panel-skip-link {
   font-family: inherit;
   font-size: 13px;
   font-weight: 400;
   color: #949494;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  transition: color 0.15s;
 }
-.task-panel-skip-btn:hover {
-  background: #f5f5f5;
+.task-panel-skip-link:hover {
   color: #6b6b6b;
+  text-decoration: underline;
+}
+
+
+/* ── Inline comment inside task-panel ── */
+.task-panel-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 -16px -16px;
+  padding: 10px 16px 14px;
+  background: #e0e0e0;
+  border-top: 1px solid #d4d4d4;
+  border-radius: 0 0 14px 14px;
+}
+
+.task-panel-comment-label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19px;
+  color: #191919;
+}
+
+.task-panel-comment-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.task-panel-comment-textarea {
+  flex: 1;
+  min-height: 36px;
+  max-height: 80px;
+  padding: 7px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 17px;
+  color: #191919;
+  background: #fafafa;
+  resize: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  box-sizing: border-box;
+}
+.task-panel-comment-textarea::placeholder {
+  color: #b0b0b0;
+}
+.task-panel-comment-textarea:focus {
+  border-color: #835de1;
+  box-shadow: 0 0 0 2px rgba(131, 93, 225, 0.10);
+  background: #fff;
+}
+
+.task-panel-comment-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #835de1;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, opacity 0.15s;
+}
+.task-panel-comment-btn:hover:not(:disabled) {
+  background: #7047d4;
+}
+.task-panel-comment-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.task-panel-comment-sent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3abe6a;
+  white-space: nowrap;
+  animation: commentSentIn 0.3s ease-out;
+}
+.task-panel-comment-sent svg {
+  color: #3abe6a;
+  flex-shrink: 0;
+}
+
+@keyframes commentSentIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* ── Welcome Modal (Figma node 4206:154291) ── */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(25, 25, 25, 0.40);
+  padding: 20px;
+}
+
+.welcome-modal {
+  width: 480px;
+  max-width: 95vw;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14);
+  animation: welcomeModalIn 0.35s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes welcomeModalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Illustration area */
+.welcome-illustration {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  background: #d6cef3;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.welcome-hand {
+  position: absolute;
+  width: 336px;
+  height: auto;
+  top: -48px;
+  left: 94px;
+  transform: rotate(-11deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.welcome-cloud {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Bottom-center-left cloud (small) */
+.welcome-cloud-1 {
+  width: 195px;
+  bottom: -2px;
+  left: 118px;
+}
+
+/* Right-middle cloud */
+.welcome-cloud-2 {
+  width: 200px;
+  top: 66px;
+  right: -12px;
+}
+
+/* Top-left/center large cloud */
+.welcome-cloud-3 {
+  width: 172px;
+  top: -2px;
+  left: -10px;
+  right: auto;
+}
+
+/* Content area */
+.welcome-content {
+  background: #ffffff;
+  padding: 16px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.welcome-title {
+  font-family: 'TT Norms Pro Tochka', sans-serif;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: 0;
+  color: #191919;
+  margin: 0 0 14px;
+}
+
+.welcome-text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+}
+
+.welcome-text p {
+  font-family: 'TT Norms Pro Tochka', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  color: #191919;
+  margin: 0;
+}
+
+/* Footer with button */
+.welcome-footer {
+  background: #ffffff;
+  padding: 0 20px 20px;
+}
+
+.welcome-start-btn {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: #835de1;
+  font-family: 'TT Norms Pro Tochka', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.welcome-start-btn:hover {
+  background: #7350c9;
+}
+
+.welcome-start-btn:active {
+  background: #6340b8;
 }
 

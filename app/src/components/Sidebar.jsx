@@ -27,7 +27,7 @@ const CollapseChevron = () => (
   </svg>
 );
 
-export default function Sidebar() {
+export default function Sidebar({ onOpenResearch }) {
   const [collapsed, setCollapsed] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [badgeHovered, setBadgeHovered] = useState(false);
@@ -125,6 +125,15 @@ export default function Sidebar() {
                 <span>{item.label}</span>
               </NavLink>
             ))}
+
+            {/* Новое исследование — opens WelcomeModal */}
+            <button
+              className="sidebar-item sidebar-item-research"
+              onClick={onOpenResearch}
+            >
+              <img src={`${base}assets/icon-new-research.svg`} alt="" className="sidebar-item-icon" />
+              <span>Новое исследование</span>
+            </button>
           </div>
 
           {/* User — triple-click opens admin dashboard */}
