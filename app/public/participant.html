@@ -120,12 +120,12 @@ async function init(){
   const[sSnap,pSnap,tasksSnap]=await Promise.all([
     fetch(FB+'/onboarding_studies/'+studyId+'.json').then(r=>r.json()),
     fetch(FB+'/onboarding_participants/'+studyId+'/'+partKey+'.json').then(r=>r.json()),
-    fetch(FB+'/onboarding_tasks.json').then(r=>r.json())
+    fetch(FB+'/onboarding_tasks/'+studyId+'.json').then(r=>r.json())
   ]);
   if(!pSnap){document.getElementById('app').innerHTML='<div class="empty-state"><div class="empty-icon">\ud83d\udd0d</div><div class="empty-title">\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d</div></div>';return}
   const p=pSnap,study=sSnap||{};
   const progress=normProg(p.taskProgress);
-  const taskArr=tasksSnap?Object.entries(tasksSnap).filter(([k,v])=>(v.studyId||'')===studyId).map(([k,v],i)=>({id:k,...v,idx:i})):[];
+  const taskArr=tasksSnap?Object.entries(tasksSnap).map(([k,v])=>({id:k,...v})).sort((a,b)=>(a.order||0)-(b.order||0)):[];
   const done=progress.filter(e=>e&&e.completed).length;
   const total=Math.max(taskArr.length,progress.length);
   const totalTime=progress.reduce((s,e)=>s+(e&&e.durationMs||0),0);
@@ -163,7 +163,7 @@ async function init(){
     const clicks=normClicks(tp.clicks);
     tlh+='<div class="task-row" data-idx="'+i+'" onclick="selectTask('+i+')">';
     tlh+='<div class="task-num '+cls+'">'+(i+1)+'</div>';
-    tlh+='<div class="task-body"><div class="task-title">'+(task.title||'\u0417\u0430\u0434\u0430\u043d\u0438\u0435 '+(i+1))+'</div>';
+    tlh+='<div class="task-body"><div class="task-title">'+(task.title||tp.title||'\u0417\u0430\u0434\u0430\u043d\u0438\u0435 '+(i+1))+'</div>';
     tlh+='<div class="task-subtitle">'+clicks.length+' \u043a\u043b. \u00b7 '+fmtSec(tp.durationMs)+'</div></div>';
     tlh+='<div class="task-dur">'+fmtSec(tp.durationMs)+'</div>';
     tlh+='</div>';
@@ -180,8 +180,8 @@ function selectTask(idx){
   const task=window._taskArr[idx]||{};
   const clicks=normClicks(tp.clicks);
   let h='<div class="detail-header">';
-  h+='<div class="detail-title">'+(task.title||'\u0417\u0430\u0434\u0430\u043d\u0438\u0435 '+(idx+1))+'</div>';
-  if(task.description) h+='<div class="detail-desc">'+esc(task.description)+'</div>';
+  h+='<div class="detail-title">'+(task.title||tp.title||'\u0417\u0430\u0434\u0430\u043d\u0438\u0435 '+(idx+1))+'</div>';
+  
   h+='<div class="detail-chips">';
   h+='<span class="chip">'+(tp.completed?'\u2705 \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043e':tp.skipped?'\u23ed \u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e':'\u23f3 \u0412 \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u0435')+'</span>';
   h+='<span class="chip">\u23f1 <b>'+fmtSec(tp.durationMs)+'</b></span>';

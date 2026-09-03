@@ -472,7 +472,7 @@ function exportCSV(){
   if(!participants.length)return alert('Нет данных');
   const curStudy=studies.find(s=>s._key===currentStudyKey);
   const activeTasks=tasks.filter(t=>t.active!==false);
-  const taskHeaders=activeTasks.map((t,i)=>'Задание '+(i+1)+': '+t.title);
+  const taskHeaders=activeTasks.map((t,i)=>t.title||('Задание '+(i+1)));
   const h=['\u2116','Грейд','Должность','Дата','Статус','Выполнено','Пропущено','Общее время (сек)',...taskHeaders];
   const rows=participants.map((p,i)=>{
     const st=getTaskStats(p);
