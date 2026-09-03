@@ -5,7 +5,9 @@ export default function TaskModal() {
   const ctx = useTaskContext();
   const [showIntro, setShowIntro] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
-  const [completedDismissed, setCompletedDismissed] = useState(false);
+  const [completedDismissed, setCompletedDismissed] = useState(() => {
+    try { return localStorage.getItem('onboarding_completed_dismissed') === 'true'; } catch { return false; }
+  });
   const [commentText, setCommentText] = useState('');
   const [commentSent, setCommentSent] = useState(false);
   const commentTimerRef = useRef(null);
@@ -39,7 +41,10 @@ export default function TaskModal() {
             Выполнено: {completedCount} из {ctx.totalTasks}
             {skippedCount > 0 && <> · Пропущено: {skippedCount}</>}
           </div>
-          <button className="task-modal-done-btn" onClick={() => setCompletedDismissed(true)}>
+          <button className="task-modal-done-btn" onClick={() => {
+            setCompletedDismissed(true);
+            try { localStorage.setItem('onboarding_completed_dismissed', 'true'); } catch { /* ignore */ }
+          }}>
             Закрыть
           </button>
         </div>

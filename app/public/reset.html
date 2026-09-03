@@ -24,6 +24,7 @@ body{font-family:-apple-system,sans-serif;display:flex;align-items:center;justif
 function doReset(){
   // Полный сброс: удаляем пользователя и все данные сессии
   localStorage.removeItem('onboarding_current_user');
+  localStorage.removeItem('onboarding_completed_dismissed');
   localStorage.removeItem('research_current_user');
   localStorage.removeItem('research_participants');
   localStorage.removeItem('research_sessions');
