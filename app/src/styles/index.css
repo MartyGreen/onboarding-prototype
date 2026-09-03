@@ -382,6 +382,17 @@
   opacity: 1 !important;
 }
 
+/* Disabled state for sidebar items (e.g. no active study) */
+.sidebar-item-disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: auto !important; /* keep pointer so cursor shows */
+  color: #949494 !important;
+}
+.sidebar-item-disabled .sidebar-item-icon {
+  opacity: 0.4 !important;
+}
+
 /* Badge */
 .sidebar-badge {
   background: #f98e88;
