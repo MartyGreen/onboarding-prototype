@@ -5,8 +5,20 @@ export default function TaskModal() {
   const ctx = useTaskContext();
   const [showIntro, setShowIntro] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
+  // Show the "all done" overlay only once — right after finishing.
+  // If tasks were already completed in a previous session (stored in localStorage),
+  // treat the overlay as already dismissed so it never re-appears on reload.
   const [completedDismissed, setCompletedDismissed] = useState(() => {
-    try { return localStorage.getItem('onboarding_completed_dismissed') === 'true'; } catch { return false; }
+    try {
+      if (localStorage.getItem('onboarding_completed_dismissed') === 'true') return true;
+      // If user data already says "all done" at mount time, it's a reload — skip overlay
+      const raw = localStorage.getItem('onboarding_current_user');
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u?.allTasksCompleted) return true;
+      }
+    } catch { /* ignore */ }
+    return false;
   });
   const [commentText, setCommentText] = useState('');
   const [commentSent, setCommentSent] = useState(false);
